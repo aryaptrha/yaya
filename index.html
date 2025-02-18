@@ -61,6 +61,12 @@
       transition: opacity 0.5s ease-out;
     }
 
+    .fade-in {
+      opacity: 1;
+      transition: opacity 0.5s ease-in;
+    }
+
+
     @media (max-width: 768px) {
       #name-animation {
         font-size: 3.5rem;
@@ -85,14 +91,18 @@
       <p class="text-xl md:text-2xl mt-4 neon-text opacity-0 tagline">Ini Full Pake AI Bjirrrrr</p>
       <nav class="mt-8 space-x-6">
         <a href="pages/about.html" class="text-lg neon-link hover:text-neon-500 transition duration-300">About</a>
-        <a href="#portfolio" class="text-lg neon-link hover:text-neon-500 transition duration-300 pointer-events-none">Portfolio</a>
-        <a href="#contact" class="text-lg neon-link hover:text-neon-500 transition duration-300 pointer-events-none">Contact</a>
+        <a href="#portfolio"
+          class="text-lg neon-link hover:text-neon-500 transition duration-300 pointer-events-none">Portfolio</a>
+        <a href="#contact"
+          class="text-lg neon-link hover:text-neon-500 transition duration-300 pointer-events-none">Contact</a>
       </nav>
     </div>
   </div>
   <script>
-    // Name animation script
     document.addEventListener('DOMContentLoaded', () => {
+      document.body.classList.add('fade-in');
+      document.body.classList.remove('fade-out');
+
       const name = "Aryaputra";
       const nameElement = document.getElementById('name-animation');
 
@@ -180,16 +190,16 @@
       animate();
 
       // Add event listeners to navigation links
-    const navLinks = document.querySelectorAll('nav a');
-    navLinks.forEach(link => {
-      link.addEventListener('click', (event) => {
-        event.preventDefault();
-        document.body.classList.add('fade-out');
-        setTimeout(() => {
-          window.location.href = link.href;
-        }, 500); // Match the duration of the CSS transition
+      const navLinks = document.querySelectorAll('nav a');
+      navLinks.forEach(link => {
+        link.addEventListener('click', (event) => {
+          event.preventDefault();
+          document.body.classList.add('fade-out');
+          setTimeout(() => {
+            window.location.href = link.href;
+          }, 500); // Match the duration of the CSS transition
+        });
       });
-    });
     });
   </script>
 </body>
