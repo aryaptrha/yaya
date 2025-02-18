@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Me - Neon Punk</title>
+    <title>About Me</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -18,7 +18,12 @@
 <body class="dark-mode fade-in">
     <div class="cyber-grid"></div>
     <div class="container mx-auto p-4 sm:p-8">
-        <div class="card neon-border rounded-lg p-6 sm:p-8">
+        <a href="javascript:history.back()" class="back-button text-blue-500 hover:text-blue-700">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+        </a>
+        <div class="card neon-border rounded-lg p-6 sm:p-8 mt-12">
             <div class="flex flex-col sm:flex-row justify-between items-center mb-4">
                 <h1 class="title text-3xl sm:text-4xl font-bold mb-2 sm:mb-0">Aryaputra</h1>
                 <button id="themeToggleBtn" class="theme-toggle-btn">🌞</button>
@@ -33,35 +38,28 @@
         <div id="carouselExampleControls" class="carousel slide relative" data-bs-ride="carousel">
             <div class="carousel-inner relative overflow-hidden w-full">
                 <div class="carousel-item active relative float-left w-full">
-                    <img src="../assets/images/pacar/1.jpeg" class="block w-full"
-                        alt="Slide 1">
+                    <img src="../assets/images/pacar/1.jpeg" class="block w-full" alt="Slide 1">
                 </div>
                 <div class="carousel-item relative float-left w-full">
-                    <img src="../assets/images/pacar/2.jpeg" class="block w-full"
-                        alt="Slide 2">
+                    <img src="../assets/images/pacar/2.jpeg" class="block w-full" alt="Slide 2">
                 </div>
                 <div class="carousel-item relative float-left w-full">
                     <img src="../assets/images/pacar/3.jpeg" class="block w-full" alt="Slide 3">
                 </div>
                 <div class="carousel-item relative float-left w-full">
-                    <img src="../assets/images/pacar/4.jpeg" class="block w-full"
-                        alt="Slide 4">
+                    <img src="../assets/images/pacar/4.jpeg" class="block w-full" alt="Slide 4">
                 </div>
                 <div class="carousel-item relative float-left w-full">
-                    <img src="../assets/images/pacar/5.jpeg" class="block w-full"
-                        alt="Slide 5">
+                    <img src="../assets/images/pacar/5.jpeg" class="block w-full" alt="Slide 5">
                 </div>
                 <div class="carousel-item relative float-left w-full">
-                    <img src="../assets/images/pacar/6.jpeg" class="block w-full"
-                        alt="Slide 6">
+                    <img src="../assets/images/pacar/6.jpeg" class="block w-full" alt="Slide 6">
                 </div>
                 <div class="carousel-item relative float-left w-full">
-                    <img src="../assets/images/pacar/7.jpeg" class="block w-full"
-                        alt="Slide 7">
+                    <img src="../assets/images/pacar/7.jpeg" class="block w-full" alt="Slide 7">
                 </div>
                 <div class="carousel-item relative float-left w-full">
-                    <img src="../assets/images/pacar/8.jpeg" class="block w-full"
-                        alt="Slide 8">
+                    <img src="../assets/images/pacar/8.jpeg" class="block w-full" alt="Slide 8">
                 </div>
             </div>
             <button
@@ -79,6 +77,16 @@
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../script/about.js"></script>
+    <script>
+        document.getElementById('themeToggleBtn').addEventListener('click', function () {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                this.textContent = '🌞';
+            } else {
+                this.textContent = '🌜';
+            }
+        });
+    </script>
 </body>
+
 </html>
