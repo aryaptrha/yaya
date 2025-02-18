@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,142 +8,190 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barrio&family=League+Gothic&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
-  
+  <link
+    href="https://fonts.googleapis.com/css2?family=Barrio&family=League+Gothic&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Sigmar&display=swap"
+    rel="stylesheet">
+
+
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <style>
     body {
       font-family: 'Open Sans', sans-serif;
     }
+
     .name-hover {
       display: inline-block;
       transition: transform 0.3s ease, color 0.3s ease;
-      margin-right: 5px; /* Add space between characters */
+      margin-right: 5px;
+      /* Add space between characters */
     }
+
     .name-hover:hover {
       transform: scale(1.2);
       color: #00ff88;
     }
+
     .neon-text {
       text-shadow: 0 0 5px #00ff88, 0 0 10px #00ff88, 0 0 20px #00ff88, 0 0 40px #00ff88;
     }
+
     .neon-border {
       box-shadow: 0 0 5px #00ff88, 0 0 10px #00ff88, inset 0 0 5px #00ff88;
     }
+
     .neon-link:hover {
       text-shadow: 0 0 5px #00ff88, 0 0 10px #00ff88;
     }
+
     #threejs-background {
       position: absolute;
       top: 0;
       left: 0;
       z-index: 0;
     }
+
+    #name-animation {
+      font-family: 'Barrio', cursive;
+      /* Change font here */
+    }
+
+    .fade-out {
+      opacity: 0;
+      transition: opacity 0.5s ease-out;
+    }
+
+    @media (max-width: 768px) {
+      #name-animation {
+        font-size: 3.5rem;
+      }
+
+      .tagline {
+        font-size: 1rem;
+      }
+
+      nav a {
+        font-size: 0.875rem;
+      }
+    }
   </style>
 </head>
+
 <body class="bg-black text-white overflow-hidden">
-    <canvas id="threejs-background"></canvas>
-    <div class="relative h-screen flex items-center justify-center">
-      <div class="relative z-10 text-center">
-        <h1 id="name-animation" class="text-6xl md:text-8xl font-bold neon-text"></h1>
-        <p class="text-xl md:text-2xl mt-4 neon-text opacity-0 tagline">Ini Full Pake AI Bjirrrrr</p>
-        <nav class="mt-8 space-x-6">
-          <a href="#about" class="text-lg neon-link hover:text-neon-500 transition duration-300">About</a>
-          <a href="#portfolio" class="text-lg neon-link hover:text-neon-500 transition duration-300">Portfolio</a>
-          <a href="#contact" class="text-lg neon-link hover:text-neon-500 transition duration-300">Contact</a>
-        </nav>
-      </div>
+  <canvas id="threejs-background"></canvas>
+  <div class="relative h-screen flex items-center justify-center">
+    <div class="relative z-10 text-center">
+      <h1 id="name-animation" class="text-6xl md:text-8xl font-bold neon-text"></h1>
+      <p class="text-xl md:text-2xl mt-4 neon-text opacity-0 tagline">Ini Full Pake AI Bjirrrrr</p>
+      <nav class="mt-8 space-x-6">
+        <a href="pages/about.html" class="text-lg neon-link hover:text-neon-500 transition duration-300">About</a>
+        <a href="#portfolio" class="text-lg neon-link hover:text-neon-500 transition duration-300 pointer-events-none">Portfolio</a>
+        <a href="#contact" class="text-lg neon-link hover:text-neon-500 transition duration-300 pointer-events-none">Contact</a>
+      </nav>
     </div>
-    <script>
-        // Name animation script
-        document.addEventListener('DOMContentLoaded', () => {
-          const name = "Aryaputra";
-          const nameElement = document.getElementById('name-animation');
-          
-          // Split name into characters with hover effect
-          const characters = name.split('').map(char => {
-            const span = document.createElement('span');
-            span.textContent = char;
-            span.classList.add('name-hover');
-            return span;
-          });
-    
-          // Append characters to name element
-          characters.forEach(char => nameElement.appendChild(char));
-    
-          // [Previous Three.js script remains the same]
-          // Scene setup code from previous artifact
-          const scene = new THREE.Scene();
-          const canvas = document.getElementById('threejs-background');
-          const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
-          renderer.setSize(window.innerWidth, window.innerHeight);
-          renderer.setPixelRatio(window.devicePixelRatio);
-    
-          const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-          camera.position.z = 5;
-    
-          // [Rest of the Three.js animation code from previous artifact]
-          const geometries = [];
-          const colors = [0x00ff88, 0x00ffff, 0xff00ff];
-    
-          function createGeometry() {
-            const geometry = new THREE.IcosahedronGeometry(Math.random() * 0.5 + 0.2);
-            const material = new THREE.MeshBasicMaterial({ 
-              color: colors[Math.floor(Math.random() * colors.length)], 
-              wireframe: true 
-            });
-            const mesh = new THREE.Mesh(geometry, material);
-            
-            mesh.position.set(
-              Math.random() * 10 - 5, 
-              Math.random() * 10 - 5, 
-              Math.random() * -10
-            );
-            
-            mesh.rotationSpeed = {
-              x: Math.random() * 0.02,
-              y: Math.random() * 0.02,
-              z: Math.random() * 0.02
-            };
-    
-            scene.add(mesh);
-            geometries.push(mesh);
-          }
-    
-          for (let i = 0; i < 20; i++) {
-            createGeometry();
-          }
-    
-          const mouse = new THREE.Vector2();
-          window.addEventListener('mousemove', (event) => {
-            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-          });
-    
-          function animate() {
-            requestAnimationFrame(animate);
-    
-            geometries.forEach(geo => {
-              geo.rotation.x += geo.rotationSpeed.x;
-              geo.rotation.y += geo.rotationSpeed.y;
-              geo.rotation.z += geo.rotationSpeed.z;
-    
-              geo.position.x += mouse.x * 0.01;
-              geo.position.y += mouse.y * 0.01;
-            });
-    
-            renderer.render(scene, camera);
-          }
-    
-          window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-          });
-    
-          animate();
+  </div>
+  <script>
+    // Name animation script
+    document.addEventListener('DOMContentLoaded', () => {
+      const name = "Aryaputra";
+      const nameElement = document.getElementById('name-animation');
+
+      // Split name into characters with hover effect
+      const characters = name.split('').map(char => {
+        const span = document.createElement('span');
+        span.textContent = char;
+        span.classList.add('name-hover');
+        return span;
+      });
+
+      // Append characters to name element
+      characters.forEach(char => nameElement.appendChild(char));
+
+      // [Previous Three.js script remains the same]
+      // Scene setup code from previous artifact
+      const scene = new THREE.Scene();
+      const canvas = document.getElementById('threejs-background');
+      const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(window.devicePixelRatio);
+
+      const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.z = 5;
+
+      // [Rest of the Three.js animation code from previous artifact]
+      const geometries = [];
+      const colors = [0x00ff88, 0x00ffff, 0xff00ff];
+
+      function createGeometry() {
+        const geometry = new THREE.IcosahedronGeometry(Math.random() * 0.5 + 0.2);
+        const material = new THREE.MeshBasicMaterial({
+          color: colors[Math.floor(Math.random() * colors.length)],
+          wireframe: true
         });
-      </script>
+        const mesh = new THREE.Mesh(geometry, material);
+
+        mesh.position.set(
+          Math.random() * 10 - 5,
+          Math.random() * 10 - 5,
+          Math.random() * -10
+        );
+
+        mesh.rotationSpeed = {
+          x: Math.random() * 0.02,
+          y: Math.random() * 0.02,
+          z: Math.random() * 0.02
+        };
+
+        scene.add(mesh);
+        geometries.push(mesh);
+      }
+
+      for (let i = 0; i < 20; i++) {
+        createGeometry();
+      }
+
+      const mouse = new THREE.Vector2();
+      window.addEventListener('mousemove', (event) => {
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+      });
+
+      function animate() {
+        requestAnimationFrame(animate);
+
+        geometries.forEach(geo => {
+          geo.rotation.x += geo.rotationSpeed.x;
+          geo.rotation.y += geo.rotationSpeed.y;
+          geo.rotation.z += geo.rotationSpeed.z;
+
+          geo.position.x += mouse.x * 0.01;
+          geo.position.y += mouse.y * 0.01;
+        });
+
+        renderer.render(scene, camera);
+      }
+
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+
+      animate();
+
+      // Add event listeners to navigation links
+    const navLinks = document.querySelectorAll('nav a');
+    navLinks.forEach(link => {
+      link.addEventListener('click', (event) => {
+        event.preventDefault();
+        document.body.classList.add('fade-out');
+        setTimeout(() => {
+          window.location.href = link.href;
+        }, 500); // Match the duration of the CSS transition
+      });
+    });
+    });
+  </script>
 </body>
+
 </html>
