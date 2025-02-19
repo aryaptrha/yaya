@@ -24,7 +24,6 @@
       display: inline-block;
       transition: transform 0.3s ease, color 0.3s ease;
       margin-right: 5px;
-      /* Add space between characters */
     }
 
     .name-hover:hover {
@@ -48,12 +47,11 @@
       position: absolute;
       top: 0;
       left: 0;
-      z-index: 0;
+      z-index: 9;
     }
 
     #name-animation {
       font-family: 'Barrio', cursive;
-      /* Change font here */
     }
 
     .fade-out {
@@ -66,6 +64,80 @@
       transition: opacity 0.5s ease-in;
     }
 
+    .social-icon img {
+      border-radius: 50%;
+      filter: drop-shadow(0 0 8px currentColor);
+      transition: all 0.3s ease;
+    }
+
+    /* Individual color glows */
+    .social-icon:nth-child(1) img {
+      filter: drop-shadow(0 0 8px #1877F2);
+    }
+
+    /* Facebook blue */
+    .social-icon:nth-child(2) img {
+      filter: drop-shadow(0 0 8px #000000);
+    }
+
+    /* X (Twitter) black */
+    .social-icon:nth-child(3) img {
+      filter: drop-shadow(0 0 8px #E1306C);
+    }
+
+    /* Instagram pink */
+    .social-icon:nth-child(4) img {
+      filter: drop-shadow(0 0 8px #0077B5);
+    }
+
+    /* LinkedIn blue */
+    .social-icon img:hover {
+      filter: drop-shadow(0 0 12px currentColor);
+      transform: scale(1.1);
+    }
+
+    .neon-border {
+      border: none;
+    }
+
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0);
+      /* Fully transparent */
+      border-top: none;
+      z-index: 10;
+      /* Make sure it's above the background */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      backdrop-filter: blur(0px);
+      /* Remove any unwanted blur */
+    }
+
+    footer::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #00ff88, transparent);
+      animation: neon-glow 2s linear infinite;
+    }
+
+    @keyframes neon-glow {
+      0% {
+        left: -100%;
+      }
+
+      100% {
+        left: 100%;
+      }
+    }
 
     @media (max-width: 768px) {
       #name-animation {
@@ -88,7 +160,7 @@
   <div class="relative h-screen flex items-center justify-center">
     <div class="relative z-10 text-center">
       <h1 id="name-animation" class="text-6xl md:text-8xl font-bold neon-text"></h1>
-      <p class="text-xl md:text-2xl mt-4 neon-text opacity-0 tagline">Ini Full Pake AI Bjirrrrr</p>
+      <p class="text-xl md:text-2xl mt-4 neon-text opacity-0 tagline"></p>
       <nav class="mt-8 space-x-6">
         <a href="pages/about.html" class="text-lg neon-link hover:text-neon-500 transition duration-300">About</a>
         <a href="#portfolio"
@@ -98,110 +170,23 @@
       </nav>
     </div>
   </div>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      document.body.classList.add('fade-in');
-      document.body.classList.remove('fade-out');
-
-      const name = "Aryaputra";
-      const nameElement = document.getElementById('name-animation');
-
-      // Split name into characters with hover effect
-      const characters = name.split('').map(char => {
-        const span = document.createElement('span');
-        span.textContent = char;
-        span.classList.add('name-hover');
-        return span;
-      });
-
-      // Append characters to name element
-      characters.forEach(char => nameElement.appendChild(char));
-
-      // [Previous Three.js script remains the same]
-      // Scene setup code from previous artifact
-      const scene = new THREE.Scene();
-      const canvas = document.getElementById('threejs-background');
-      const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.setPixelRatio(window.devicePixelRatio);
-
-      const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-      camera.position.z = 5;
-
-      // [Rest of the Three.js animation code from previous artifact]
-      const geometries = [];
-      const colors = [0x00ff88, 0x00ffff, 0xff00ff];
-
-      function createGeometry() {
-        const geometry = new THREE.IcosahedronGeometry(Math.random() * 0.5 + 0.2);
-        const material = new THREE.MeshBasicMaterial({
-          color: colors[Math.floor(Math.random() * colors.length)],
-          wireframe: true
-        });
-        const mesh = new THREE.Mesh(geometry, material);
-
-        mesh.position.set(
-          Math.random() * 10 - 5,
-          Math.random() * 10 - 5,
-          Math.random() * -10
-        );
-
-        mesh.rotationSpeed = {
-          x: Math.random() * 0.02,
-          y: Math.random() * 0.02,
-          z: Math.random() * 0.02
-        };
-
-        scene.add(mesh);
-        geometries.push(mesh);
-      }
-
-      for (let i = 0; i < 20; i++) {
-        createGeometry();
-      }
-
-      const mouse = new THREE.Vector2();
-      window.addEventListener('mousemove', (event) => {
-        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-      });
-
-      function animate() {
-        requestAnimationFrame(animate);
-
-        geometries.forEach(geo => {
-          geo.rotation.x += geo.rotationSpeed.x;
-          geo.rotation.y += geo.rotationSpeed.y;
-          geo.rotation.z += geo.rotationSpeed.z;
-
-          geo.position.x += mouse.x * 0.01;
-          geo.position.y += mouse.y * 0.01;
-        });
-
-        renderer.render(scene, camera);
-      }
-
-      window.addEventListener('resize', () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-      });
-
-      animate();
-
-      // Add event listeners to navigation links
-      const navLinks = document.querySelectorAll('nav a');
-      navLinks.forEach(link => {
-        link.addEventListener('click', (event) => {
-          event.preventDefault();
-          document.body.classList.add('fade-out');
-          setTimeout(() => {
-            window.location.href = link.href;
-          }, 500); // Match the duration of the CSS transition
-        });
-      });
-    });
-  </script>
+  <footer class="absolute bottom-0 w-full py-4 text-white text-center">
+    <div class="flex justify-center space-x-6">
+      <a href="https://www.facebook.com/share/1BV4EYcvLy/" target="_blank" class="social-icon">
+        <img src="assets/logo/facebook.png" alt="Facebook" class="h-8 w-8 neon-border">
+      </a>
+      <a href="https://www.x.com/tryphooo" target="_blank" class="social-icon">
+        <img src="assets/logo/twitter.png" alt="X" class="h-8 w-8 neon-border">
+      </a>
+      <a href="https://www.instagram.com/aryaptrha" target="_blank" class="social-icon">
+        <img src="assets/logo/instagram.png" alt="Instagram" class="h-8 w-8 neon-border">
+      </a>
+      <a href="https://www.linkedin.com/in/aryaputra-haidar-akbar-b122811b7/" target="_blank" class="social-icon">
+        <img src="assets/logo/linkedin.png" alt="LinkedIn" class="h-8 w-8 neon-border">
+      </a>
+    </div>
+  </footer>
+  <script src="/script/index.js"></script>
 </body>
 
 </html>
