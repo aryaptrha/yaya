@@ -1,0 +1,714 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+================================================================
+File Summary
+================================================================
+
+Purpose:
+--------
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+
+File Format:
+------------
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Multiple file entries, each consisting of:
+  a. A separator line (================)
+  b. The file path (File: path/to/file)
+  c. Another separator line
+  d. The full contents of the file
+  e. A blank line
+
+Usage Guidelines:
+-----------------
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+
+Notes:
+------
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+
+Additional Info:
+----------------
+
+================================================================
+Directory Structure
+================================================================
+pages/
+  about.html
+script/
+  about.js
+  index.js
+styles/
+  about.css
+index.html
+style.css
+
+================================================================
+Files
+================================================================
+
+================
+File: pages/about.html
+================
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Me</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Barrio&family=League+Gothic&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Sigmar&family=Varela+Round&display=swap"
+        rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/about.css">
+</head>
+
+<body class="dark-mode fade-in">
+    <div class="cyber-grid"></div>
+    <div class="container mx-auto p-4 sm:p-8">
+        <a href="javascript:history.back()" class="back-button text-blue-500 hover:text-blue-700">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+        </a>
+        <div class="normal-card neon-border rounded-lg p-6 sm:p-8 mt-12 mb-12">
+            <div class="flex flex-col sm:flex-row justify-between items-center mb-4">
+                <h1 class="title text-3xl sm:text-4xl font-bold mb-2 sm:mb-0">Aryaputra</h1>
+                <button id="themeToggleBtn" class="theme-toggle-btn">🌞</button>
+            </div>
+            <p class="text-lg sm:text-xl">Kok Bisa sih aku se-<span><b>SIGMA</b></span> ini!!!</p>
+        </div>
+        <hr class="mx-8 my-3 border-t-2 border-neon-blue">
+        <div class="flex justify-center my-4">
+            <div>Siapa Saya?</div>
+        </div>
+        <hr class="mx-8 my-3 border-t-2 border-neon-blue">
+        <div class="normal-card neon-border rounded-lg p-6 sm:p-8 mb-12">
+            <p class="text-lg sm
+            :text-xl">Aku bukan siapa siapa tapi aku tau siapa aku. Just an ordinary boring person trying to be good
+                for the sake of a life.</p>
+            <p class="text-lg sm
+            :text-xl">Lahir dan besar di Kota Bandung, sekolah dari TK sampai kuliah pun di Bandung. Semenjak memasuki
+                dunia kuliah mulai untuk mendalami dan menyukai dunia programming (walaupun lebih ke dipaksa terpaksa
+                terbiasa 🗿)</p>
+        </div>
+        <hr class="mx-8 my-3 border-t-2 border-neon-blue">
+        <div class="flex justify-center my-4">
+            <div>Bersama Para Pacar</div>
+        </div>
+        <hr class="mx-8 my-3 border-t-2 border-neon-blue">
+        <div id="carouselExampleControls" class="carousel slide relative" data-bs-ride="carousel">
+            <div class="carousel-inner relative overflow-hidden w-full">
+                <div class="carousel-item active relative float-left w-full">
+                    <img src="../assets/images/pacar/1.jpeg" class="block w-full" alt="Slide 1">
+                </div>
+                <div class="carousel-item relative float-left w-full">
+                    <img src="../assets/images/pacar/2.jpeg" class="block w-full" alt="Slide 2">
+                </div>
+                <div class="carousel-item relative float-left w-full">
+                    <img src="../assets/images/pacar/3.jpeg" class="block w-full" alt="Slide 3">
+                </div>
+                <div class="carousel-item relative float-left w-full">
+                    <img src="../assets/images/pacar/4.jpeg" class="block w-full" alt="Slide 4">
+                </div>
+                <div class="carousel-item relative float-left w-full">
+                    <img src="../assets/images/pacar/5.jpeg" class="block w-full" alt="Slide 5">
+                </div>
+                <div class="carousel-item relative float-left w-full">
+                    <img src="../assets/images/pacar/6.jpeg" class="block w-full" alt="Slide 6">
+                </div>
+                <div class="carousel-item relative float-left w-full">
+                    <img src="../assets/images/pacar/7.jpeg" class="block w-full" alt="Slide 7">
+                </div>
+                <div class="carousel-item relative float-left w-full">
+                    <img src="../assets/images/pacar/8.jpeg" class="block w-full" alt="Slide 8">
+                </div>
+            </div>
+            <button
+                class="carousel-control-prev absolute top-0 bottom-0 left-0 z-10 flex items-center justify-center p-0 text-center border-0 hover:outline-none hover:no-underline focus:outline-none focus:no-underline"
+                type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon inline-block bg-no-repeat" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button
+                class="carousel-control-next absolute top-0 bottom-0 right-0 z-10 flex items-center justify-center p-0 text-center border-0 hover:outline-none hover:no-underline focus:outline-none focus:no-underline"
+                type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                <span class="carousel-control-next-icon inline-block bg-no-repeat" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('themeToggleBtn').addEventListener('click', function () {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                this.textContent = '🌞';
+            } else {
+                this.textContent = '🌜';
+            }
+        });
+    </script>
+</body>
+
+</html>
+
+================
+File: script/about.js
+================
+document.getElementById('themeToggleBtn').addEventListener('click', function () {
+    document.body.classList.toggle('dark-mode');
+    if (document.body.classList.contains('dark-mode')) {
+        this.textContent = '🌞';
+    } else {
+        this.textContent = '🌜';
+    }
+});
+
+================
+File: script/index.js
+================
+document.addEventListener('DOMContentLoaded', () => {
+  document.body.classList.add('fade-in');
+  document.body.classList.remove('fade-out');
+
+  const name = "Aryaputra";
+  const nameElement = document.getElementById('name-animation');
+
+  // Split name into characters with hover effect
+  const characters = name.split('').map(char => {
+    const span = document.createElement('span');
+    span.textContent = char;
+    span.classList.add('name-hover');
+    return span;
+  });
+
+  // Append characters to name element
+  characters.forEach(char => nameElement.appendChild(char));
+
+  // Scene setup code from previous artifact
+  const scene = new THREE.Scene();
+  const canvas = document.getElementById('threejs-background');
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(window.devicePixelRatio);
+
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+  camera.position.z = 5;
+
+  const geometries = [];
+  const colors = [0x00ff88, 0x00ffff, 0xff00ff];
+
+  function createGeometry() {
+    const geometry = new THREE.IcosahedronGeometry(Math.random() * 0.5 + 0.2);
+    const material = new THREE.MeshBasicMaterial({
+      color: colors[Math.floor(Math.random() * colors.length)],
+      wireframe: true
+    });
+    const mesh = new THREE.Mesh(geometry, material);
+
+    mesh.position.set(
+      Math.random() * 10 - 5,
+      Math.random() * 10 - 5,
+      Math.random() * -10
+    );
+
+    mesh.rotationSpeed = {
+      x: Math.random() * 0.02,
+      y: Math.random() * 0.02,
+      z: Math.random() * 0.02
+    };
+
+    scene.add(mesh);
+    geometries.push(mesh);
+  }
+
+  for (let i = 0; i < 20; i++) {
+    createGeometry();
+  }
+
+  const mouse = new THREE.Vector2();
+  window.addEventListener('mousemove', (event) => {
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  });
+
+  function animate() {
+    requestAnimationFrame(animate);
+
+    geometries.forEach(geo => {
+      geo.rotation.x += geo.rotationSpeed.x;
+      geo.rotation.y += geo.rotationSpeed.y;
+      geo.rotation.z += geo.rotationSpeed.z;
+
+      geo.position.x += mouse.x * 0.01;
+      geo.position.y += mouse.y * 0.01;
+    });
+
+    renderer.render(scene, camera);
+  }
+
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+  animate();
+
+  // Add event listeners to navigation links
+  const navLinks = document.querySelectorAll('nav a');
+  navLinks.forEach(link => {
+    link.addEventListener('click', (event) => {
+      event.preventDefault();
+      document.body.classList.add('fade-out');
+      setTimeout(() => {
+        window.location.href = link.href;
+      }, 500);
+    });
+  });
+});
+
+================
+File: styles/about.css
+================
+:root {
+    --neon-pink: #ff2e97;
+    --neon-blue: #00f3ff;
+    --neon-purple: #b537f2;
+    --neon-yellow: #f9f002;
+}
+
+/* Light mode */
+body {
+    background: linear-gradient(135deg, #ffffff, #f0f0f0);
+    color: #2d2d2d;
+    transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.card {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+}
+
+.glassmorphism-card {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border: 2px solid var(--neon-purple);
+    box-shadow: 0 0 20px rgba(181, 55, 242, 0.3);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin: 1rem;
+    transition: background 0.3s ease-in-out, border 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.title {
+    color: var(--neon-purple);
+    text-shadow: 0 0 5px rgba(181, 55, 242, 0.3);
+    position: relative;
+    letter-spacing: 2px;
+    font-family: "Varela Round", serif;
+    transition: color 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
+}
+
+/* Dark mode */
+.dark-mode {
+    background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+    color: #ffffff;
+}
+
+.dark-mode .card {
+    background: rgba(20, 20, 20, 0.9);
+    border: 2px solid var(--neon-pink);
+    box-shadow: 0 0 20px rgba(255, 46, 151, 0.3);
+}
+
+.dark-mode .title {
+    color: var(--neon-pink);
+    text-shadow: 0 0 10px rgba(255, 46, 151, 0.5);
+}
+
+/* Neon elements */
+.neon-border {
+    position: relative;
+}
+
+.neon-border::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg,
+            var(--neon-pink),
+            var(--neon-blue),
+            var(--neon-purple),
+            var(--neon-yellow));
+    border-radius: 0.5rem;
+    z-index: -1;
+    animation: borderGlow 3s linear infinite;
+}
+
+.theme-toggle-btn {
+    font-size: 2rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 10px rgba(249, 240, 2, 0.5);
+}
+
+.theme-toggle-btn:hover {
+    transform: scale(1.1);
+    text-shadow: 0 0 20px rgba(249, 240, 2, 0.8);
+}
+
+.cyber-grid {
+    background-image:
+        linear-gradient(rgba(255, 46, 151, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 46, 151, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    pointer-events: none;
+}
+
+@keyframes borderGlow {
+    0% {
+        filter: hue-rotate(0deg);
+    }
+
+    100% {
+        filter: hue-rotate(360deg);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.carousel-item img {
+    object-fit: cover;
+    width: 100%;
+    height: 400px;
+    /* Adjust the height as needed */
+}
+
+================
+File: index.html
+================
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arya Ganteng Abis</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Barrio&family=League+Gothic&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Sigmar&display=swap"
+    rel="stylesheet">
+
+
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <style>
+    body {
+      font-family: 'Open Sans', sans-serif;
+    }
+
+    .name-hover {
+      display: inline-block;
+      transition: transform 0.3s ease, color 0.3s ease;
+      margin-right: 5px;
+    }
+
+    .name-hover:hover {
+      transform: scale(1.2);
+      color: #00ff88;
+    }
+
+    .neon-text {
+      text-shadow: 0 0 5px #00ff88, 0 0 10px #00ff88, 0 0 20px #00ff88, 0 0 40px #00ff88;
+    }
+
+    .neon-border {
+      box-shadow: 0 0 5px #00ff88, 0 0 10px #00ff88, inset 0 0 5px #00ff88;
+    }
+
+    .neon-link:hover {
+      text-shadow: 0 0 5px #00ff88, 0 0 10px #00ff88;
+    }
+
+    #threejs-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 9;
+    }
+
+    #name-animation {
+      font-family: 'Barrio', cursive;
+    }
+
+    .fade-out {
+      opacity: 0;
+      transition: opacity 0.5s ease-out;
+    }
+
+    .fade-in {
+      opacity: 1;
+      transition: opacity 0.5s ease-in;
+    }
+
+    .social-icon img {
+      border-radius: 50%;
+      filter: drop-shadow(0 0 8px currentColor);
+      transition: all 0.3s ease;
+    }
+
+    /* Individual color glows */
+    .social-icon:nth-child(1) img {
+      filter: drop-shadow(0 0 8px #1877F2);
+    }
+
+    /* Facebook blue */
+    .social-icon:nth-child(2) img {
+      filter: drop-shadow(0 0 8px #000000);
+    }
+
+    /* X (Twitter) black */
+    .social-icon:nth-child(3) img {
+      filter: drop-shadow(0 0 8px #E1306C);
+    }
+
+    /* Instagram pink */
+    .social-icon:nth-child(4) img {
+      filter: drop-shadow(0 0 8px #0077B5);
+    }
+
+    /* LinkedIn blue */
+    .social-icon img:hover {
+      filter: drop-shadow(0 0 12px currentColor);
+      transform: scale(1.1);
+    }
+
+    .neon-border {
+      border: none;
+    }
+
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0);
+      border-top: none;
+      z-index: 10;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      backdrop-filter: blur(0px);
+    }
+
+    footer::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #00ff88, transparent);
+      animation: neon-glow 2s linear infinite;
+    }
+
+    @keyframes neon-glow {
+      0% {
+        left: -100%;
+      }
+
+      100% {
+        left: 100%;
+      }
+    }
+
+    @media (max-width: 768px) {
+      #name-animation {
+        font-size: 3.5rem;
+      }
+
+      .tagline {
+        font-size: 1rem;
+      }
+
+      nav a {
+        font-size: 0.875rem;
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-black text-white overflow-hidden">
+  <canvas id="threejs-background"></canvas>
+  <div class="relative h-screen flex items-center justify-center">
+    <div class="relative z-10 text-center">
+      <h1 id="name-animation" class="text-6xl md:text-8xl font-bold neon-text"></h1>
+      <p class="text-xl md:text-2xl mt-4 neon-text opacity-0 tagline">Aryaputra</p>
+      <nav class="mt-8 space-x-6">
+        <a href="pages/about.html" class="text-lg neon-link hover:text-neon-500 transition duration-300">About</a>
+        <!-- <a href="#portfolio"
+          class="text-lg neon-link hover:text-neon-500 transition duration-300 pointer-events-none">Portfolio</a>
+        <a href="#contact"
+          class="text-lg neon-link hover:text-neon-500 transition duration-300 pointer-events-none">Contact</a> -->
+      </nav>
+    </div>
+  </div>
+  <footer class="absolute bottom-0 w-full py-4 text-white text-center">
+    <div class="flex justify-center space-x-6">
+      <a href="https://www.facebook.com/share/1BV4EYcvLy/" target="_blank" class="social-icon">
+        <img src="assets/logo/facebook.png" alt="Facebook" class="h-8 w-8">
+      </a>
+      <a href="https://www.x.com/tryphooo" target="_blank" class="social-icon">
+        <img src="assets/logo/twitter.png" alt="X" class="h-8 w-8">
+      </a>
+      <a href="https://www.instagram.com/aryaptrha" target="_blank" class="social-icon">
+        <img src="assets/logo/instagram.png" alt="Instagram" class="h-8 w-8">
+      </a>
+      <a href="https://www.linkedin.com/in/aryaputra-haidar-akbar-b122811b7/" target="_blank" class="social-icon">
+        <img src="assets/logo/linkedin.png" alt="LinkedIn" class="h-8 w-8">
+      </a>
+    </div>
+  </footer>
+  <script src="script/index.js"></script>
+</body>
+
+</html>
+
+================
+File: style.css
+================
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Arial', sans-serif;
+    color: #fff;
+    overflow: hidden;
+  }
+  
+  .container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #000;
+  }
+  
+  #3d-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+  
+  .content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+  }
+  
+  .name {
+    font-size: 4rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  .tagline {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeIn 2s ease-in-out forwards;
+  }
+  
+  nav {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  nav a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+  }
+  
+  nav a:hover {
+    color: #00ff88;
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+  
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+    }
+  }
+
+
+
+================================================================
+End of Codebase
+================================================================
