@@ -1,27 +1,14 @@
-// script/supabase-config.js
-
-// Add this to supabase-config.js right before creating the client
-console.log("Supabase URL:", supabaseUrl);
-console.log("Supabase Key:", supabaseKey ? "Key exists (not showing for security)" : "Key is missing");
-
-// Check if config exists and is valid
+// First check for window.appConfig and set up fallback if needed
 if (!window.appConfig || !window.appConfig.supabaseUrl || !window.appConfig.supabaseKey) {
   console.warn("Config not found or invalid, using development fallback");
   window.appConfig = {
     supabaseUrl: 'https://nrgxggpmipbvecjshvxf.supabase.co',
-    supabaseKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' // Add a short prefix of your key
+    supabaseKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5yZ3hnZ3BtaXBidmVjanNodnhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDExNDUxMjksImV4cCI6MjA1NjcyMTEyOX0.rJeqNwDJ794OUIxR0Zlr0ZNvx0rysTeEPfc5OmcUGqM' // Add a short prefix of your key
   };
 }
 
-// Ensure URL has proper protocol
-let supabaseUrl = window.appConfig.supabaseUrl;
-if (!supabaseUrl.startsWith('http')) {
-  supabaseUrl = 'https://' + supabaseUrl;
-}
-if (!supabaseUrl.includes('.supabase.co') && !supabaseUrl.includes('localhost')) {
-  supabaseUrl = supabaseUrl + '.supabase.co';
-}
-
+// THEN declare and initialize these variables
+const supabaseUrl = window.appConfig.supabaseUrl;
 const supabaseKey = window.appConfig.supabaseKey;
 const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
