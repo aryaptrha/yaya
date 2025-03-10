@@ -1,12 +1,11 @@
-# .github/workflows/deploy.yml
 name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ main ]  # Or your default branch
+    branches: [ main ]
 
 permissions:
-  contents: write  # This is important - gives permission to write to the repository
+  contents: write
 
 jobs:
   build-and-deploy:
@@ -15,16 +14,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Update config with secrets
+      - name: Update configuration in HTML files
         run: |
-          # Create a sed command to replace placeholders with actual secrets
-          sed -i "s|SUPABASE_URL_PLACEHOLDER|${{ secrets.SUPABASE_URL }}|g" deploy-config.js
-          sed -i "s|SUPABASE_KEY_PLACEHOLDER|${{ secrets.SUPABASE_KEY }}|g" deploy-config.js
-          # Copy to config.js which is used by the application
-          cp deploy-config.js config.js
+          # Find all HTML files and replace placeholders
+          find . -name "*.html" -type f -exec sed -i "s|SUPABASE_URL_PLACEHOLDER|${{ secrets.SUPABASE_URL }}|g" {} \;
+          find . -name "*.html" -type f -exec sed -i "s|SUPABASE_KEY_PLACEHOLDER|${{ secrets.SUPABASE_KEY }}|g" {} \;
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@4.1.5
         with:
-          branch: gh-pages  # The branch the action should deploy to
-          folder: .  # The folder the action should deploy
+          branch: gh-pages
+          folder: .
