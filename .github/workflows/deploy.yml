@@ -1,8 +1,12 @@
+# .github/workflows/deploy.yml
 name: Deploy to GitHub Pages
 
 on:
   push:
     branches: [ main ]  # Or your default branch
+
+permissions:
+  contents: write  # This is important - gives permission to write to the repository
 
 jobs:
   build-and-deploy:
@@ -11,12 +15,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Create config file
+      - name: Update config with secrets
         run: |
-          echo "window.appConfig = {" > config.js
-          echo "  supabaseUrl: '${{ secrets.SUPABASE_URL }}'," >> config.js
-          echo "  supabaseKey: '${{ secrets.SUPABASE_KEY }}'" >> config.js
-          echo "};" >> config.js
+          # Create a sed command to replace placeholders with actual secrets
+          sed -i "s|SUPABASE_URL_PLACEHOLDER|${{ secrets.SUPABASE_URL }}|g" deploy-config.js
+          sed -i "s|SUPABASE_KEY_PLACEHOLDER|${{ secrets.SUPABASE_KEY }}|g" deploy-config.js
+          # Copy to config.js which is used by the application
+          cp deploy-config.js config.js
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@4.1.5
