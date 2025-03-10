@@ -22,7 +22,7 @@ jobs:
           
           # Verify replacement worked (will print files with remaining placeholders)
           echo "Checking for remaining placeholders:"
-          grep -r "SUPABASE_[A-Z_]*PLACEHOLDER" --include="*.html" .
+          grep -r "SUPABASE_[A-Z_]*PLACEHOLDER" --include="*.html" . || echo "No placeholders found - good!"
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@4.1.5
