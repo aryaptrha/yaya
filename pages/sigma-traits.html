@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sigma Traits Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Barrio&family=League+Gothic&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Sigmar&family=Varela+Round&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../styles/sigma-traits.css">
+    <link rel="stylesheet" href="../styles/visitor-modal.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.5.0/dist/umd/supabase.min.js"></script>
+</head>
+
+<body>
+    <div class="cyber-grid"></div>
+
+    <button class="back-btn" onclick="window.location.href='../index.html'">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+                d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
+        </svg>
+        Back
+    </button>
+
+    <div class="container">
+        <h1 class="title">SIGMA TRAITS GENERATOR</h1>
+
+        <div class="sigma-card">
+            <div class="emoji">😎</div>
+            <div class="sigma-trait" id="trait">Click the button below to reveal your Sigma trait!</div>
+            <div class="sigma-description" id="description">Discover why you're the ultimate Sigma.</div>
+        </div>
+
+        <div style="text-align: center;">
+            <button class="generate-btn" id="generateBtn">GENERATE SIGMA TRAIT</button>
+        </div>
+    </div>
+    <script src="../script/sigma-traits.js"></script>
+    <script src="../config.js"></script>
+    <script src="../script/supabase-config.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Show visitor modal when page loads - ensure CSS is fully loaded
+            setTimeout(() => {
+                showVisitorModal('sigma-traits');
+            }, 1000);
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arya Ganteng Abis</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Barrio&family=League+Gothic&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Sigmar&display=swap"
+    rel="stylesheet">
+
+
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <style>
+    body {
+      font-family: 'Open Sans', sans-serif;
+    }
+
+    .name-hover {
+      display: inline-block;
+      transition: transform 0.3s ease, color 0.3s ease;
+      margin-right: 5px;
+    }
+
+    .name-hover:hover {
+      transform: scale(1.2);
+      color: #00ff88;
+    }
+
+    .neon-text {
+      text-shadow: 0 0 5px #00ff88, 0 0 10px #00ff88, 0 0 20px #00ff88, 0 0 40px #00ff88;
+    }
+
+    .neon-border {
+      box-shadow: 0 0 5px #00ff88, 0 0 10px #00ff88, inset 0 0 5px #00ff88;
+    }
+
+    .neon-link:hover {
+      text-shadow: 0 0 5px #00ff88, 0 0 10px #00ff88;
+    }
+
+    #threejs-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 9;
+    }
+
+    #name-animation {
+      font-family: 'Barrio', cursive;
+    }
+
+    .fade-out {
+      opacity: 0;
+      transition: opacity 0.5s ease-out;
+    }
+
+    .fade-in {
+      opacity: 1;
+      transition: opacity 0.5s ease-in;
+    }
+
+    .social-icon img {
+      border-radius: 50%;
+      filter: drop-shadow(0 0 8px currentColor);
+      transition: all 0.3s ease;
+    }
+
+    /* Individual color glows */
+    .social-icon:nth-child(1) img {
+      filter: drop-shadow(0 0 8px #1877F2);
+    }
+
+    /* Facebook blue */
+    .social-icon:nth-child(2) img {
+      filter: drop-shadow(0 0 8px #000000);
+    }
+
+    /* X (Twitter) black */
+    .social-icon:nth-child(3) img {
+      filter: drop-shadow(0 0 8px #E1306C);
+    }
+
+    /* Instagram pink */
+    .social-icon:nth-child(4) img {
+      filter: drop-shadow(0 0 8px #0077B5);
+    }
+
+    /* LinkedIn blue */
+    .social-icon img:hover {
+      filter: drop-shadow(0 0 12px currentColor);
+      transform: scale(1.1);
+    }
+
+    .neon-border {
+      border: none;
+    }
+
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0);
+      border-top: none;
+      z-index: 10;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      backdrop-filter: blur(0px);
+    }
+
+    footer::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #00ff88, transparent);
+      animation: neon-glow 2s linear infinite;
+    }
+
+    @keyframes neon-glow {
+      0% {
+        left: -100%;
+      }
+
+      100% {
+        left: 100%;
+      }
+    }
+
+    @media (max-width: 768px) {
+      #name-animation {
+        font-size: 3.5rem;
+      }
+
+      .tagline {
+        font-size: 1rem;
+      }
+
+      nav a {
+        font-size: 0.875rem;
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-black text-white overflow-hidden">
+  <canvas id="threejs-background"></canvas>
+  <div class="relative h-screen flex items-center justify-center">
+    <div class="relative z-10 text-center">
+      <h1 id="name-animation" class="text-6xl md:text-8xl font-bold neon-text"></h1>
+      <p class="text-xl md:text-2xl mt-4 neon-text opacity-0 tagline">Aryaputra</p>
+      <nav class="mt-8 space-x-6">
+        <a href="pages/about.html" class="text-lg neon-link hover:text-neon-500 transition duration-300">About</a>
+        <a href="pages/sigma-traits.html" class="text-lg neon-link hover:text-neon-500 transition duration-300">Sigma</a>
+        <a href="pages/hack-attack.html" class="text-lg neon-link hover:text-neon-500 transition duration-300">🎮</a>
+      </nav>
+    </div>
+  </div>
+  <footer class="absolute bottom-0 w-full py-4 text-white text-center">
+    <div class="flex justify-center space-x-6">
+      <a href="https://www.facebook.com/share/1BV4EYcvLy/" target="_blank" class="social-icon">
+        <img src="assets/logo/facebook.png" alt="Facebook" class="h-8 w-8">
+      </a>
+      <a href="https://www.x.com/tryphooo" target="_blank" class="social-icon">
+        <img src="assets/logo/twitter.png" alt="X" class="h-8 w-8">
+      </a>
+      <a href="https://www.instagram.com/aryaptrha" target="_blank" class="social-icon">
+        <img src="assets/logo/instagram.png" alt="Instagram" class="h-8 w-8">
+      </a>
+      <a href="https://www.linkedin.com/in/aryaputra-haidar-akbar-b122811b7/" target="_blank" class="social-icon">
+        <img src="assets/logo/linkedin.png" alt="LinkedIn" class="h-8 w-8">
+      </a>
+    </div>
+  </footer>
+  <script src="script/index.js"></script>
+</body>
+
+</html>

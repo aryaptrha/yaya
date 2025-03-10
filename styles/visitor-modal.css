@@ -1,0 +1,173 @@
+/* styles/visitor-modal.css */
+/* Complete reset for visitor modal to prevent style conflicts with other frameworks */
+
+:root {
+  --neon-pink: #ff2e97;
+  --neon-blue: #00f3ff;
+  --neon-purple: #b537f2;
+  --neon-yellow: #f9f002;
+  --neon-green: #00ff88;
+}
+
+/* Global modal reset - override any framework defaults */
+#visitor-modal,
+#visitor-modal * {
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  font-family: 'Open Sans', sans-serif !important;
+  line-height: normal !important;
+  border: none !important;
+  outline: none !important;
+  text-align: center !important;
+}
+
+#visitor-modal {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  background-color: rgba(0, 0, 0, 0.8) !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  z-index: 99999 !important;
+  backdrop-filter: blur(5px) !important;
+  overflow: hidden !important;
+}
+
+#visitor-modal .visitor-modal-content {
+  position: relative !important;
+  background: rgba(10, 10, 10, 0.9) !important;
+  padding: 2rem !important;
+  border-radius: 10px !important;
+  width: 90% !important;
+  max-width: 400px !important;
+  display: block !important;
+  transform: none !important;
+}
+
+#visitor-modal .visitor-modal-content::before {
+  content: '' !important;
+  position: absolute !important;
+  top: -2px !important;
+  left: -2px !important;
+  right: -2px !important;
+  bottom: -2px !important;
+  background: linear-gradient(45deg,
+      var(--neon-pink),
+      var(--neon-blue),
+      var(--neon-purple),
+      var(--neon-yellow)) !important;
+  border-radius: 12px !important;
+  z-index: -1 !important;
+  animation: borderGlow 3s linear infinite !important;
+}
+
+#visitor-modal h2 {
+  font-size: 2rem !important;
+  margin-bottom: 1rem !important;
+  color: var(--neon-green) !important;
+  text-shadow: 0 0 10px var(--neon-green) !important;
+  font-family: 'Sigmar', serif !important;
+  padding: 0.5rem 0 !important;
+}
+
+#visitor-modal p {
+  margin-bottom: 1.5rem !important;
+  font-size: 1.1rem !important;
+  color: white !important;
+  padding: 0.5rem 0 !important;
+}
+
+#visitor-modal .visitor-input {
+  width: 100% !important;
+  padding: 12px !important;
+  margin: 1rem 0 1.5rem 0 !important;
+  border: 2px solid var(--neon-blue) !important;
+  background: rgba(0, 0, 0, 0.5) !important;
+  border-radius: 5px !important;
+  color: white !important;
+  font-size: 1.1rem !important;
+  transition: all 0.3s ease !important;
+  display: block !important;
+}
+
+#visitor-modal .visitor-input:focus {
+  border-color: var(--neon-green) !important;
+  box-shadow: 0 0 10px var(--neon-green) !important;
+}
+
+#visitor-modal .visitor-input.error {
+  border-color: var(--neon-pink) !important;
+  box-shadow: 0 0 15px var(--neon-pink) !important;
+  animation: shake 0.5s !important;
+}
+
+#visitor-modal .visitor-button-container {
+  display: block !important;
+  margin: 0 auto !important;
+  text-align: center !important;
+  padding: 0.5rem 0 !important;
+}
+
+#visitor-modal .visitor-button {
+  background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple)) !important;
+  color: white !important;
+  padding: 12px 30px !important;
+  font-size: 1.1rem !important;
+  font-weight: bold !important;
+  border-radius: 50px !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 0 15px rgba(0, 243, 255, 0.5) !important;
+  display: inline-block !important;
+  margin: 0 auto !important;
+  border: none !important;
+  text-transform: none !important;
+  outline: none !important;
+}
+
+#visitor-modal .visitor-button:hover {
+  background: linear-gradient(45deg, var(--neon-purple), var(--neon-pink)) !important;
+  box-shadow: 0 0 20px rgba(255, 46, 151, 0.7) !important;
+  transform: translateY(-3px) !important;
+}
+
+@keyframes borderGlow {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    filter: hue-rotate(360deg);
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+/* Welcome text glow effect */
+#visitor-modal h2 {
+  color: #fff !important;
+  text-shadow: 0 0 10px var(--neon-green), 
+               0 0 20px var(--neon-green), 
+               0 0 30px var(--neon-green) !important;
+  animation: textGlow 2s infinite alternate !important;
+}
+
+@keyframes textGlow {
+  from {
+    text-shadow: 0 0 10px var(--neon-green), 
+                 0 0 20px var(--neon-green);
+  }
+  to {
+    text-shadow: 0 0 10px var(--neon-green), 
+                 0 0 20px var(--neon-green), 
+                 0 0 30px var(--neon-green), 
+                 0 0 40px var(--neon-green);
+  }
+}
