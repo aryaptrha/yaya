@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Barrio&family=League+Gothic&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Sigmar&family=Varela+Round&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --neon-pink: #ff2e97;
+            --neon-blue: #00f3ff;
+            --neon-purple: #b537f2;
+            --neon-yellow: #f9f002;
+            --neon-green: #00ff88;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+            color: #ffffff;
+            font-family: 'Open Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .cyber-grid {
+            background-image:
+                linear-gradient(rgba(255, 46, 151, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 46, 151, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .header h1 {
+            font-family: "Sigmar", serif;
+            font-size: 2.5rem;
+            color: var(--neon-green);
+            text-shadow: 0 0 10px var(--neon-green);
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: var(--neon-blue);
+            font-size: 1.2rem;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: none;
+            border: none;
+            color: var(--neon-blue);
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            color: var(--neon-pink);
+            transform: translateX(-5px);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid var(--neon-purple);
+            color: white;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background: rgba(181, 55, 242, 0.2);
+            box-shadow: 0 0 10px var(--neon-purple);
+        }
+
+        .tab-btn:hover {
+            background: rgba(181, 55, 242, 0.1);
+            box-shadow: 0 0 10px var(--neon-purple);
+        }
+
+        .data-card {
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .data-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg,
+                    var(--neon-pink),
+                    var(--neon-blue),
+                    var(--neon-purple),
+                    var(--neon-yellow));
+            border-radius: 12px;
+            z-index: -1;
+            animation: borderGlow 3s linear infinite;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            width: 100%;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            color: white;
+        }
+
+        th {
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.5);
+            text-align: left;
+            color: var(--neon-blue);
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+
+        td {
+            padding: 0.75rem 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            font-size: 1.2rem;
+            color: var(--neon-yellow);
+        }
+
+        .loading::after {
+            content: '';
+            width: 1rem;
+            height: 1rem;
+            margin-left: 0.5rem;
+            border-radius: 50%;
+            border: 2px solid var(--neon-yellow);
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+        }
+
+        .error {
+            color: var(--neon-pink);
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 2px solid var(--neon-blue);
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--neon-green);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--neon-blue);
+            font-size: 1rem;
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 300px;
+            margin-top: 1rem;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 2rem;
+            color: var(--neon-yellow);
+            font-style: italic;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes borderGlow {
+            0% {
+                filter: hue-rotate(0deg);
+            }
+
+            100% {
+                filter: hue-rotate(360deg);
+            }
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .back-btn {
+                top: 10px;
+                left: 10px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="cyber-grid"></div>
+
+    <a href="../index.html" class="back-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+                d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
+        </svg>
+        Back to Home
+    </a>
+
+    <div class="container">
+        <div class="header">
+            <h1>Admin Dashboard</h1>
+            <p>Track and monitor site visitors and game scores</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="stats">Statistics</button>
+            <button class="tab-btn" data-tab="visitors">Visitors</button>
+            <button class="tab-btn" data-tab="game-scores">Game Scores</button>
+        </div>
+
+        <!-- Stats Tab -->
+        <div class="tab-content active" id="stats-tab">
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="total-visitors">-</div>
+                    <div class="stat-label">Total Visitors</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="total-games">-</div>
+                    <div class="stat-label">Games Played</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="high-score">-</div>
+                    <div class="stat-label">Highest Score</div>
+                </div>
+            </div>
+
+            <div class="data-card">
+                <h2>Overview</h2>
+                <div id="overview-chart" class="chart-container"></div>
+            </div>
+        </div>
+
+        <!-- Visitors Tab -->
+        <div class="tab-content" id="visitors-tab">
+            <div class="data-card">
+                <h2>Visitor Log</h2>
+                <div class="table-container">
+                    <table id="visitors-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Page Visited</th>
+                                <th>Visit Time</th>
+                            </tr>
+                        </thead>
+                        <tbody id="visitors-data">
+                            <tr>
+                                <td colspan="3" class="loading">Loading visitor data...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Scores Tab -->
+        <div class="tab-content" id="game-scores-tab">
+            <div class="data-card">
+                <h2>Game Leaderboard</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Player</th>
+                                <th>Score</th>
+                                <th>Level</th>
+                                <th>Targets</th>
+                                <th>Difficulty</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="scores-data">
+                            <tr>
+                                <td colspan="6" class="loading">Loading score data...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../config.js"></script>
+
+    <script>
+        // Format date for display
+        function formatDate(dateString) {
+            if (!dateString) return "N/A";
+            try {
+                const date = new Date(dateString);
+                return date.toLocaleString();
+            } catch (e) {
+                return dateString || "N/A";
+            }
+        }
+
+        // Tab functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            // Setup tab navigation
+            document.querySelectorAll('.tab-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    // Deactivate all tabs
+                    document.querySelectorAll('.tab-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+
+                    // Activate clicked tab
+                    button.classList.add('active');
+                    const tabId = button.getAttribute('data-tab') + '-tab';
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+        });
+    </script>
+
+    <!-- Direct fetch script -->
+    <script>
+        // direct-fetch.js
+        async function directFetchData() {
+            try {
+                const supabaseUrl = window.appConfig.supabaseUrl;
+                const supabaseKey = window.appConfig.supabaseKey;
+                console.log("Making direct fetch call to Supabase REST API");
+
+                // Direct REST API call to get visitors
+                const response = await fetch(`${supabaseUrl}/rest/v1/visitors?select=*&order=visit_time.desc`, {
+                    method: 'GET',
+                    headers: {
+                        'apikey': supabaseKey,
+                        'Authorization': `Bearer ${supabaseKey}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log("Direct API response:", data);
+
+                // Display the data
+                displayVisitorData(data);
+
+                // Now fetch game scores
+                const scoresResponse = await fetch(`${supabaseUrl}/rest/v1/game_scores?select=*&order=score.desc`, {
+                    method: 'GET',
+                    headers: {
+                        'apikey': supabaseKey,
+                        'Authorization': `Bearer ${supabaseKey}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!scoresResponse.ok) {
+                    throw new Error(`HTTP error! Status: ${scoresResponse.status}`);
+                }
+
+                const scoresData = await scoresResponse.json();
+                console.log("Game scores API response:", scoresData);
+
+                // Display game scores data
+                displayGameScoreData(scoresData);
+
+            } catch (error) {
+                console.error("Error in direct fetch:", error);
+                document.getElementById('visitors-data').innerHTML =
+                    `<tr><td colspan="3" class="error">Error: ${error.message}</td></tr>`;
+            }
+        }
+
+        function displayVisitorData(data) {
+            const tableBody = document.getElementById('visitors-data');
+
+            if (!data || data.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="3" class="no-data">No visitor data available</td></tr>';
+                console.log("No visitor data found in direct fetch");
+                return;
+            }
+
+            console.log(`Found ${data.length} visitors in direct fetch`);
+            tableBody.innerHTML = '';
+
+            data.forEach(visitor => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                <td>${visitor.name || 'Anonymous'}</td>
+                <td>${visitor.page_visited || 'Unknown'}</td>
+                <td>${formatDate(visitor.visit_time)}</td>
+            `;
+                tableBody.appendChild(row);
+            });
+
+            // Update stats
+            document.getElementById('total-visitors').textContent = data.length;
+        }
+
+        function displayGameScoreData(data) {
+            const tableBody = document.getElementById('scores-data');
+
+            if (!data || data.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="6" class="no-data">No game score data available</td></tr>';
+                return;
+            }
+
+            tableBody.innerHTML = '';
+
+            data.forEach(score => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                <td>${score.player_name || 'Anonymous'}</td>
+                <td>${score.score || 0}</td>
+                <td>${score.level || 1}</td>
+                <td>${score.targets || 0}</td>
+                <td>${score.difficulty || 'Unknown'}</td>
+                <td>${formatDate(score.created_at)}</td>
+            `;
+                tableBody.appendChild(row);
+            });
+
+            // Update stats
+            document.getElementById('total-games').textContent = data.length;
+
+            // Find highest score
+            if (data.length > 0) {
+                const highestScore = Math.max(...data.map(score => score.score || 0));
+                document.getElementById('high-score').textContent = highestScore;
+            }
+        }
+
+        // Call the direct fetch function when the page loads
+        document.addEventListener('DOMContentLoaded', directFetchData);
+    </script>
+</body>
+
+</html>

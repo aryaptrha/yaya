@@ -1,35 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hack Attack - Cyberpunk Game</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Barrio&family=League+Gothic&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Sigmar&family=Varela+Round&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Barrio&family=League+Gothic&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Sigmar&family=Varela+Round&display=swap"
+        rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <link rel="stylesheet" href="../styles/hack-attack.css">
+    <link rel="stylesheet" href="../styles/visitor-modal.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.5.0/dist/umd/supabase.min.js"></script>
 </head>
+
 <body>
     <div class="loading">
         <div class="loading-text">INITIALIZING HACK...</div>
     </div>
 
     <div class="cyber-grid"></div>
-    
+
     <a class="back-btn" href="../index.html">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-            <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+            <path fill-rule="evenodd"
+                d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
         </svg>
         Back
     </a>
-    
+
     <div class="container">
         <header>
             <h1 class="title">HACK ATTACK</h1>
             <p class="sub-title">Click the targets before they disappear!</p>
         </header>
-        
+
         <div class="game-wrapper">
             <div id="game-container">
                 <div id="start-screen">
@@ -43,27 +50,27 @@
                             <li>How many targets can you hack?</li>
                         </ul>
                     </div>
-                    
+
                     <div class="difficulty-container">
                         <button class="difficulty-btn selected" data-difficulty="easy">Easy</button>
                         <button class="difficulty-btn" data-difficulty="medium">Medium</button>
                         <button class="difficulty-btn" data-difficulty="hard">Hard</button>
                     </div>
-                    
+
                     <div style="position: relative; z-index: 20; margin-top: 5px;">
                         <button class="button" id="start-button">START HACKING</button>
                     </div>
                 </div>
-                
+
                 <div class="level-notification" id="level-notification">LEVEL 1</div>
-                
+
                 <div class="game-over-container" id="game-over">
                     <h2 class="game-over-text">SYSTEM BREACH FAILED</h2>
                     <div class="final-score">Score: <span id="final-score">0</span></div>
                     <button class="button" id="restart-button">HACK AGAIN</button>
                 </div>
             </div>
-            
+
             <div class="stats-bar">
                 <div class="stat" id="score">
                     <div class="stat-label">SCORE</div>
@@ -82,7 +89,7 @@
                     <div class="stat-value">3</div>
                 </div>
             </div>
-            
+
             <div class="leaderboard">
                 <div class="leaderboard-header">
                     <h3 class="leaderboard-title">TOP HACKERS</h3>
@@ -95,5 +102,16 @@
         </div>
     </div>
     <script src="../script/hack-attack.js"></script>
+    <script src="../config.js"></script>
+    <script src="../script/supabase-config.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Show visitor modal when page loads - ensure CSS is fully loaded
+            setTimeout(() => {
+                showVisitorModal('hack-attack');
+            }, 1000);
+        });
+    </script>
 </body>
+
 </html>

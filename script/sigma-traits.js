@@ -151,11 +151,11 @@ setTimeout(() => {
 }, 500);
 
 // Add shake animation
-const styleSheet = document.styleSheets[0];
-styleSheet.insertRule(`
-    @keyframes shake {
-        0%, 100% { transform: translateX(0); }
-        10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-        20%, 40%, 60%, 80% { transform: translateX(5px); }
-    }
-`, styleSheet.cssRules.length);
+const shakeStyle = document.createElement('style');
+shakeStyle.textContent = `
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}`;
+document.head.appendChild(shakeStyle);

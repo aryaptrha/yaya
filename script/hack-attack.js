@@ -60,37 +60,37 @@ const SYMBOLS = ['$', '#', '&', '@', '%', '*', '^', '!', '+', '=', '<', '>', '?'
 // Create a target
 function createTarget() {
     if (!gameState.gameActive) return;
-    
+
     const target = document.createElement('div');
     target.className = 'target';
-    
+
     // Random position inside the game container
     const gameWidth = gameContainer.offsetWidth;
     const gameHeight = gameContainer.offsetHeight;
     const targetSize = window.innerWidth <= 480 ? 50 : window.innerWidth <= 768 ? 60 : 70;
-    
+
     // Ensure targets are fully inside the container with padding
     const padding = 10;
     const randomX = Math.random() * (gameWidth - targetSize - padding * 2) + padding;
     const randomY = Math.random() * (gameHeight - targetSize - padding * 2) + padding;
-    
+
     target.style.left = `${randomX}px`;
     target.style.top = `${randomY}px`;
-    
+
     // Random symbol
     const symbol = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
     target.textContent = symbol;
-    
+
     // Point value based on level (higher levels = more points)
     const pointValue = (Math.floor(Math.random() * 3) + 1) * gameState.level * 10;
     target.dataset.points = pointValue;
-    
+
     // Add click handler
     target.addEventListener('click', () => handleTargetClick(target));
-    
+
     // Add to game container
     gameContainer.appendChild(target);
-    
+
     // Shrinking effect for higher difficulties
     if (gameConfig.targetShrink) {
         gsap.to(target, {
@@ -99,7 +99,7 @@ function createTarget() {
             ease: "linear"
         });
     }
-    
+
     // Remove target after lifespan
     const timeout = setTimeout(() => {
         if (target.parentNode) {
@@ -107,7 +107,7 @@ function createTarget() {
             handleMissedTarget();
         }
     }, gameConfig.targetLifespan);
-    
+
     // Keep track of target
     gameState.currentTargets.push({
         element: target,
@@ -119,28 +119,28 @@ function createTarget() {
 function handleTargetClick(target) {
     // Remove target from DOM
     target.parentNode.removeChild(target);
-    
+
     // Find the target in our array to clear its timeout
     const targetIndex = gameState.currentTargets.findIndex(t => t.element === target);
     if (targetIndex !== -1) {
         clearTimeout(gameState.currentTargets[targetIndex].timeout);
         gameState.currentTargets.splice(targetIndex, 1);
     }
-    
+
     // Get point value from data attribute
     const points = parseInt(target.dataset.points);
-    
+
     // Update score
     gameState.score += points;
     gameState.targetsClicked++;
-    
+
     // Update display
     scoreElement.textContent = gameState.score;
     targetsElement.textContent = gameState.targetsClicked;
-    
+
     // Create particle effect at target position
     createParticleEffect(target);
-    
+
     // Level up after certain number of targets
     if (gameState.targetsClicked % 10 === 0) {
         levelUp();
@@ -151,11 +151,11 @@ function handleTargetClick(target) {
 function handleMissedTarget() {
     // Only penalize if game is active
     if (!gameState.gameActive) return;
-    
+
     // Reduce lives
     gameState.lives--;
     livesElement.textContent = gameState.lives;
-    
+
     // Flash the lives counter in red
     gsap.to(livesElement, {
         color: 'red',
@@ -166,7 +166,7 @@ function handleMissedTarget() {
             livesElement.style.color = 'var(--neon-pink)';
         }
     });
-    
+
     // Game over when lives reach 0
     if (gameState.lives <= 0) {
         endGame();
@@ -177,30 +177,30 @@ function handleMissedTarget() {
 function createParticleEffect(target) {
     const rect = target.getBoundingClientRect();
     const gameRect = gameContainer.getBoundingClientRect();
-    
+
     // Position relative to game container
-    const x = rect.left + rect.width/2 - gameRect.left;
-    const y = rect.top + rect.height/2 - gameRect.top;
-    
+    const x = rect.left + rect.width / 2 - gameRect.left;
+    const y = rect.top + rect.height / 2 - gameRect.top;
+
     // Create particles
     for (let i = 0; i < 12; i++) {
         const particle = document.createElement('div');
         particle.className = 'particle';
         particle.style.left = `${x}px`;
         particle.style.top = `${y}px`;
-        
+
         // Random color
         const colors = ['var(--neon-pink)', 'var(--neon-green)', 'var(--neon-blue)'];
         particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-        
+
         gameContainer.appendChild(particle);
-        
+
         // Random direction
         const angle = Math.random() * Math.PI * 2;
         const distance = 20 + Math.random() * 60;
         const destinationX = Math.cos(angle) * distance;
         const destinationY = Math.sin(angle) * distance;
-        
+
         // Animate with GSAP
         gsap.to(particle, {
             x: destinationX,
@@ -215,7 +215,7 @@ function createParticleEffect(target) {
             }
         });
     }
-    
+
     // Show points gained
     const pointsText = document.createElement('div');
     pointsText.textContent = `+${target.dataset.points}`;
@@ -228,9 +228,9 @@ function createParticleEffect(target) {
     pointsText.style.textShadow = '0 0 5px var(--neon-green)';
     pointsText.style.zIndex = '3';
     pointsText.style.pointerEvents = 'none';
-    
+
     gameContainer.appendChild(pointsText);
-    
+
     gsap.to(pointsText, {
         y: '-30',
         opacity: 0,
@@ -248,15 +248,15 @@ function createParticleEffect(target) {
 function levelUp() {
     gameState.level++;
     levelElement.textContent = gameState.level;
-    
+
     // Speed up the game
     gameConfig.targetLifespan *= gameConfig.speedIncrease;
     gameConfig.spawnRate *= gameConfig.speedIncrease;
-    
+
     // Show level notification
     levelNotification.textContent = `LEVEL ${gameState.level}`;
     levelNotification.style.opacity = '1';
-    
+
     gsap.to(levelNotification, {
         opacity: 0,
         duration: 2,
@@ -268,15 +268,15 @@ function levelUp() {
 // Create digital code lines effect
 function createCodeLines() {
     if (!gameState.gameActive) return;
-    
+
     const gameWidth = gameContainer.offsetWidth;
     const gameHeight = gameContainer.offsetHeight;
-    
+
     // Create horizontal or vertical line randomly
     const isHorizontal = Math.random() > 0.5;
     const codeLine = document.createElement('div');
     codeLine.className = 'code-line';
-    
+
     if (isHorizontal) {
         codeLine.style.width = `${gameWidth}px`;
         codeLine.style.height = '2px';
@@ -288,9 +288,9 @@ function createCodeLines() {
         codeLine.style.top = '0';
         codeLine.style.left = `${Math.random() * gameWidth}px`;
     }
-    
+
     gameContainer.appendChild(codeLine);
-    
+
     // Animate line
     gsap.to(codeLine, {
         opacity: 0,
@@ -313,25 +313,25 @@ function startGame() {
     gameState.lives = gameConfig.lives;
     gameState.gameActive = true;
     gameState.currentTargets = [];
-    
+
     // Clear any existing targets
     document.querySelectorAll('.target').forEach(target => target.remove());
     document.querySelectorAll('.particle').forEach(particle => particle.remove());
     document.querySelectorAll('.code-line').forEach(line => line.remove());
-    
+
     // Update displays
     scoreElement.textContent = gameState.score;
     levelElement.textContent = gameState.level;
     targetsElement.textContent = gameState.targetsClicked;
     livesElement.textContent = gameState.lives;
-    
+
     // Hide start and game over screens
     startScreen.style.display = 'none';
     gameOverScreen.classList.remove('visible');
-    
+
     // Start spawning targets
     gameState.spawnInterval = setInterval(createTarget, gameConfig.spawnRate);
-    
+
     // Start code line effect
     gameState.codeLineInterval = setInterval(createCodeLines, 2000);
 }
@@ -340,22 +340,22 @@ function startGame() {
 function endGame() {
     // Set game as inactive
     gameState.gameActive = false;
-    
+
     // Clear intervals
     clearInterval(gameState.spawnInterval);
     clearInterval(gameState.codeLineInterval);
-    
+
     // Clear timeouts for existing targets
     gameState.currentTargets.forEach(target => {
         clearTimeout(target.timeout);
     });
-    
+
     // Show game over screen
     gameOverScreen.classList.add('visible');
-    
+
     // Update final score
     finalScoreElement.textContent = gameState.score;
-    
+
     // Save score to leaderboard
     saveScore();
 }
@@ -363,10 +363,10 @@ function endGame() {
 // Leaderboard functionality
 function saveScore() {
     let leaderboard = JSON.parse(localStorage.getItem('hackAttackLeaderboard')) || [];
-    
-    // Generate a player name (could be replaced with input)
-    const playerName = `Hacker_${Math.floor(Math.random() * 1000)}`;
-    
+
+    // Get player name from session or use fallback
+    const playerName = sessionStorage.getItem('visitorName') || `Hacker_${Math.floor(Math.random() * 1000)}`;
+
     // Add new score
     leaderboard.push({
         name: playerName,
@@ -376,23 +376,38 @@ function saveScore() {
         difficulty: gameState.difficultySelected,
         date: new Date().toISOString()
     });
-    
+
     // Sort and limit to top 10
     leaderboard.sort((a, b) => b.score - a.score);
     leaderboard = leaderboard.slice(0, 10);
-    
+
     // Save back to localStorage
     localStorage.setItem('hackAttackLeaderboard', JSON.stringify(leaderboard));
-    
+
     // Update leaderboard display
     updateLeaderboard(playerName);
+
+    // If connected to Supabase, also save score to the database
+    if (typeof supabase !== 'undefined') {
+        try {
+            supabase.from('game_scores').insert([{
+                player_name: playerName,
+                score: gameState.score,
+                level: gameState.level,
+                targets: gameState.targetsClicked,
+                difficulty: gameState.difficultySelected
+            }]);
+        } catch (err) {
+            console.error('Error saving score to Supabase:', err);
+        }
+    }
 }
 
 // Update leaderboard display
 function updateLeaderboard(currentPlayerName = null) {
     const leaderboard = JSON.parse(localStorage.getItem('hackAttackLeaderboard')) || [];
     leaderboardEntries.innerHTML = '';
-    
+
     if (leaderboard.length === 0) {
         const emptyEntry = document.createElement('div');
         emptyEntry.className = 'leaderboard-entry';
@@ -400,27 +415,27 @@ function updateLeaderboard(currentPlayerName = null) {
         leaderboardEntries.appendChild(emptyEntry);
         return;
     }
-    
+
     leaderboard.forEach((entry, index) => {
         const entryElement = document.createElement('div');
         entryElement.className = 'leaderboard-entry';
         if (entry.name === currentPlayerName) {
             entryElement.classList.add('highlight');
         }
-        
+
         const rankElement = document.createElement('div');
         rankElement.textContent = `#${index + 1}`;
-        
+
         const nameElement = document.createElement('div');
         nameElement.textContent = entry.name;
-        
+
         const scoreElement = document.createElement('div');
         scoreElement.textContent = `${entry.score} pts (Lvl ${entry.level})`;
-        
+
         entryElement.appendChild(rankElement);
         entryElement.appendChild(nameElement);
         entryElement.appendChild(scoreElement);
-        
+
         leaderboardEntries.appendChild(entryElement);
     });
 }
@@ -430,39 +445,39 @@ function clearLeaderboard() {
     // Create confirmation dialog
     const dialog = document.createElement('div');
     dialog.className = 'confirm-dialog';
-    
+
     const message = document.createElement('p');
     message.textContent = 'Are you sure you want to clear all leaderboard data?';
-    
+
     const buttonContainer = document.createElement('div');
     buttonContainer.className = 'confirm-dialog-buttons';
-    
+
     const confirmButton = document.createElement('button');
     confirmButton.className = 'button';
     confirmButton.textContent = 'Yes, Clear';
     confirmButton.style.backgroundColor = 'var(--neon-pink)';
-    
+
     const cancelButton = document.createElement('button');
     cancelButton.className = 'button';
     cancelButton.textContent = 'Cancel';
-    
+
     buttonContainer.appendChild(confirmButton);
     buttonContainer.appendChild(cancelButton);
-    
+
     dialog.appendChild(message);
     dialog.appendChild(buttonContainer);
-    
+
     document.body.appendChild(dialog);
-    
+
     // Button event handlers
-    confirmButton.addEventListener('click', function() {
+    confirmButton.addEventListener('click', function () {
         // Clear leaderboard data
         localStorage.removeItem('hackAttackLeaderboard');
         updateLeaderboard();
         document.body.removeChild(dialog);
     });
-    
-    cancelButton.addEventListener('click', function() {
+
+    cancelButton.addEventListener('click', function () {
         document.body.removeChild(dialog);
     });
 }
@@ -471,7 +486,7 @@ function clearLeaderboard() {
 function setDifficulty(difficulty) {
     gameState.difficultySelected = difficulty;
     gameConfig = { ...DIFFICULTY_SETTINGS[difficulty] };
-    
+
     // Update UI
     difficultyButtons.forEach(btn => {
         btn.classList.remove('selected');
@@ -522,15 +537,15 @@ window.addEventListener('resize', () => {
         const gameHeight = gameContainer.offsetHeight;
         const targetSize = window.innerWidth <= 480 ? 50 : window.innerWidth <= 768 ? 60 : 70;
         const padding = 10;
-        
+
         // Keep targets within bounds
         let left = parseInt(target.style.left);
         let top = parseInt(target.style.top);
-        
+
         if (left > gameWidth - targetSize - padding) {
             target.style.left = `${gameWidth - targetSize - padding}px`;
         }
-        
+
         if (top > gameHeight - targetSize - padding) {
             target.style.top = `${gameHeight - targetSize - padding}px`;
         }
