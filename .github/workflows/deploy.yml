@@ -16,16 +16,21 @@ jobs:
 
       - name: Update configuration in HTML files
         run: |
-          # Find all HTML files and replace placeholders
-          find . -name "*.html" -type f -exec sed -i "s|SUPABASE_URL_PLACEHOLDER|${{ secrets.SUPABASE_URL }}|g" {} \;
-          find . -name "*.html" -type f -exec sed -i "s|SUPABASE_KEY_PLACEHOLDER|${{ secrets.SUPABASE_KEY }}|g" {} \;
-          
-          # Verify replacement worked (will print files with remaining placeholders)
-          echo "Checking for remaining placeholders:"
-          grep -r "SUPABASE_[A-Z_]*PLACEHOLDER" --include="*.html" . || echo "No placeholders found - good!"
+            # Find all HTML files and replace placeholders
+            find . -name "*.html" -type f -exec sed -i "s|SUPABASE_URL_PLACEHOLDER|${{ secrets.SUPABASE_URL }}|g" {} \;
+            find . -name "*.html" -type f -exec sed -i "s|SUPABASE_KEY_PLACEHOLDER|${{ secrets.SUPABASE_KEY }}|g" {} \;
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@4.1.5
         with:
           branch: gh-pages
           folder: .
+          
+      - name: Debug - Show environment variables (redacted)
+        run: |
+          echo "SUPABASE_URL length: ${#SUPABASE_URL}"
+          echo "SUPABASE_URL starts with: ${SUPABASE_URL:0:5}..."
+          echo "SUPABASE_KEY length: ${#SUPABASE_KEY}"
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
