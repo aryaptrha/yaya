@@ -29,3 +29,11 @@ jobs:
         with:
           branch: gh-pages
           folder: .
+      - name: Debug - Show environment variables (redacted)
+        run: |
+          echo "SUPABASE_URL length: ${#SUPABASE_URL}"
+          echo "SUPABASE_URL starts with: ${SUPABASE_URL:0:5}..."
+          echo "SUPABASE_KEY length: ${#SUPABASE_KEY}"
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
