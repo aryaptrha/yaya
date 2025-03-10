@@ -1,7 +1,18 @@
+// script/supabase-config.js
+
+// Check if config exists, otherwise provide fallback
+if (!window.appConfig) {
+  console.warn("Config not found, using development fallback");
+  window.appConfig = {
+    supabaseUrl: 'https://nrgxggpmipbvecjshvxf.supabase.co',
+    supabaseKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' // Add a short prefix of your key for development
+  };
+}
+
 // Initialize Supabase client
 const supabaseUrl = window.appConfig.supabaseUrl;
 const supabaseKey = window.appConfig.supabaseKey;
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
+const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 // Function to check if user is logged in via session
 async function checkVisitorSession() {

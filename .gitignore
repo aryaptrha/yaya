@@ -1,3 +1,10 @@
-# Ignore environment variables
-.env
+# Don't commit the actual config with credentials
 config.js
+
+# But do commit the placeholder
+# deploy-config.js should be committed
+
+# Other common files to ignore
+.DS_Store
+node_modules/
+.env
