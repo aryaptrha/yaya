@@ -12,12 +12,14 @@
     href="https://fonts.googleapis.com/css2?family=Barrio&family=League+Gothic&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Sigmar&display=swap"
     rel="stylesheet">
 
-
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
   <style>
     body {
       font-family: 'Open Sans', sans-serif;
+      overflow-x: hidden;
     }
 
     .name-hover {
@@ -33,6 +35,8 @@
 
     .neon-text {
       text-shadow: 0 0 5px #00ff88, 0 0 10px #00ff88, 0 0 20px #00ff88, 0 0 40px #00ff88;
+      color: #fff;
+      font-weight: 700;
     }
 
     .neon-border {
@@ -44,14 +48,17 @@
     }
 
     #threejs-background {
-      position: absolute;
+      position: fixed;
       top: 0;
       left: 0;
-      z-index: 9;
+      z-index: 0;
     }
 
     #name-animation {
       font-family: 'Barrio', cursive;
+      opacity: 0;
+      text-transform: uppercase;
+      letter-spacing: 2px;
     }
 
     .fade-out {
@@ -136,6 +143,83 @@
       }
     }
 
+    /* New styles for scrollable content */
+    .section {
+      min-height: 100vh;
+      position: relative;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .section-content {
+      z-index: 2;
+      max-width: 1000px;
+      padding: 40px;
+    }
+
+    #hero-section {
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    #branding-section {
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(10px);
+    }
+
+    .skill-card {
+      background: rgba(0, 20, 20, 0.3);
+      border: 1px solid rgba(0, 255, 136, 0.2);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .skill-card:hover {
+      box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+      transform: translateY(0) scale(1.02);
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      animation: bounce 2s infinite;
+      opacity: 0;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0) translateX(-50%);
+      }
+      40% {
+        transform: translateY(-20px) translateX(-50%);
+      }
+      60% {
+        transform: translateY(-10px) translateX(-50%);
+      }
+    }
+
+    .progress-bar {
+      height: 2px;
+      background-color: #00ff88;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 100;
+      width: 0%;
+    }
+
+    .section-content {
+      background-color: transparent;
+    }
+
     @media (max-width: 768px) {
       #name-animation {
         font-size: 3.5rem;
@@ -148,39 +232,109 @@
       nav a {
         font-size: 0.875rem;
       }
+
+      .section-content {
+        padding: 20px;
+      }
+
+      #branding-section {
+        padding-bottom: 70px;
+      }
+
+      .skill-card {
+        margin-bottom: 30px;
+      }
+
+      .section-content {
+        padding: 20px;
+      }
     }
   </style>
 </head>
 
-<body class="bg-black text-white overflow-hidden">
+<body class="bg-black text-white">
+  <div class="progress-bar"></div>
   <canvas id="threejs-background"></canvas>
-  <div class="relative h-screen flex items-center justify-center">
+  
+  <!-- Hero Section -->
+  <section id="hero-section" class="section">
     <div class="relative z-10 text-center">
-      <h1 id="name-animation" class="text-6xl md:text-8xl font-bold neon-text"></h1>
-      <p class="text-xl md:text-2xl mt-4 neon-text opacity-0 tagline">Aryaputra</p>
-      <nav class="mt-8 space-x-6">
-        <a href="pages/about.html" class="text-lg neon-link hover:text-neon-500 transition duration-300">About</a>
-        <a href="pages/sigma-traits.html" class="text-lg neon-link hover:text-neon-500 transition duration-300">Sigma</a>
-        <a href="pages/hack-attack.html" class="text-lg neon-link hover:text-neon-500 transition duration-300">🎮</a>
+      <h1 id="name-animation" class="text-6xl md:text-8xl neon-text"></h1>
+      <nav class="mt-8 space-x-10 opacity-0" id="nav-links">
+        <a href="pages/about.html" class="text-xl neon-text hover:text-neon-500 transition duration-300">About</a>
+        <a href="pages/sigma-traits.html" class="text-xl neon-text hover:text-neon-500 transition duration-300">Sigma</a>
+        <a href="pages/hack-attack.html" class="text-xl neon-text hover:text-neon-500 transition duration-300">🎮</a>
       </nav>
+      <div class="scroll-indicator" id="scroll-indicator">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#00ff88" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 5v14"></path>
+          <path d="M19 12l-7 7-7-7"></path>
+        </svg>
+      </div>
     </div>
-  </div>
-  <footer class="absolute bottom-0 w-full py-4 text-white text-center">
+  </section>
+
+  <!-- Personal Branding Section -->
+  <section id="branding-section" class="section">
+    <div class="section-content">
+      <h2 class="text-4xl font-bold mb-8 neon-text opacity-0" id="branding-title">My Skills & Expertise</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="skill-card">
+          <h3 class="text-2xl font-bold mb-2">Web Development</h3>
+          <p>Specializing in modern front-end frameworks and responsive design with a focus on creating immersive user experiences.</p>
+        </div>
+        
+        <div class="skill-card">
+          <h3 class="text-2xl font-bold mb-2">UI/UX Design</h3>
+          <p>Creating intuitive interfaces with stunning visuals that balance aesthetics with functionality.</p>
+        </div>
+        
+        <div class="skill-card">
+          <h3 class="text-2xl font-bold mb-2">3D Visualization</h3>
+          <p>Bringing ideas to life with Three.js and WebGL to create immersive 3D experiences on the web.</p>
+        </div>
+        
+        <div class="skill-card">
+          <h3 class="text-2xl font-bold mb-2">Creative Coding</h3>
+          <p>Blending art and technology to create interactive digital experiences and dynamic visual elements.</p>
+        </div>
+      </div>
+      
+      <div class="text-center opacity-0" id="contact-cta">
+        <h3 class="text-2xl mb-4 neon-text">Want to work together?</h3>
+        <a href="mailto:aryaputrahaidar@gmail.com" class="inline-block px-8 py-3 border border-green-400 rounded-full neon-border hover:bg-green-900 transition-all duration-300">
+          Get In Touch
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="py-4 text-white text-center">
     <div class="flex justify-center space-x-6">
       <a href="https://www.facebook.com/share/1BV4EYcvLy/" target="_blank" class="social-icon">
-        <img src="assets/logo/facebook.png" alt="Facebook" class="h-8 w-8">
+        <div class="h-10 w-10 rounded-full bg-blue-600 flex items-center justify-center hover:scale-110 transition-transform duration-300">
+          <img src="assets/logo/facebook.png" alt="Facebook" class="h-8 w-8">
+        </div>
       </a>
       <a href="https://www.x.com/tryphooo" target="_blank" class="social-icon">
-        <img src="assets/logo/twitter.png" alt="X" class="h-8 w-8">
+        <div class="h-10 w-10 rounded-full bg-black flex items-center justify-center hover:scale-110 transition-transform duration-300">
+          <img src="assets/logo/twitter.png" alt="X" class="h-6 w-6">
+        </div>
       </a>
       <a href="https://www.instagram.com/aryaptrha" target="_blank" class="social-icon">
-        <img src="assets/logo/instagram.png" alt="Instagram" class="h-8 w-8">
+        <div class="h-10 w-10 rounded-full bg-gradient-to-tr from-yellow-500 via-pink-600 to-purple-700 flex items-center justify-center hover:scale-110 transition-transform duration-300">
+          <img src="assets/logo/instagram.png" alt="Instagram" class="h-6 w-6">
+        </div>
       </a>
       <a href="https://www.linkedin.com/in/aryaputra-haidar-akbar-b122811b7/" target="_blank" class="social-icon">
-        <img src="assets/logo/linkedin.png" alt="LinkedIn" class="h-8 w-8">
+        <div class="h-10 w-10 rounded-full bg-blue-700 flex items-center justify-center hover:scale-110 transition-transform duration-300">
+          <img src="assets/logo/linkedin.png" alt="LinkedIn" class="h-6 w-6">
+        </div>
       </a>
     </div>
   </footer>
+  
   <script src="script/index.js"></script>
 </body>
 

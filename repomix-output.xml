@@ -1,0 +1,3913 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+<additional_info>
+
+</additional_info>
+
+</file_summary>
+
+<directory_structure>
+.github/
+  workflows/
+    deploy.yml
+pages/
+  about.html
+  admin.html
+  hack-attack.html
+  sigma-traits.html
+script/
+  about.js
+  hack-attack.js
+  index.js
+  sigma-traits.js
+  supabase-admin-connector.js
+  supabase-config.js
+  supabase-config.min.js
+styles/
+  about.css
+  admin.css
+  hack-attack.css
+  sigma-traits.css
+  visitor-modal.css
+.gitignore
+config.template.js
+deploy-config.js
+index.html
+package.json
+style.css
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="script/about.js">
+document.getElementById('themeToggleBtn').addEventListener('click', function () {
+    document.body.classList.toggle('dark-mode');
+    if (document.body.classList.contains('dark-mode')) {
+        this.textContent = '🌞';
+    } else {
+        this.textContent = '🌜';
+    }
+});
+</file>
+
+<file path="script/index.js">
+document.addEventListener('DOMContentLoaded', () => {
+  document.body.classList.add('fade-in');
+  document.body.classList.remove('fade-out');
+
+  const name = "Aryaputra";
+  const nameElement = document.getElementById('name-animation');
+
+  // Split name into characters with hover effect
+  const characters = name.split('').map(char => {
+    const span = document.createElement('span');
+    span.textContent = char;
+    span.classList.add('name-hover');
+    return span;
+  });
+
+  // Append characters to name element
+  characters.forEach(char => nameElement.appendChild(char));
+
+  // Scene setup code from previous artifact
+  const scene = new THREE.Scene();
+  const canvas = document.getElementById('threejs-background');
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(window.devicePixelRatio);
+
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+  camera.position.z = 5;
+
+  const geometries = [];
+  const colors = [0x00ff88, 0x00ffff, 0xff00ff];
+
+  function createGeometry() {
+    const geometry = new THREE.IcosahedronGeometry(Math.random() * 0.5 + 0.2);
+    const material = new THREE.MeshBasicMaterial({
+      color: colors[Math.floor(Math.random() * colors.length)],
+      wireframe: true
+    });
+    const mesh = new THREE.Mesh(geometry, material);
+
+    mesh.position.set(
+      Math.random() * 10 - 5,
+      Math.random() * 10 - 5,
+      Math.random() * -10
+    );
+
+    mesh.rotationSpeed = {
+      x: Math.random() * 0.02,
+      y: Math.random() * 0.02,
+      z: Math.random() * 0.02
+    };
+
+    scene.add(mesh);
+    geometries.push(mesh);
+  }
+
+  for (let i = 0; i < 20; i++) {
+    createGeometry();
+  }
+
+  const mouse = new THREE.Vector2();
+  window.addEventListener('mousemove', (event) => {
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  });
+
+  function animate() {
+    requestAnimationFrame(animate);
+
+    geometries.forEach(geo => {
+      geo.rotation.x += geo.rotationSpeed.x;
+      geo.rotation.y += geo.rotationSpeed.y;
+      geo.rotation.z += geo.rotationSpeed.z;
+
+      geo.position.x += mouse.x * 0.01;
+      geo.position.y += mouse.y * 0.01;
+    });
+
+    renderer.render(scene, camera);
+  }
+
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+  animate();
+
+  // Add event listeners to navigation links
+  const navLinks = document.querySelectorAll('nav a');
+  navLinks.forEach(link => {
+    link.addEventListener('click', (event) => {
+      event.preventDefault();
+      document.body.classList.add('fade-out');
+      setTimeout(() => {
+        window.location.href = link.href;
+      }, 500);
+    });
+  });
+});
+</file>
+
+<file path="script/supabase-admin-connector.js">
+// Set up connection to Supabase
+document.addEventListener('DOMContentLoaded', function() {
+  console.log("Admin connector script running...");
+
+  // Direct connection with hardcoded credentials - more reliable
+  const supabaseUrl = window.appConfig.supabaseUrl;
+  const supabaseKey = window.appConfig.supabaseKey;
+  
+  // Use hardcoded credentials, which we know work
+  if (supabaseUrl.includes('nrgxggpmipbvecjshvxf')) {
+    console.log("Initializing Supabase with project credentials");
+    window.adminSupabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+    
+    // Load data
+    loadVisitors(window.adminSupabase);
+    loadGameScores(window.adminSupabase);
+  } else {
+    // Try to extract credentials from main config
+    console.log("Attempting to extract credentials from config file");
+    loadSupabaseConfig();
+  }
+});
+
+// Function to extract credentials from config file as fallback
+async function loadSupabaseConfig() {
+  try {
+    const response = await fetch('../script/supabase-config.js');
+    const text = await response.text();
+    
+    // Extract the URL and key using regex
+    const urlMatch = text.match(/supabaseUrl\s*=\s*['"]([^'"]+)['"]/);
+    const keyMatch = text.match(/supabaseKey\s*=\s*['"]([^'"]+)['"]/);
+    
+    if (urlMatch && urlMatch[1] && keyMatch && keyMatch[1]) {
+      // Initialize Supabase with the extracted credentials
+      const supabaseUrl = urlMatch[1];
+      const supabaseKey = keyMatch[1];
+      
+      console.log("Supabase credentials loaded from config");
+      
+      // Initialize Supabase client with these credentials
+      window.adminSupabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+      
+      // Call the data loading functions
+      loadVisitors(window.adminSupabase);
+      loadGameScores(window.adminSupabase);
+      
+      return true;
+    } else {
+      throw new Error("Could not extract Supabase credentials from config file");
+    }
+  } catch (error) {
+    console.error("Error loading Supabase config:", error);
+    
+    // Fallback - prompt for credentials
+    const url = prompt("Enter your Supabase URL", "https://nrgxggpmipbvecjshvxf.supabase.co");
+    const key = prompt("Enter your Supabase anon key", "");
+    
+    if (url && key) {
+      window.adminSupabase = window.supabase.createClient(url, key);
+      
+      loadVisitors(window.adminSupabase);
+      loadGameScores(window.adminSupabase);
+      
+      return true;
+    }
+    
+    return false;
+  }
+}
+</file>
+
+<file path="script/supabase-config.min.js">
+let supabaseUrl="https://nrgxggpmipbvecjshvxf.supabase.co",supabaseKey="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5yZ3hnZ3BtaXBidmVjanNodnhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDExNDUxMjksImV4cCI6MjA1NjcyMTEyOX0.rJeqNwDJ794OUIxR0Zlr0ZNvx0rysTeEPfc5OmcUGqM",supabase=window.supabase.createClient(supabaseUrl,supabaseKey);async function checkVisitorSession(){var e=sessionStorage.getItem("visitorName");return e||null}async function saveVisitorInfo(e,t){try{var i;if("magic word"===e.toLowerCase())(i=document.getElementById("visitor-modal"))&&i.parentNode&&i.parentNode.removeChild(i),window.location.href="../pages/admin.html";else{var s=(await supabase.from("visitors").insert([{name:e,page_visited:t,visit_time:(new Date).toISOString()}])).error;if(s)return console.error("Error saving visitor:",s),!1;sessionStorage.setItem("visitorName",e);var o=document.getElementById("visitor-modal");o&&o.parentNode&&o.parentNode.removeChild(o)}return!0}catch(e){return console.error("Error in saveVisitorInfo:",e),!1}}function showVisitorModal(i){var e=sessionStorage.getItem("visitorName");e?console.log(`Welcome back, ${e}!`):((e=document.getElementById("visitor-modal"))&&e.parentNode&&e.parentNode.removeChild(e),(e=document.createElement("div")).innerHTML=`
+    <div id="visitor-modal">
+      <div class="visitor-modal-content">
+        <h2>Welcome!</h2>
+        <p>Please enter your name to continue:</p>
+        <input type="text" id="visitor-name" placeholder="Your name" class="visitor-input">
+        <div class="visitor-button-container">
+          <button id="visitor-submit" class="visitor-button">Continue</button>
+        </div>
+      </div>
+    </div>
+  `,document.body.appendChild(e.firstElementChild),document.getElementById("visitor-submit").addEventListener("click",async function(){let e=document.getElementById("visitor-name");var t=e.value.trim();t?await saveVisitorInfo(t,i):(e.classList.add("error"),setTimeout(()=>e.classList.remove("error"),500))}),document.getElementById("visitor-name").addEventListener("keypress",async function(e){"Enter"===e.key&&((e=this.value.trim())?await saveVisitorInfo(e,i):(this.classList.add("error"),setTimeout(()=>this.classList.remove("error"),500)))}))}
+</file>
+
+<file path="styles/admin.css">
+:root {
+    --neon-pink: #ff2e97;
+    --neon-blue: #00f3ff;
+    --neon-purple: #b537f2;
+    --neon-yellow: #f9f002;
+    --neon-green: #00ff88;
+}
+
+body {
+    background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+    color: #ffffff;
+    font-family: 'Open Sans', sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+.cyber-grid {
+    background-image:
+        linear-gradient(rgba(255, 46, 151, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 46, 151, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.header h1 {
+    font-family: "Sigmar", serif;
+    font-size: 2.5rem;
+    color: var(--neon-green);
+    text-shadow: 0 0 10px var(--neon-green);
+    margin-bottom: 0.5rem;
+}
+
+.header p {
+    color: var(--neon-blue);
+    font-size: 1.2rem;
+}
+
+.back-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: none;
+    border: none;
+    color: var(--neon-blue);
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.back-btn:hover {
+    color: var(--neon-pink);
+    transform: translateX(-5px);
+}
+
+.tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.tab-btn {
+    padding: 0.75rem 1.5rem;
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid var(--neon-purple);
+    color: white;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tab-btn.active {
+    background: rgba(181, 55, 242, 0.2);
+    box-shadow: 0 0 10px var(--neon-purple);
+}
+
+.tab-btn:hover {
+    background: rgba(181, 55, 242, 0.1);
+    box-shadow: 0 0 10px var(--neon-purple);
+}
+
+.data-card {
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.data-card::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg,
+        var(--neon-pink),
+        var(--neon-blue),
+        var(--neon-purple),
+        var(--neon-yellow));
+    border-radius: 12px;
+    z-index: -1;
+    animation: borderGlow 3s linear infinite;
+}
+
+.table-container {
+    overflow-x: auto;
+    width: 100%;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    color: white;
+}
+
+th {
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.5);
+    text-align: left;
+    color: var(--neon-blue);
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+}
+
+td {
+    padding: 0.75rem 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+tr:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    font-size: 1.2rem;
+    color: var(--neon-yellow);
+}
+
+.loading::after {
+    content: '';
+    width: 1rem;
+    height: 1rem;
+    margin-left: 0.5rem;
+    border-radius: 50%;
+    border: 2px solid var(--neon-yellow);
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
+}
+
+.error {
+    color: var(--neon-pink);
+    padding: 1rem;
+    text-align: center;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 10px;
+    padding: 1.5rem;
+    text-align: center;
+    border: 2px solid var(--neon-blue);
+    box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
+}
+
+.stat-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--neon-green);
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    color: var(--neon-blue);
+    font-size: 1rem;
+}
+
+.chart-container {
+    width: 100%;
+    height: 300px;
+    margin-top: 1rem;
+}
+
+.no-data {
+    text-align: center;
+    padding: 2rem;
+    color: var(--neon-yellow);
+    font-style: italic;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+@keyframes borderGlow {
+    0% {
+        filter: hue-rotate(0deg);
+    }
+    100% {
+        filter: hue-rotate(360deg);
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2rem;
+    }
+    
+    .back-btn {
+        top: 10px;
+        left: 10px;
+    }
+    
+    .stats {
+        grid-template-columns: 1fr;
+    }
+}
+</file>
+
+<file path="styles/hack-attack.css">
+:root {
+    --neon-pink: #ff2e97;
+    --neon-blue: #00f3ff;
+    --neon-purple: #b537f2;
+    --neon-yellow: #f9f002;
+    --neon-green: #00ff88;
+    --dark-bg: #0a0a0a;
+    --card-bg: rgba(0, 0, 0, 0.7);
+    --border-glow: 0 0 15px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(135deg, var(--dark-bg), #1a1a1a);
+    color: #ffffff;
+    font-family: 'Open Sans', sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.cyber-grid {
+    background-image:
+        linear-gradient(rgba(255, 46, 151, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 46, 151, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 2;
+    width: 100%;
+}
+
+.title {
+    font-family: "Sigmar", serif;
+    font-size: 3.5rem;
+    margin-bottom: 10px;
+    color: var(--neon-green);
+    text-shadow: 0 0 20px rgba(0, 255, 136, 0.7);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.sub-title {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: var(--neon-blue);
+    text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+}
+
+.game-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+#game-container {
+    width: 100%;
+    max-width: 900px;
+    aspect-ratio: 16/9;
+    position: relative;
+    background: var(--card-bg);
+    border-radius: 15px;
+    overflow: hidden;
+    border: 2px solid var(--neon-blue);
+    box-shadow: var(--border-glow) var(--neon-blue);
+    transition: all 0.3s ease;
+}
+
+.target {
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: rgba(0, 255, 136, 0.2);
+    border: 3px solid var(--neon-green);
+    box-shadow: 0 0 15px var(--neon-green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    animation: pulse 1.5s infinite;
+    font-family: monospace;
+    font-size: 1.8rem;
+    color: var(--neon-green);
+    text-shadow: 0 0 5px var(--neon-green);
+    z-index: 2;
+    transition: transform 0.2s ease;
+}
+
+.target:hover {
+    transform: scale(1.1);
+}
+
+.target:active {
+    transform: scale(0.9);
+}
+
+.stats-bar {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 900px;
+    padding: 15px;
+    background: var(--card-bg);
+    border-radius: 15px;
+    border: 2px solid var(--neon-blue);
+    box-shadow: var(--border-glow) var(--neon-blue);
+}
+
+.stat {
+    text-align: center;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 0;
+}
+
+.stat-label {
+    font-size: 1rem;
+    color: var(--neon-blue);
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: white;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+    font-family: 'League Gothic', sans-serif;
+}
+
+#timer .stat-value {
+    color: var(--neon-yellow);
+}
+
+#score .stat-value {
+    color: var(--neon-green);
+}
+
+#lives .stat-value {
+    color: var(--neon-pink);
+}
+
+.game-over-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+    backdrop-filter: blur(4px);
+}
+
+.game-over-container.visible {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.game-over-text {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--neon-pink);
+    text-shadow: 0 0 15px var(--neon-pink);
+    text-align: center;
+    font-family: 'Sigmar', serif;
+    letter-spacing: 2px;
+}
+
+.final-score {
+    font-size: 1.5rem;
+    color: var(--neon-green);
+    margin-bottom: 40px;
+    text-align: center;
+    text-shadow: 0 0 10px var(--neon-green);
+}
+
+.button {
+    background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+    border: none;
+    color: white;
+    padding: 10px 25px; /* Reduced padding */
+    font-size: 1.1rem; /* Reduced font size */
+    font-weight: bold;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.5);
+    margin: 5px; /* Reduced margin */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    z-index: 10; /* Ensure button is clickable */
+    position: relative; /* Add relative position */
+}
+
+.button:hover {
+    box-shadow: 0 0 20px rgba(255, 46, 151, 0.7);
+    transform: translateY(-3px);
+    background: linear-gradient(45deg, var(--neon-purple), var(--neon-pink));
+}
+
+.button:active {
+    transform: translateY(0);
+}
+
+.back-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: none;
+    border: none;
+    color: var(--neon-blue);
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    z-index: 10;
+    text-decoration: none;
+}
+
+.back-btn:hover {
+    color: var(--neon-pink);
+    transform: translateX(-5px);
+}
+
+#start-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+    padding: 20px;
+}
+
+.start-title {
+    font-size: 3.5rem;
+    font-weight: bold;
+    color: var(--neon-green);
+    text-shadow: 0 0 15px var(--neon-green);
+    margin-bottom: -5px;
+    text-align: center;
+    font-family: 'Sigmar', serif;
+    letter-spacing: 2px;
+}
+
+.instructions {
+    text-align: left;
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: -10px;
+    line-height: 1.8;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 25px;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.instructions li {
+    margin-bottom: 15px;
+    list-style-type: none;
+    font-size: 1.2rem;
+}
+
+.instructions li::before {
+    content: ">";
+    color: var(--neon-pink);
+    margin-right: 12px;
+    font-weight: bold;
+}
+
+.difficulty-container {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.difficulty-btn {
+    padding: 12px 25px;
+    border: 2px solid var(--neon-blue);
+    background: transparent;
+    color: var(--neon-blue);
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.1rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    min-width: 120px;
+}
+
+.difficulty-btn:hover {
+    background-color: rgba(0, 243, 255, 0.2);
+    box-shadow: 0 0 15px var(--neon-blue);
+    transform: translateY(-2px);
+}
+
+.difficulty-btn.selected {
+    background-color: var(--neon-blue);
+    color: black;
+    box-shadow: 0 0 15px var(--neon-blue);
+}
+
+.leaderboard {
+    width: 100%;
+    max-width: 900px;
+    padding: 20px;
+    background: var(--card-bg);
+    border-radius: 15px;
+    margin-top: 20px;
+    border: 2px solid var(--neon-purple);
+    box-shadow: var(--border-glow) var(--neon-purple);
+}
+
+.leaderboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.leaderboard-title {
+    color: var(--neon-purple);
+    text-align: center;
+    font-size: 2rem;
+    text-shadow: 0 0 10px var(--neon-purple);
+    font-family: 'Sigmar', serif;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.clear-btn {
+    background: none;
+    border: 1px solid var(--neon-pink);
+    color: var(--neon-pink);
+    padding: 5px 15px;
+    font-size: 0.9rem;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    letter-spacing: 1px;
+}
+
+.clear-btn:hover {
+    background-color: var(--neon-pink);
+    color: black;
+    box-shadow: 0 0 10px var(--neon-pink);
+}
+
+.leaderboard-entries {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.leaderboard-entry {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.leaderboard-entry:hover {
+    background: rgba(181, 55, 242, 0.1);
+}
+
+.leaderboard-entry.highlight {
+    background: rgba(181, 55, 242, 0.2);
+    border-radius: 8px;
+    border: 1px solid var(--neon-purple);
+    box-shadow: 0 0 10px rgba(181, 55, 242, 0.3);
+}
+
+.confirm-dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid var(--neon-purple);
+    box-shadow: 0 0 20px var(--neon-purple);
+    padding: 30px;
+    border-radius: 15px;
+    z-index: 100;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    backdrop-filter: blur(5px);
+}
+
+.confirm-dialog p {
+    margin-bottom: 25px;
+    font-size: 1.2rem;
+    line-height: 1.6;
+}
+
+.confirm-dialog-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: 0 0 15px var(--neon-green);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0 0 25px var(--neon-green);
+        transform: scale(1.05);
+    }
+}
+
+/* Loading indicator */
+.loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease;
+}
+
+.loading-text {
+    font-size: 2.5rem;
+    color: var(--neon-green);
+    text-shadow: 0 0 15px var(--neon-green);
+    font-family: 'Sigmar', serif;
+    letter-spacing: 2px;
+    animation: glitch 1s infinite alternate;
+}
+
+@keyframes glitch {
+    0% {
+        text-shadow: 0.05em 0 0 var(--neon-pink), -0.05em -0.025em 0 var(--neon-blue),
+            -0.025em 0.05em 0 var(--neon-green);
+    }
+    14% {
+        text-shadow: 0.05em 0 0 var(--neon-pink), -0.05em -0.025em 0 var(--neon-blue),
+            -0.025em 0.05em 0 var(--neon-green);
+    }
+    15% {
+        text-shadow: -0.05em -0.025em 0 var(--neon-pink), 0.025em 0.025em 0 var(--neon-blue),
+            -0.05em -0.05em 0 var(--neon-green);
+    }
+    49% {
+        text-shadow: -0.05em -0.025em 0 var(--neon-pink), 0.025em 0.025em 0 var(--neon-blue),
+            -0.05em -0.05em 0 var(--neon-green);
+    }
+    50% {
+        text-shadow: 0.025em 0.05em 0 var(--neon-pink), 0.05em 0 0 var(--neon-blue),
+            0 -0.05em 0 var(--neon-green);
+    }
+    99% {
+        text-shadow: 0.025em 0.05em 0 var(--neon-pink), 0.05em 0 0 var(--neon-blue),
+            0 -0.05em 0 var(--neon-green);
+    }
+    100% {
+        text-shadow: -0.025em 0 0 var(--neon-pink), -0.025em -0.025em 0 var(--neon-blue),
+            -0.025em -0.05em 0 var(--neon-green);
+    }
+}
+
+/* Particle effects */
+.particle {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: var(--neon-pink);
+    pointer-events: none;
+    z-index: 3;
+}
+
+/* Level notification */
+.level-notification {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 3.5rem;
+    font-weight: bold;
+    color: var(--neon-green);
+    text-shadow: 0 0 20px var(--neon-green);
+    z-index: 5;
+    opacity: 0;
+    pointer-events: none;
+    font-family: 'Sigmar', serif;
+    letter-spacing: 3px;
+}
+
+/* Digital code lines effect */
+.code-line {
+    position: absolute;
+    height: 2px;
+    background: var(--neon-green);
+    opacity: 0.4;
+    pointer-events: none;
+    z-index: 1;
+    box-shadow: 0 0 8px var(--neon-green);
+}
+
+/* Fix for mobile aspect ratio */
+@media (max-width: 768px) {
+    #game-container {
+        aspect-ratio: 3/2; /* Less extreme aspect ratio for tablets */
+    }
+    
+    /* Adjust font sizes for better fit */
+    .start-title {
+        font-size: 2rem;
+        margin-bottom: 10px;
+    }
+    
+    .instructions li {
+        margin-bottom: 6px;
+        font-size: 0.9rem;
+    }
+    
+    .button {
+        padding: 8px 20px;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    #game-container {
+        aspect-ratio: 4/3; /* More compact for phones */
+        min-height: 350px; /* Ensure minimum height */
+    }
+    
+    /* Further reduce sizes for mobile */
+    .start-title {
+        font-size: 1.8rem;
+        margin-bottom: 8px;
+    }
+    
+    .instructions {
+        padding: 10px;
+        margin-bottom: 15px;
+    }
+    
+    .instructions li {
+        margin-bottom: 5px;
+        font-size: 0.85rem;
+    }
+    
+    .difficulty-btn {
+        padding: 6px 15px;
+        font-size: 0.9rem;
+        min-width: 80px;
+    }
+    
+    .button {
+        padding: 8px 18px;
+        font-size: 0.9rem;
+    }
+}
+</file>
+
+<file path="styles/sigma-traits.css">
+:root {
+    --neon-pink: #ff2e97;
+    --neon-blue: #00f3ff;
+    --neon-purple: #b537f2;
+    --neon-yellow: #f9f002;
+    --neon-green: #00ff88;
+}
+
+body {
+    background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+    color: #ffffff;
+    font-family: 'Open Sans', sans-serif;
+    transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.cyber-grid {
+    background-image:
+        linear-gradient(rgba(255, 46, 151, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 46, 151, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.container {
+    width: 90%;
+    max-width: 800px;
+    padding: 2rem;
+}
+
+.title {
+    font-family: "Sigmar", serif;
+    font-size: 3rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--neon-green);
+    text-shadow: 0 0 10px rgba(0, 255, 136, 0.7);
+    letter-spacing: 2px;
+}
+
+.sigma-card {
+    position: relative;
+    background: rgba(20, 20, 20, 0.8);
+    border-radius: 10px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    overflow: hidden;
+}
+
+.sigma-card::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg,
+        var(--neon-pink),
+        var(--neon-blue),
+        var(--neon-purple),
+        var(--neon-yellow));
+    border-radius: 10px;
+    z-index: -1;
+    animation: borderGlow 3s linear infinite;
+}
+
+.sigma-trait {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.sigma-description {
+    font-size: 1.2rem;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    transition-delay: 0.2s;
+}
+
+.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.generate-btn {
+    background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+    border: none;
+    color: white;
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.5);
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.generate-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, var(--neon-pink), var(--neon-yellow));
+    transition: all 0.3s ease;
+    z-index: -1;
+}
+
+.generate-btn:hover::before {
+    left: 0;
+}
+
+.generate-btn:hover {
+    box-shadow: 0 0 20px rgba(255, 46, 151, 0.7);
+    transform: translateY(-5px);
+}
+
+.back-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: none;
+    border: none;
+    color: var(--neon-blue);
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+    color: var(--neon-pink);
+    transform: translateX(-5px);
+}
+
+.emoji {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    animation: pulse 2s infinite;
+}
+
+@keyframes borderGlow {
+    0% {
+        filter: hue-rotate(0deg);
+    }
+    100% {
+        filter: hue-rotate(360deg);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+}
+
+/* Sparkle effect */
+.sparkle {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: white;
+    pointer-events: none;
+    z-index: 999;
+    animation: sparkle-fade 0.5s forwards;
+}
+
+@keyframes sparkle-fade {
+    0% {
+        opacity: 1;
+        transform: scale(0);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1);
+    }
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .title {
+        font-size: 2rem;
+    }
+    
+    .sigma-trait {
+        font-size: 1.5rem;
+    }
+    
+    .sigma-description {
+        font-size: 1rem;
+    }
+    
+    .generate-btn {
+        padding: 0.8rem 1.6rem;
+        font-size: 1rem;
+    }
+}
+</file>
+
+<file path="styles/visitor-modal.css">
+/* styles/visitor-modal.css */
+/* Complete reset for visitor modal to prevent style conflicts with other frameworks */
+
+:root {
+  --neon-pink: #ff2e97;
+  --neon-blue: #00f3ff;
+  --neon-purple: #b537f2;
+  --neon-yellow: #f9f002;
+  --neon-green: #00ff88;
+}
+
+/* Global modal reset - override any framework defaults */
+#visitor-modal,
+#visitor-modal * {
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  font-family: 'Open Sans', sans-serif !important;
+  line-height: normal !important;
+  border: none !important;
+  outline: none !important;
+  text-align: center !important;
+}
+
+#visitor-modal {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  background-color: rgba(0, 0, 0, 0.8) !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  z-index: 99999 !important;
+  backdrop-filter: blur(5px) !important;
+  overflow: hidden !important;
+}
+
+#visitor-modal .visitor-modal-content {
+  position: relative !important;
+  background: rgba(10, 10, 10, 0.9) !important;
+  padding: 2rem !important;
+  border-radius: 10px !important;
+  width: 90% !important;
+  max-width: 400px !important;
+  display: block !important;
+  transform: none !important;
+}
+
+#visitor-modal .visitor-modal-content::before {
+  content: '' !important;
+  position: absolute !important;
+  top: -2px !important;
+  left: -2px !important;
+  right: -2px !important;
+  bottom: -2px !important;
+  background: linear-gradient(45deg,
+      var(--neon-pink),
+      var(--neon-blue),
+      var(--neon-purple),
+      var(--neon-yellow)) !important;
+  border-radius: 12px !important;
+  z-index: -1 !important;
+  animation: borderGlow 3s linear infinite !important;
+}
+
+#visitor-modal h2 {
+  font-size: 2rem !important;
+  margin-bottom: 1rem !important;
+  color: var(--neon-green) !important;
+  text-shadow: 0 0 10px var(--neon-green) !important;
+  font-family: 'Sigmar', serif !important;
+  padding: 0.5rem 0 !important;
+}
+
+#visitor-modal p {
+  margin-bottom: 1.5rem !important;
+  font-size: 1.1rem !important;
+  color: white !important;
+  padding: 0.5rem 0 !important;
+}
+
+#visitor-modal .visitor-input {
+  width: 100% !important;
+  padding: 12px !important;
+  margin: 1rem 0 1.5rem 0 !important;
+  border: 2px solid var(--neon-blue) !important;
+  background: rgba(0, 0, 0, 0.5) !important;
+  border-radius: 5px !important;
+  color: white !important;
+  font-size: 1.1rem !important;
+  transition: all 0.3s ease !important;
+  display: block !important;
+}
+
+#visitor-modal .visitor-input:focus {
+  border-color: var(--neon-green) !important;
+  box-shadow: 0 0 10px var(--neon-green) !important;
+}
+
+#visitor-modal .visitor-input.error {
+  border-color: var(--neon-pink) !important;
+  box-shadow: 0 0 15px var(--neon-pink) !important;
+  animation: shake 0.5s !important;
+}
+
+#visitor-modal .visitor-button-container {
+  display: block !important;
+  margin: 0 auto !important;
+  text-align: center !important;
+  padding: 0.5rem 0 !important;
+}
+
+#visitor-modal .visitor-button {
+  background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple)) !important;
+  color: white !important;
+  padding: 12px 30px !important;
+  font-size: 1.1rem !important;
+  font-weight: bold !important;
+  border-radius: 50px !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 0 15px rgba(0, 243, 255, 0.5) !important;
+  display: inline-block !important;
+  margin: 0 auto !important;
+  border: none !important;
+  text-transform: none !important;
+  outline: none !important;
+}
+
+#visitor-modal .visitor-button:hover {
+  background: linear-gradient(45deg, var(--neon-purple), var(--neon-pink)) !important;
+  box-shadow: 0 0 20px rgba(255, 46, 151, 0.7) !important;
+  transform: translateY(-3px) !important;
+}
+
+@keyframes borderGlow {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    filter: hue-rotate(360deg);
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+/* Welcome text glow effect */
+#visitor-modal h2 {
+  color: #fff !important;
+  text-shadow: 0 0 10px var(--neon-green), 
+               0 0 20px var(--neon-green), 
+               0 0 30px var(--neon-green) !important;
+  animation: textGlow 2s infinite alternate !important;
+}
+
+@keyframes textGlow {
+  from {
+    text-shadow: 0 0 10px var(--neon-green), 
+                 0 0 20px var(--neon-green);
+  }
+  to {
+    text-shadow: 0 0 10px var(--neon-green), 
+                 0 0 20px var(--neon-green), 
+                 0 0 30px var(--neon-green), 
+                 0 0 40px var(--neon-green);
+  }
+}
+</file>
+
+<file path="config.template.js">
+window.appConfig = {
+    supabaseUrl: "YOUR_SUPABASE_URL",
+    supabaseKey: "YOUR_SUPABASE_KEY"
+  };
+</file>
+
+<file path="deploy-config.js">
+window.appConfig = {
+    supabaseUrl: "SUPABASE_URL_PLACEHOLDER",
+    supabaseKey: "SUPABASE_KEY_PLACEHOLDER"
+  };
+</file>
+
+<file path="package.json">
+{
+  "dependencies": {
+    "dotenv": "^16.4.7"
+  }
+}
+</file>
+
+<file path="style.css">
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Arial', sans-serif;
+    color: #fff;
+    overflow: hidden;
+  }
+  
+  .container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #000;
+  }
+  
+  #3d-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+  
+  .content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+  }
+  
+  .name {
+    font-size: 4rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  .tagline {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeIn 2s ease-in-out forwards;
+  }
+  
+  nav {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  nav a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+  }
+  
+  nav a:hover {
+    color: #00ff88;
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+  
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+    }
+  }
+</file>
+
+<file path="script/hack-attack.js">
+// Configuration based on difficulty
+const DIFFICULTY_SETTINGS = {
+    'easy': {
+        targetLifespan: 1500,
+        spawnRate: 1100,
+        lives: 5,
+        targetShrink: false,
+        speedIncrease: 0.9
+    },
+    'medium': {
+        targetLifespan: 1250,
+        spawnRate: 800,
+        lives: 3,
+        targetShrink: true,
+        speedIncrease: 0.85
+    },
+    'hard': {
+        targetLifespan: 1000,
+        spawnRate: 600,
+        lives: 2,
+        targetShrink: true,
+        speedIncrease: 0.8
+    }
+};
+
+// Game state
+let gameConfig = { ...DIFFICULTY_SETTINGS['easy'] };
+let gameState = {
+    score: 0,
+    level: 1,
+    targetsClicked: 0,
+    lives: gameConfig.lives,
+    gameActive: false,
+    difficultySelected: 'easy',
+    currentTargets: [],
+    spawnInterval: null,
+    codeLineInterval: null
+};
+
+// DOM elements
+const gameContainer = document.getElementById('game-container');
+const startScreen = document.getElementById('start-screen');
+const gameOverScreen = document.getElementById('game-over');
+const startButton = document.getElementById('start-button');
+const restartButton = document.getElementById('restart-button');
+const scoreElement = document.querySelector('#score .stat-value');
+const levelElement = document.querySelector('#level .stat-value');
+const targetsElement = document.querySelector('#targets .stat-value');
+const livesElement = document.querySelector('#lives .stat-value');
+const finalScoreElement = document.getElementById('final-score');
+const difficultyButtons = document.querySelectorAll('.difficulty-btn');
+const leaderboardEntries = document.getElementById('leaderboard-entries');
+const loadingScreen = document.querySelector('.loading');
+const levelNotification = document.getElementById('level-notification');
+const clearLeaderboardBtn = document.getElementById('clear-leaderboard');
+
+// Symbols for targets
+const SYMBOLS = ['$', '#', '&', '@', '%', '*', '^', '!', '+', '=', '<', '>', '?', '~', '|'];
+
+// Create a target
+function createTarget() {
+    if (!gameState.gameActive) return;
+
+    const target = document.createElement('div');
+    target.className = 'target';
+
+    // Random position inside the game container
+    const gameWidth = gameContainer.offsetWidth;
+    const gameHeight = gameContainer.offsetHeight;
+    const targetSize = window.innerWidth <= 480 ? 50 : window.innerWidth <= 768 ? 60 : 70;
+
+    // Ensure targets are fully inside the container with padding
+    const padding = 10;
+    const randomX = Math.random() * (gameWidth - targetSize - padding * 2) + padding;
+    const randomY = Math.random() * (gameHeight - targetSize - padding * 2) + padding;
+
+    target.style.left = `${randomX}px`;
+    target.style.top = `${randomY}px`;
+
+    // Random symbol
+    const symbol = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
+    target.textContent = symbol;
+
+    // Point value based on level (higher levels = more points)
+    const pointValue = (Math.floor(Math.random() * 3) + 1) * gameState.level * 10;
+    target.dataset.points = pointValue;
+
+    // Add click handler
+    target.addEventListener('click', () => handleTargetClick(target));
+
+    // Add to game container
+    gameContainer.appendChild(target);
+
+    // Shrinking effect for higher difficulties
+    if (gameConfig.targetShrink) {
+        gsap.to(target, {
+            scale: 0.5,
+            duration: gameConfig.targetLifespan / 1000,
+            ease: "linear"
+        });
+    }
+
+    // Remove target after lifespan
+    const timeout = setTimeout(() => {
+        if (target.parentNode) {
+            target.parentNode.removeChild(target);
+            handleMissedTarget();
+        }
+    }, gameConfig.targetLifespan);
+
+    // Keep track of target
+    gameState.currentTargets.push({
+        element: target,
+        timeout: timeout
+    });
+}
+
+// Handle target click
+function handleTargetClick(target) {
+    // Remove target from DOM
+    target.parentNode.removeChild(target);
+
+    // Find the target in our array to clear its timeout
+    const targetIndex = gameState.currentTargets.findIndex(t => t.element === target);
+    if (targetIndex !== -1) {
+        clearTimeout(gameState.currentTargets[targetIndex].timeout);
+        gameState.currentTargets.splice(targetIndex, 1);
+    }
+
+    // Get point value from data attribute
+    const points = parseInt(target.dataset.points);
+
+    // Update score
+    gameState.score += points;
+    gameState.targetsClicked++;
+
+    // Update display
+    scoreElement.textContent = gameState.score;
+    targetsElement.textContent = gameState.targetsClicked;
+
+    // Create particle effect at target position
+    createParticleEffect(target);
+
+    // Level up after certain number of targets
+    if (gameState.targetsClicked % 10 === 0) {
+        levelUp();
+    }
+}
+
+// Handle missed target
+function handleMissedTarget() {
+    // Only penalize if game is active
+    if (!gameState.gameActive) return;
+
+    // Reduce lives
+    gameState.lives--;
+    livesElement.textContent = gameState.lives;
+
+    // Flash the lives counter in red
+    gsap.to(livesElement, {
+        color: 'red',
+        duration: 0.2,
+        repeat: 3,
+        yoyo: true,
+        onComplete: () => {
+            livesElement.style.color = 'var(--neon-pink)';
+        }
+    });
+
+    // Game over when lives reach 0
+    if (gameState.lives <= 0) {
+        endGame();
+    }
+}
+
+// Create particle effect
+function createParticleEffect(target) {
+    const rect = target.getBoundingClientRect();
+    const gameRect = gameContainer.getBoundingClientRect();
+
+    // Position relative to game container
+    const x = rect.left + rect.width / 2 - gameRect.left;
+    const y = rect.top + rect.height / 2 - gameRect.top;
+
+    // Create particles
+    for (let i = 0; i < 12; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = `${x}px`;
+        particle.style.top = `${y}px`;
+
+        // Random color
+        const colors = ['var(--neon-pink)', 'var(--neon-green)', 'var(--neon-blue)'];
+        particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+
+        gameContainer.appendChild(particle);
+
+        // Random direction
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 20 + Math.random() * 60;
+        const destinationX = Math.cos(angle) * distance;
+        const destinationY = Math.sin(angle) * distance;
+
+        // Animate with GSAP
+        gsap.to(particle, {
+            x: destinationX,
+            y: destinationY,
+            opacity: 0,
+            duration: 0.6 + Math.random() * 0.4,
+            ease: "power2.out",
+            onComplete: () => {
+                if (particle.parentNode) {
+                    particle.parentNode.removeChild(particle);
+                }
+            }
+        });
+    }
+
+    // Show points gained
+    const pointsText = document.createElement('div');
+    pointsText.textContent = `+${target.dataset.points}`;
+    pointsText.style.position = 'absolute';
+    pointsText.style.left = `${x}px`;
+    pointsText.style.top = `${y}px`;
+    pointsText.style.color = 'var(--neon-green)';
+    pointsText.style.fontWeight = 'bold';
+    pointsText.style.fontSize = '1.2rem';
+    pointsText.style.textShadow = '0 0 5px var(--neon-green)';
+    pointsText.style.zIndex = '3';
+    pointsText.style.pointerEvents = 'none';
+
+    gameContainer.appendChild(pointsText);
+
+    gsap.to(pointsText, {
+        y: '-30',
+        opacity: 0,
+        duration: 1,
+        ease: "power1.out",
+        onComplete: () => {
+            if (pointsText.parentNode) {
+                pointsText.parentNode.removeChild(pointsText);
+            }
+        }
+    });
+}
+
+// Level up
+function levelUp() {
+    gameState.level++;
+    levelElement.textContent = gameState.level;
+
+    // Speed up the game
+    gameConfig.targetLifespan *= gameConfig.speedIncrease;
+    gameConfig.spawnRate *= gameConfig.speedIncrease;
+
+    // Show level notification
+    levelNotification.textContent = `LEVEL ${gameState.level}`;
+    levelNotification.style.opacity = '1';
+
+    gsap.to(levelNotification, {
+        opacity: 0,
+        duration: 2,
+        delay: 1,
+        ease: "power2.out"
+    });
+}
+
+// Create digital code lines effect
+function createCodeLines() {
+    if (!gameState.gameActive) return;
+
+    const gameWidth = gameContainer.offsetWidth;
+    const gameHeight = gameContainer.offsetHeight;
+
+    // Create horizontal or vertical line randomly
+    const isHorizontal = Math.random() > 0.5;
+    const codeLine = document.createElement('div');
+    codeLine.className = 'code-line';
+
+    if (isHorizontal) {
+        codeLine.style.width = `${gameWidth}px`;
+        codeLine.style.height = '2px';
+        codeLine.style.left = '0';
+        codeLine.style.top = `${Math.random() * gameHeight}px`;
+    } else {
+        codeLine.style.height = `${gameHeight}px`;
+        codeLine.style.width = '2px';
+        codeLine.style.top = '0';
+        codeLine.style.left = `${Math.random() * gameWidth}px`;
+    }
+
+    gameContainer.appendChild(codeLine);
+
+    // Animate line
+    gsap.to(codeLine, {
+        opacity: 0,
+        duration: 2,
+        delay: 1,
+        onComplete: () => {
+            if (codeLine.parentNode) {
+                codeLine.parentNode.removeChild(codeLine);
+            }
+        }
+    });
+}
+
+// Start the game
+function startGame() {
+    // Reset game state
+    gameState.score = 0;
+    gameState.level = 1;
+    gameState.targetsClicked = 0;
+    gameState.lives = gameConfig.lives;
+    gameState.gameActive = true;
+    gameState.currentTargets = [];
+
+    // Clear any existing targets
+    document.querySelectorAll('.target').forEach(target => target.remove());
+    document.querySelectorAll('.particle').forEach(particle => particle.remove());
+    document.querySelectorAll('.code-line').forEach(line => line.remove());
+
+    // Update displays
+    scoreElement.textContent = gameState.score;
+    levelElement.textContent = gameState.level;
+    targetsElement.textContent = gameState.targetsClicked;
+    livesElement.textContent = gameState.lives;
+
+    // Hide start and game over screens
+    startScreen.style.display = 'none';
+    gameOverScreen.classList.remove('visible');
+
+    // Start spawning targets
+    gameState.spawnInterval = setInterval(createTarget, gameConfig.spawnRate);
+
+    // Start code line effect
+    gameState.codeLineInterval = setInterval(createCodeLines, 2000);
+}
+
+// End game
+function endGame() {
+    // Set game as inactive
+    gameState.gameActive = false;
+
+    // Clear intervals
+    clearInterval(gameState.spawnInterval);
+    clearInterval(gameState.codeLineInterval);
+
+    // Clear timeouts for existing targets
+    gameState.currentTargets.forEach(target => {
+        clearTimeout(target.timeout);
+    });
+
+    // Show game over screen
+    gameOverScreen.classList.add('visible');
+
+    // Update final score
+    finalScoreElement.textContent = gameState.score;
+
+    // Save score to leaderboard
+    saveScore();
+}
+
+// Leaderboard functionality
+function saveScore() {
+    let leaderboard = JSON.parse(localStorage.getItem('hackAttackLeaderboard')) || [];
+
+    // Get player name from session or use fallback
+    const playerName = sessionStorage.getItem('visitorName') || `Hacker_${Math.floor(Math.random() * 1000)}`;
+
+    // Add new score
+    leaderboard.push({
+        name: playerName,
+        score: gameState.score,
+        level: gameState.level,
+        targets: gameState.targetsClicked,
+        difficulty: gameState.difficultySelected,
+        date: new Date().toISOString()
+    });
+
+    // Sort and limit to top 10
+    leaderboard.sort((a, b) => b.score - a.score);
+    leaderboard = leaderboard.slice(0, 10);
+
+    // Save back to localStorage
+    localStorage.setItem('hackAttackLeaderboard', JSON.stringify(leaderboard));
+
+    // Update leaderboard display
+    updateLeaderboard(playerName);
+
+    // If connected to Supabase, also save score to the database
+    if (typeof supabase !== 'undefined') {
+        try {
+            supabase.from('game_scores').insert([{
+                player_name: playerName,
+                score: gameState.score,
+                level: gameState.level,
+                targets: gameState.targetsClicked,
+                difficulty: gameState.difficultySelected
+            }]);
+        } catch (err) {
+            console.error('Error saving score to Supabase:', err);
+        }
+    }
+}
+
+// Update leaderboard display
+function updateLeaderboard(currentPlayerName = null) {
+    const leaderboard = JSON.parse(localStorage.getItem('hackAttackLeaderboard')) || [];
+    leaderboardEntries.innerHTML = '';
+
+    if (leaderboard.length === 0) {
+        const emptyEntry = document.createElement('div');
+        emptyEntry.className = 'leaderboard-entry';
+        emptyEntry.textContent = 'No scores yet. Be the first!';
+        leaderboardEntries.appendChild(emptyEntry);
+        return;
+    }
+
+    leaderboard.forEach((entry, index) => {
+        const entryElement = document.createElement('div');
+        entryElement.className = 'leaderboard-entry';
+        if (entry.name === currentPlayerName) {
+            entryElement.classList.add('highlight');
+        }
+
+        const rankElement = document.createElement('div');
+        rankElement.textContent = `#${index + 1}`;
+
+        const nameElement = document.createElement('div');
+        nameElement.textContent = entry.name;
+
+        const scoreElement = document.createElement('div');
+        scoreElement.textContent = `${entry.score} pts (Lvl ${entry.level})`;
+
+        entryElement.appendChild(rankElement);
+        entryElement.appendChild(nameElement);
+        entryElement.appendChild(scoreElement);
+
+        leaderboardEntries.appendChild(entryElement);
+    });
+}
+
+// Clear leaderboard functionality
+function clearLeaderboard() {
+    // Create confirmation dialog
+    const dialog = document.createElement('div');
+    dialog.className = 'confirm-dialog';
+
+    const message = document.createElement('p');
+    message.textContent = 'Are you sure you want to clear all leaderboard data?';
+
+    const buttonContainer = document.createElement('div');
+    buttonContainer.className = 'confirm-dialog-buttons';
+
+    const confirmButton = document.createElement('button');
+    confirmButton.className = 'button';
+    confirmButton.textContent = 'Yes, Clear';
+    confirmButton.style.backgroundColor = 'var(--neon-pink)';
+
+    const cancelButton = document.createElement('button');
+    cancelButton.className = 'button';
+    cancelButton.textContent = 'Cancel';
+
+    buttonContainer.appendChild(confirmButton);
+    buttonContainer.appendChild(cancelButton);
+
+    dialog.appendChild(message);
+    dialog.appendChild(buttonContainer);
+
+    document.body.appendChild(dialog);
+
+    // Button event handlers
+    confirmButton.addEventListener('click', function () {
+        // Clear leaderboard data
+        localStorage.removeItem('hackAttackLeaderboard');
+        updateLeaderboard();
+        document.body.removeChild(dialog);
+    });
+
+    cancelButton.addEventListener('click', function () {
+        document.body.removeChild(dialog);
+    });
+}
+
+// Set game difficulty
+function setDifficulty(difficulty) {
+    gameState.difficultySelected = difficulty;
+    gameConfig = { ...DIFFICULTY_SETTINGS[difficulty] };
+
+    // Update UI
+    difficultyButtons.forEach(btn => {
+        btn.classList.remove('selected');
+        if (btn.dataset.difficulty === difficulty) {
+            btn.classList.add('selected');
+        }
+    });
+}
+
+// Event listeners
+startButton.addEventListener('click', startGame);
+restartButton.addEventListener('click', () => {
+    gameOverScreen.classList.remove('visible');
+    startScreen.style.display = 'flex';
+});
+
+difficultyButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+        setDifficulty(btn.dataset.difficulty);
+    });
+});
+
+clearLeaderboardBtn.addEventListener('click', clearLeaderboard);
+
+// Pause game if window loses focus
+window.addEventListener('blur', () => {
+    if (gameState.gameActive) {
+        gameState.gameActive = false;
+        clearInterval(gameState.spawnInterval);
+        clearInterval(gameState.codeLineInterval);
+    }
+});
+
+// Resume game when window regains focus
+window.addEventListener('focus', () => {
+    if (!gameState.gameActive && !gameOverScreen.classList.contains('visible') && startScreen.style.display === 'none') {
+        gameState.gameActive = true;
+        gameState.spawnInterval = setInterval(createTarget, gameConfig.spawnRate);
+        gameState.codeLineInterval = setInterval(createCodeLines, 2000);
+    }
+});
+
+// Handle window resize
+window.addEventListener('resize', () => {
+    // Reposition any active targets
+    document.querySelectorAll('.target').forEach(target => {
+        const gameWidth = gameContainer.offsetWidth;
+        const gameHeight = gameContainer.offsetHeight;
+        const targetSize = window.innerWidth <= 480 ? 50 : window.innerWidth <= 768 ? 60 : 70;
+        const padding = 10;
+
+        // Keep targets within bounds
+        let left = parseInt(target.style.left);
+        let top = parseInt(target.style.top);
+
+        if (left > gameWidth - targetSize - padding) {
+            target.style.left = `${gameWidth - targetSize - padding}px`;
+        }
+
+        if (top > gameHeight - targetSize - padding) {
+            target.style.top = `${gameHeight - targetSize - padding}px`;
+        }
+    });
+});
+
+// Update leaderboard on load
+updateLeaderboard();
+
+// Hide loading screen after a delay
+setTimeout(() => {
+    loadingScreen.style.opacity = 0;
+    setTimeout(() => {
+        loadingScreen.style.display = 'none';
+    }, 500);
+}, 1500);
+</file>
+
+<file path="script/sigma-traits.js">
+const sigmaTraits = [
+    {
+        trait: "Stares at walls instead of people",
+        description: "Walls don't judge. Walls understand the Sigma grindset.",
+        emoji: "🧱"
+    },
+    {
+        trait: "Uses dark mode on everything",
+        description: "Light attracts bugs. Darkness attracts success.",
+        emoji: "🌚"
+    },
+    {
+        trait: "Types with 100% accuracy while looking at the ceiling",
+        description: "True Sigmas don't need to look at keyboards. Keyboards look at them.",
+        emoji: "⌨️"
+    },
+    {
+        trait: "Spends 3 hours on a bug that could be fixed with a Google search",
+        description: "It's not about efficiency, it's about sending a message to the compiler.",
+        emoji: "🐛"
+    },
+    {
+        trait: "Drinks coffee after 11 PM",
+        description: "Sleep is for the weak. Caffeine is for the week... and weekend.",
+        emoji: "☕"
+    },
+    {
+        trait: "Responds to 'Hello' with 'HTTPS 200 OK'",
+        description: "Social protocols are just another API to master.",
+        emoji: "🤖"
+    },
+    {
+        trait: "Has multiple personality disorder — all of them are programmers",
+        description: "It's not a bug, it's a distributed system architecture.",
+        emoji: "👥"
+    },
+    {
+        trait: "Doesn't read documentation, just guesses the API",
+        description: "Documentation is written by followers. Sigma males create their own reality.",
+        emoji: "📝"
+    },
+    {
+        trait: "Refuses to use frameworks",
+        description: "Frameworks are training wheels. Sigmas code on unicycles.",
+        emoji: "🦄"
+    },
+    {
+        trait: "Uses lorem ipsum as actual content",
+        description: "When you're Sigma enough, gibberish becomes profound wisdom to others.",
+        emoji: "📜"
+    },
+    {
+        trait: "Debugs with console.log instead of a debugger",
+        description: "Real Sigmas don't need specialized tools. They print their way to success.",
+        emoji: "🖨️"
+    },
+    {
+        trait: "Pronounces SQL as 'Squirrel'",
+        description: "Alphas say 'S-Q-L'. Betas say 'Sequel'. Sigmas create linguistic chaos.",
+        emoji: "🐿️"
+    },
+    {
+        trait: "GitHub profile is just README files",
+        description: "Code is temporary. Documentation is forever.",
+        emoji: "📚"
+    },
+    {
+        trait: "Prefers CLI over GUI",
+        description: "Graphics are for the visually dependent. Text is for the intellectually independent.",
+        emoji: "💻"
+    },
+    {
+        trait: "Has never closed a Stack Overflow tab",
+        description: "Each tab represents a battle won in the war of knowledge.",
+        emoji: "🏆"
+    }
+];
+
+const generateBtn = document.getElementById('generateBtn');
+const traitElement = document.getElementById('trait');
+const descriptionElement = document.getElementById('description');
+const emojiElement = document.querySelector('.emoji');
+
+// Function to create sparkle effect
+function createSparkle(x, y) {
+    const sparkle = document.createElement('div');
+    sparkle.className = 'sparkle';
+    sparkle.style.left = `${x}px`;
+    sparkle.style.top = `${y}px`;
+    document.body.appendChild(sparkle);
+    
+    // Remove sparkle after animation completes
+    setTimeout(() => {
+        sparkle.remove();
+    }, 500);
+}
+
+// Add mousemove event for sparkle effect
+document.addEventListener('mousemove', (e) => {
+    // Only create sparkles occasionally to avoid overwhelming the browser
+    if (Math.random() < 0.1) {
+        createSparkle(e.clientX, e.clientY);
+    }
+});
+
+// Function to generate random trait
+function generateTrait() {
+    // Remove 'show' class for animation
+    traitElement.classList.remove('show');
+    descriptionElement.classList.remove('show');
+    
+    // Random shaking effect
+    const card = document.querySelector('.sigma-card');
+    card.style.animation = 'none';
+    setTimeout(() => {
+        card.style.animation = 'shake 0.5s';
+    }, 10);
+    
+    // Generate random sparkles around the button
+    const buttonRect = generateBtn.getBoundingClientRect();
+    for (let i = 0; i < 20; i++) {
+        setTimeout(() => {
+            const x = buttonRect.left + Math.random() * buttonRect.width;
+            const y = buttonRect.top + Math.random() * buttonRect.height;
+            createSparkle(x, y);
+        }, i * 50);
+    }
+    
+    // Get random trait after short delay for animation
+    setTimeout(() => {
+        const randomIndex = Math.floor(Math.random() * sigmaTraits.length);
+        const randomTrait = sigmaTraits[randomIndex];
+        
+        traitElement.textContent = randomTrait.trait;
+        descriptionElement.textContent = randomTrait.description;
+        emojiElement.textContent = randomTrait.emoji;
+        
+        // Add 'show' class for animation
+        traitElement.classList.add('show');
+        descriptionElement.classList.add('show');
+    }, 300);
+}
+
+// Button click event
+generateBtn.addEventListener('click', generateTrait);
+
+// Initial animation
+setTimeout(() => {
+    traitElement.classList.add('show');
+    descriptionElement.classList.add('show');
+}, 500);
+
+// Add shake animation
+const shakeStyle = document.createElement('style');
+shakeStyle.textContent = `
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}`;
+document.head.appendChild(shakeStyle);
+</file>
+
+<file path=".gitignore">
+# Don't commit the actual config with credentials
+config.js
+
+# But do commit the placeholder
+# deploy-config.js should be committed
+
+# Other common files to ignore
+.DS_Store
+node_modules/
+.env
+</file>
+
+<file path="styles/about.css">
+:root {
+    --neon-pink: #ff2e97;
+    --neon-blue: #00f3ff;
+    --neon-purple: #b537f2;
+    --neon-yellow: #f9f002;
+}
+
+/* Light mode */
+body {
+    background: linear-gradient(135deg, #ffffff, #f0f0f0);
+    color: #2d2d2d;
+    transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.card {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+}
+
+.glassmorphism-card {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border: 2px solid var(--neon-purple);
+    box-shadow: 0 0 20px rgba(181, 55, 242, 0.3);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin: 1rem;
+    transition: background 0.3s ease-in-out, border 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.title {
+    color: var(--neon-purple);
+    text-shadow: 0 0 5px rgba(181, 55, 242, 0.3);
+    position: relative;
+    letter-spacing: 2px;
+    font-family: "Varela Round", serif;
+    transition: color 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
+}
+
+/* Dark mode */
+.dark-mode {
+    background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+    color: #ffffff;
+}
+
+.dark-mode .card {
+    background: rgba(20, 20, 20, 0.9);
+    border: 2px solid var(--neon-pink);
+    box-shadow: 0 0 20px rgba(255, 46, 151, 0.3);
+}
+
+.dark-mode .title {
+    color: var(--neon-pink);
+    text-shadow: 0 0 10px rgba(255, 46, 151, 0.5);
+}
+
+/* Neon elements */
+.neon-border {
+    position: relative;
+}
+
+.neon-border::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg,
+            var(--neon-pink),
+            var(--neon-blue),
+            var(--neon-purple),
+            var(--neon-yellow));
+    border-radius: 0.5rem;
+    z-index: -1;
+    animation: borderGlow 3s linear infinite;
+}
+
+.theme-toggle-btn {
+    font-size: 2rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 10px rgba(249, 240, 2, 0.5);
+}
+
+.theme-toggle-btn:hover {
+    transform: scale(1.1);
+    text-shadow: 0 0 20px rgba(249, 240, 2, 0.8);
+}
+
+.cyber-grid {
+    background-image:
+        linear-gradient(rgba(255, 46, 151, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 46, 151, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    pointer-events: none;
+}
+
+@keyframes borderGlow {
+    0% {
+        filter: hue-rotate(0deg);
+    }
+
+    100% {
+        filter: hue-rotate(360deg);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.carousel-item img {
+    object-fit: cover;
+    width: 100%;
+    height: 400px;
+    /* Adjust the height as needed */
+}
+</file>
+
+<file path="script/supabase-config.js">
+//Yang baca ini silahkan baca dan resapi url sama key nya otak atik ajh asw
+const supabaseUrl = "https://nrgxggpmipbvecjshvxf.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5yZ3hnZ3BtaXBidmVjanNodnhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDExNDUxMjksImV4cCI6MjA1NjcyMTEyOX0.rJeqNwDJ794OUIxR0Zlr0ZNvx0rysTeEPfc5OmcUGqM";
+const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+// Function to check if user is logged in via session
+async function checkVisitorSession() {
+  const visitorName = sessionStorage.getItem('visitorName')
+  if (visitorName) {
+    return visitorName
+  }
+  return null
+}
+
+// Function to save visitor info to Supabase
+async function saveVisitorInfo(name, pageName) {
+  try {
+    // Check if the name is the magic word for admin access
+    if (name.toLowerCase() === 'magic word') {
+      // Remove the modal from DOM completely before redirecting
+      const modal = document.getElementById('visitor-modal');
+      if (modal && modal.parentNode) {
+        modal.parentNode.removeChild(modal);
+      }
+      // Redirect to admin page
+      window.location.href = '../pages/admin.html';
+      return true;
+    }
+
+    const { data, error } = await supabase
+      .from('visitors')
+      .insert([
+        {
+          name: name,
+          page_visited: pageName,
+          visit_time: new Date().toISOString()
+        }
+      ])
+
+    if (error) {
+      console.error('Error saving visitor:', error)
+      return false
+    }
+
+    // Save to session storage
+    sessionStorage.setItem('visitorName', name)
+
+    // Remove the modal from DOM completely
+    const modal = document.getElementById('visitor-modal');
+    if (modal && modal.parentNode) {
+      modal.parentNode.removeChild(modal);
+    }
+
+    return true
+  } catch (err) {
+    console.error('Error in saveVisitorInfo:', err)
+    return false
+  }
+}
+
+// Function to create and show visitor name modal
+function showVisitorModal(pageName) {
+  // First check if we already have a session
+  const existingName = sessionStorage.getItem('visitorName')
+  if (existingName) {
+    console.log(`Welcome back, ${existingName}!`)
+    return
+  }
+
+  // Remove any existing modal first
+  const existingModal = document.getElementById('visitor-modal');
+  if (existingModal && existingModal.parentNode) {
+    existingModal.parentNode.removeChild(existingModal);
+  }
+
+  // Create modal
+  const modalHtml = `
+    <div id="visitor-modal">
+      <div class="visitor-modal-content">
+        <h2>Welcome!</h2>
+        <p>Please enter your name to continue:</p>
+        <input type="text" id="visitor-name" placeholder="Your name" class="visitor-input">
+        <div class="visitor-button-container">
+          <button id="visitor-submit" class="visitor-button">Continue</button>
+        </div>
+      </div>
+    </div>
+  `
+
+  // Append modal to body
+  const modalContainer = document.createElement('div')
+  modalContainer.innerHTML = modalHtml
+  document.body.appendChild(modalContainer.firstElementChild) // Append the modal element directly
+
+  // Add event listener to the submit button
+  document.getElementById('visitor-submit').addEventListener('click', async function () {
+    const nameInput = document.getElementById('visitor-name')
+    const visitorName = nameInput.value.trim()
+
+    if (visitorName) {
+      await saveVisitorInfo(visitorName, pageName)
+    } else {
+      nameInput.classList.add('error')
+      setTimeout(() => nameInput.classList.remove('error'), 500)
+    }
+  })
+
+  // Add event listener for Enter key
+  document.getElementById('visitor-name').addEventListener('keypress', async function (e) {
+    if (e.key === 'Enter') {
+      const visitorName = this.value.trim()
+      if (visitorName) {
+        await saveVisitorInfo(visitorName, pageName)
+      } else {
+        this.classList.add('error')
+        setTimeout(() => this.classList.remove('error'), 500)
+      }
+    }
+  })
+}
+</file>
+
+<file path="pages/hack-attack.html">
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hack Attack - Cyberpunk Game</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Barrio&family=League+Gothic&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Sigmar&family=Varela+Round&display=swap"
+        rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link rel="stylesheet" href="../styles/hack-attack.css">
+    <link rel="stylesheet" href="../styles/visitor-modal.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.5.0/dist/umd/supabase.min.js"></script>
+</head>
+
+<body>
+    <div class="loading">
+        <div class="loading-text">INITIALIZING HACK...</div>
+    </div>
+
+    <div class="cyber-grid"></div>
+
+    <a class="back-btn" href="../index.html">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+                d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
+        </svg>
+        Back
+    </a>
+
+    <div class="container">
+        <header>
+            <h1 class="title">HACK ATTACK</h1>
+            <p class="sub-title">Click the targets before they disappear!</p>
+        </header>
+
+        <div class="game-wrapper">
+            <div id="game-container">
+                <div id="start-screen">
+                    <h2 class="start-title">HACK ATTACK</h2>
+                    <div class="instructions">
+                        <ul>
+                            <li>Hack the green targets by clicking on them</li>
+                            <li>Each target has a different point value</li>
+                            <li>Don't let targets disappear or you'll lose a life</li>
+                            <li>The game gets faster as your level increases</li>
+                            <li>How many targets can you hack?</li>
+                        </ul>
+                    </div>
+
+                    <div class="difficulty-container">
+                        <button class="difficulty-btn selected" data-difficulty="easy">Easy</button>
+                        <button class="difficulty-btn" data-difficulty="medium">Medium</button>
+                        <button class="difficulty-btn" data-difficulty="hard">Hard</button>
+                    </div>
+
+                    <div style="position: relative; z-index: 20; margin-top: 5px;">
+                        <button class="button" id="start-button">START HACKING</button>
+                    </div>
+                </div>
+
+                <div class="level-notification" id="level-notification">LEVEL 1</div>
+
+                <div class="game-over-container" id="game-over">
+                    <h2 class="game-over-text">SYSTEM BREACH FAILED</h2>
+                    <div class="final-score">Score: <span id="final-score">0</span></div>
+                    <button class="button" id="restart-button">HACK AGAIN</button>
+                </div>
+            </div>
+
+            <div class="stats-bar">
+                <div class="stat" id="score">
+                    <div class="stat-label">SCORE</div>
+                    <div class="stat-value">0</div>
+                </div>
+                <div class="stat" id="level">
+                    <div class="stat-label">LEVEL</div>
+                    <div class="stat-value">1</div>
+                </div>
+                <div class="stat" id="targets">
+                    <div class="stat-label">TARGETS</div>
+                    <div class="stat-value">0</div>
+                </div>
+                <div class="stat" id="lives">
+                    <div class="stat-label">LIVES</div>
+                    <div class="stat-value">3</div>
+                </div>
+            </div>
+
+            <div class="leaderboard">
+                <div class="leaderboard-header">
+                    <h3 class="leaderboard-title">TOP HACKERS</h3>
+                    <button id="clear-leaderboard" class="clear-btn">CLEAR</button>
+                </div>
+                <div class="leaderboard-entries" id="leaderboard-entries">
+                    <!-- Entries will be generated dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../script/hack-attack.js"></script>
+    <script id="supabase-config">
+        window.appConfig = {
+            supabaseUrl: "https://SUPABASE_URL_PLACEHOLDER.supabase.co",
+            supabaseKey: "SUPABASE_KEY_PLACEHOLDER"
+        };
+    </script>
+    <script src="../script/supabase-config.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Show visitor modal when page loads - ensure CSS is fully loaded
+            setTimeout(() => {
+                showVisitorModal('hack-attack');
+            }, 1000);
+        });
+    </script>
+</body>
+
+</html>
+</file>
+
+<file path="pages/sigma-traits.html">
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sigma Traits Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Barrio&family=League+Gothic&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Sigmar&family=Varela+Round&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../styles/sigma-traits.css">
+    <link rel="stylesheet" href="../styles/visitor-modal.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.5.0/dist/umd/supabase.min.js"></script>
+</head>
+
+<body>
+    <div class="cyber-grid"></div>
+
+    <button class="back-btn" onclick="window.location.href='../index.html'">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+                d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
+        </svg>
+        Back
+    </button>
+
+    <div class="container">
+        <h1 class="title">SIGMA TRAITS GENERATOR</h1>
+
+        <div class="sigma-card">
+            <div class="emoji">😎</div>
+            <div class="sigma-trait" id="trait">Click the button below to reveal your Sigma trait!</div>
+            <div class="sigma-description" id="description">Discover why you're the ultimate Sigma.</div>
+        </div>
+
+        <div style="text-align: center;">
+            <button class="generate-btn" id="generateBtn">GENERATE SIGMA TRAIT</button>
+        </div>
+    </div>
+    <script src="../script/sigma-traits.js"></script>
+    <script id="supabase-config">
+        window.appConfig = {
+            supabaseUrl: "https://SUPABASE_URL_PLACEHOLDER.supabase.co",
+            supabaseKey: "SUPABASE_KEY_PLACEHOLDER"
+        };
+    </script>
+    <script src="../script/supabase-config.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Show visitor modal when page loads - ensure CSS is fully loaded
+            setTimeout(() => {
+                showVisitorModal('sigma-traits');
+            }, 1000);
+        });
+    </script>
+</body>
+
+</html>
+</file>
+
+<file path="pages/admin.html">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barrio&family=League+Gothic&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Sigmar&family=Varela+Round&display=swap" rel="stylesheet">
+    
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css">
+    
+    <!-- DataTables JS -->
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+    
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.5.0/dist/umd/supabase.min.js"></script>
+    
+    <style>
+        :root {
+            --neon-pink: #ff2e97;
+            --neon-blue: #00f3ff;
+            --neon-purple: #b537f2;
+            --neon-yellow: #f9f002;
+            --neon-green: #00ff88;
+            --dark-bg: #0a0a0a;
+            --card-bg: rgba(0, 0, 0, 0.6);
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--dark-bg), #1a1a1a);
+            color: #ffffff;
+            font-family: 'Open Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .cyber-grid {
+            background-image:
+                linear-gradient(rgba(255, 46, 151, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 46, 151, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .header h1 {
+            font-family: "Sigmar", serif;
+            font-size: 2.5rem;
+            color: var(--neon-green);
+            text-shadow: 0 0 10px var(--neon-green);
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: var(--neon-blue);
+            font-size: 1.2rem;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: none;
+            border: none;
+            color: var(--neon-blue);
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            color: var(--neon-pink);
+            transform: translateX(-5px);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid var(--neon-purple);
+            color: white;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background: rgba(181, 55, 242, 0.2);
+            box-shadow: 0 0 10px var(--neon-purple);
+        }
+
+        .tab-btn:hover {
+            background: rgba(181, 55, 242, 0.1);
+            box-shadow: 0 0 10px var(--neon-purple);
+        }
+
+        .data-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .data-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg,
+                var(--neon-pink),
+                var(--neon-blue),
+                var(--neon-purple),
+                var(--neon-yellow));
+            border-radius: 12px;
+            z-index: -1;
+            animation: borderGlow 3s linear infinite;
+        }
+
+        .table-container {
+            overflow: hidden;
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        .error {
+            color: var(--neon-pink);
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 2px solid var(--neon-blue);
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--neon-green);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--neon-blue);
+            font-size: 1rem;
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 300px;
+            margin-top: 1rem;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 2rem;
+            color: var(--neon-yellow);
+            font-style: italic;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes borderGlow {
+            0% {
+                filter: hue-rotate(0deg);
+            }
+            100% {
+                filter: hue-rotate(360deg);
+            }
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Loading indicator */
+        .loading-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(0, 243, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--neon-blue);
+            animation: spin 1s linear infinite;
+        }
+
+        /* Fixed DataTables Custom Styling */
+        /* Reset all DataTables styling */
+        .dataTable, 
+        .dataTables_wrapper, 
+        .dataTables_length, 
+        .dataTables_filter, 
+        .dataTables_info, 
+        .dataTables_paginate, 
+        .paginate_button,
+        .dataTable thead th,
+        .dataTable tbody td {
+            background: transparent !important;
+            border: none !important;
+            color: white !important;
+            font-family: 'Open Sans', sans-serif !important;
+        }
+
+        /* DataTable structure */
+        .dataTables_wrapper {
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        /* Header controls (search and length) */
+        .dataTables_length select {
+            background-color: rgba(0, 0, 0, 0.5) !important;
+            color: var(--neon-blue) !important;
+            border: 1px solid var(--neon-blue) !important;
+            border-radius: 4px;
+            padding: 4px 8px;
+            margin: 0 5px;
+        }
+
+        .dataTables_filter input {
+            background-color: rgba(0, 0, 0, 0.5) !important;
+            color: white !important;
+            border: 1px solid var(--neon-blue) !important;
+            border-radius: 4px;
+            padding: 6px 10px;
+            margin-left: 8px;
+            outline: none !important;
+        }
+
+        .dataTables_filter input:focus {
+            box-shadow: 0 0 8px var(--neon-blue) !important;
+        }
+
+        /* Table head */
+        .dataTable thead th {
+            padding: 12px 10px !important;
+            color: var(--neon-blue) !important;
+            border-bottom: 2px solid var(--neon-purple) !important;
+            background-color: rgba(0, 0, 0, 0.4) !important;
+            text-align: left !important;
+            font-weight: 600 !important;
+        }
+
+        /* Table body */
+        .dataTable tbody tr {
+            background-color: rgba(0, 0, 0, 0.2) !important;
+        }
+
+        .dataTable tbody tr:nth-child(even) {
+            background-color: rgba(0, 0, 0, 0.3) !important;
+        }
+
+        .dataTable tbody tr:hover {
+            background-color: rgba(181, 55, 242, 0.1) !important;
+        }
+
+        .dataTable tbody td {
+            padding: 10px !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+
+        /* Footer info and pagination */
+        .dataTables_info {
+            color: var(--neon-blue) !important;
+            padding: 15px 0 !important;
+        }
+
+        .dataTables_paginate {
+            padding: 15px 0 !important;
+        }
+
+        .paginate_button {
+            padding: 6px 12px !important;
+            margin: 0 3px !important;
+            border-radius: 4px !important;
+            cursor: pointer !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .paginate_button:hover {
+            background-color: rgba(0, 243, 255, 0.2) !important;
+            color: white !important;
+        }
+
+        .paginate_button.current {
+            background-color: rgba(0, 243, 255, 0.3) !important;
+            border: 1px solid var(--neon-blue) !important;
+        }
+
+        .paginate_button.disabled {
+            opacity: 0.5;
+            cursor: not-allowed !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .back-btn {
+                top: 10px;
+                left: 10px;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .dataTables_length,
+            .dataTables_filter,
+            .dataTables_info,
+            .dataTables_paginate {
+                text-align: left !important;
+                float: none !important;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cyber-grid"></div>
+    
+    <a href="../index.html" class="back-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+        </svg>
+        Back to Home
+    </a>
+    
+    <div class="container">
+        <div class="header">
+            <h1>Admin Dashboard</h1>
+            <p>Track and monitor site visitors and game scores</p>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="stats">Statistics</button>
+            <button class="tab-btn" data-tab="visitors">Visitors</button>
+            <button class="tab-btn" data-tab="game-scores">Game Scores</button>
+        </div>
+        
+        <!-- Stats Tab -->
+        <div class="tab-content active" id="stats-tab">
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="total-visitors">-</div>
+                    <div class="stat-label">Total Visitors</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="total-games">-</div>
+                    <div class="stat-label">Games Played</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="high-score">-</div>
+                    <div class="stat-label">Highest Score</div>
+                </div>
+            </div>
+            
+            <div class="data-card">
+                <h2>Overview</h2>
+                <div id="overview-chart" class="chart-container">
+                    <div class="no-data">Overview chart will be displayed here</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Visitors Tab -->
+        <div class="tab-content" id="visitors-tab">
+            <div class="data-card">
+                <h2>Visitor Log</h2>
+                <div class="table-container">
+                    <div id="visitors-loading" class="loading-container">
+                        <div class="loading-spinner"></div>
+                    </div>
+                    <table id="visitors-table" class="display responsive nowrap" style="width:100%; display:none;">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Page Visited</th>
+                                <th>Visit Time</th>
+                            </tr>
+                        </thead>
+                        <tbody id="visitors-data">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Game Scores Tab -->
+        <div class="tab-content" id="game-scores-tab">
+            <div class="data-card">
+                <h2>Game Leaderboard</h2>
+                <div class="table-container">
+                    <div id="scores-loading" class="loading-container">
+                        <div class="loading-spinner"></div>
+                    </div>
+                    <table id="scores-table" class="display responsive nowrap" style="width:100%; display:none;">
+                        <thead>
+                            <tr>
+                                <th>Player</th>
+                                <th>Score</th>
+                                <th>Level</th>
+                                <th>Targets</th>
+                                <th>Difficulty</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="scores-data">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Hard-code the Supabase connection for the admin page
+        const supabaseUrl = "https://nrgxggpmipbvecjshvxf.supabase.co";
+        // Replace this with your actual Supabase anon key for local development
+        const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5yZ3hnZ3BtaXBidmVjanNodnhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDExNDUxMjksImV4cCI6MjA1NjcyMTEyOX0.rJeqNwDJ794OUIxR0Zlr0ZNvx0rysTeEPfc5OmcUGqM";
+        
+        // Initialize Supabase client
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+        
+        // Format date for display
+        function formatDate(dateString) {
+            if (!dateString) return "N/A";
+            try {
+                const date = new Date(dateString);
+                return date.toLocaleString();
+            } catch (e) {
+                return dateString || "N/A";
+            }
+        }
+        
+        // Load visitor data
+        async function loadVisitors() {
+            try {
+                console.log("Loading visitors data...");
+                const { data, error } = await supabase
+                    .from('visitors')
+                    .select('*')
+                    .order('visit_time', { ascending: false });
+                
+                if (error) {
+                    console.error("Supabase error:", error);
+                    throw error;
+                }
+                
+                // Hide loading spinner
+                $('#visitors-loading').hide();
+                
+                if (!data || data.length === 0) {
+                    // Show empty message
+                    $('#visitors-table').after('<div class="no-data">No visitor data available</div>');
+                    return;
+                }
+                
+                console.log(`Found ${data.length} visitors`);
+                
+                // Prepare data for DataTable
+                const tableData = data.map(visitor => [
+                    visitor.name || 'Anonymous',
+                    visitor.page_visited || 'Unknown',
+                    formatDate(visitor.visit_time)
+                ]);
+                
+                // Initialize DataTable with cyberpunk styling
+                $('#visitors-table').show().DataTable({
+                    data: tableData,
+                    responsive: true,
+                    dom: '<"cyber-controls"lf>rt<"cyber-footer"ip>',
+                    language: {
+                        search: "Filter Records:",
+                        lengthMenu: "Show _MENU_ entries",
+                        info: "Showing _START_ to _END_ of _TOTAL_ visitors",
+                        paginate: {
+                            first: "First",
+                            last: "Last",
+                            next: "»",
+                            previous: "«"
+                        }
+                    },
+                    pageLength: 10,
+                    lengthMenu: [5, 10, 25, 50, 100],
+                    drawCallback: function() {
+                        // Apply additional cyberpunk styling after table is drawn
+                        $('.paginate_button').addClass('cyber-btn');
+                        $('.paginate_button.current').addClass('active');
+                    }
+                });
+                
+                // Update stats
+                document.getElementById('total-visitors').textContent = data.length;
+            } catch (err) {
+                console.error('Error loading visitors:', err);
+                $('#visitors-loading').hide();
+                $('#visitors-table').after(`<div class="error">Error loading visitor data: ${err.message}</div>`);
+            }
+        }
+        
+        // Load game scores
+        async function loadGameScores() {
+            try {
+                console.log("Loading game scores...");
+                const { data, error } = await supabase
+                    .from('game_scores')
+                    .select('*')
+                    .order('score', { ascending: false });
+                
+                if (error) {
+                    console.error("Supabase error:", error);
+                    throw error;
+                }
+                
+                // Hide loading spinner
+                $('#scores-loading').hide();
+                
+                if (!data || data.length === 0) {
+                    // Show empty message
+                    $('#scores-table').after('<div class="no-data">No game score data available</div>');
+                    return;
+                }
+                
+                console.log(`Found ${data.length} game scores`);
+                
+                // Prepare data for DataTable
+                const tableData = data.map(score => [
+                    score.player_name || 'Anonymous',
+                    score.score || 0,
+                    score.level || 1,
+                    score.targets || 0,
+                    score.difficulty || 'Unknown',
+                    formatDate(score.created_at)
+                ]);
+                
+                // Initialize DataTable
+                $('#scores-table').show().DataTable({
+                    data: tableData,
+                    responsive: true,
+                    dom: '<"cyber-controls"lf>rt<"cyber-footer"ip>',
+                    language: {
+                        search: "Filter Records:",
+                        lengthMenu: "Show _MENU_ entries",
+                        info: "Showing _START_ to _END_ of _TOTAL_ scores",
+                        paginate: {
+                            first: "First",
+                            last: "Last",
+                            next: "»",
+                            previous: "«"
+                        }
+                    },
+                    pageLength: 10,
+                    lengthMenu: [5, 10, 25, 50, 100],
+                    order: [[1, 'desc']], // Sort by score column (index 1) descending
+                    drawCallback: function() {
+                        // Apply additional cyberpunk styling after table is drawn
+                        $('.paginate_button').addClass('cyber-btn');
+                        $('.paginate_button.current').addClass('active');
+                    }
+                });
+                
+                // Update stats
+                document.getElementById('total-games').textContent = data.length;
+                
+                // Find highest score
+                if (data.length > 0) {
+                    const highestScore = Math.max(...data.map(score => score.score || 0));
+                    document.getElementById('high-score').textContent = highestScore;
+                }
+            } catch (err) {
+                console.error('Error loading game scores:', err);
+                $('#scores-loading').hide();
+                $('#scores-table').after(`<div class="error">Error loading game score data: ${err.message}</div>`);
+            }
+        }
+        
+        // Initialize page
+        $(document).ready(function() {
+            console.log("Admin page initialized");
+            
+            // Set up tab navigation
+            $('.tab-btn').on('click', function() {
+                // Deactivate all tabs
+                $('.tab-btn').removeClass('active');
+                $('.tab-content').removeClass('active');
+                
+                // Activate clicked tab
+                $(this).addClass('active');
+                $(`#${$(this).data('tab')}-tab`).addClass('active');
+                
+                // Adjust DataTables when showing tabs (fixes layout issues)
+                $(window).trigger('resize');
+            });
+            
+            // Load data from Supabase
+            loadVisitors();
+            loadGameScores();
+        });
+    </script>
+</body>
+</html>
+</file>
+
+<file path=".github/workflows/deploy.yml">
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Update configuration in HTML files
+        run: |
+            # Find all HTML files and replace placeholders
+            find . -name "*.html" -type f -exec sed -i "s|SUPABASE_URL_PLACEHOLDER|${{ secrets.SUPABASE_URL }}|g" {} \;
+            find . -name "*.html" -type f -exec sed -i "s|SUPABASE_KEY_PLACEHOLDER|${{ secrets.SUPABASE_KEY }}|g" {} \;
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@4.1.5
+        with:
+          branch: gh-pages
+          folder: .
+          
+      - name: Debug - Show environment variables (redacted)
+        run: |
+          echo "SUPABASE_URL length: ${#SUPABASE_URL}"
+          echo "SUPABASE_URL starts with: ${SUPABASE_URL:0:5}..."
+          echo "SUPABASE_KEY length: ${#SUPABASE_KEY}"
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+</file>
+
+<file path="index.html">
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arya Ganteng Abis</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Barrio&family=League+Gothic&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Sigmar&display=swap"
+    rel="stylesheet">
+
+
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <style>
+    body {
+      font-family: 'Open Sans', sans-serif;
+    }
+
+    .name-hover {
+      display: inline-block;
+      transition: transform 0.3s ease, color 0.3s ease;
+      margin-right: 5px;
+    }
+
+    .name-hover:hover {
+      transform: scale(1.2);
+      color: #00ff88;
+    }
+
+    .neon-text {
+      text-shadow: 0 0 5px #00ff88, 0 0 10px #00ff88, 0 0 20px #00ff88, 0 0 40px #00ff88;
+    }
+
+    .neon-border {
+      box-shadow: 0 0 5px #00ff88, 0 0 10px #00ff88, inset 0 0 5px #00ff88;
+    }
+
+    .neon-link:hover {
+      text-shadow: 0 0 5px #00ff88, 0 0 10px #00ff88;
+    }
+
+    #threejs-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 9;
+    }
+
+    #name-animation {
+      font-family: 'Barrio', cursive;
+    }
+
+    .fade-out {
+      opacity: 0;
+      transition: opacity 0.5s ease-out;
+    }
+
+    .fade-in {
+      opacity: 1;
+      transition: opacity 0.5s ease-in;
+    }
+
+    .social-icon img {
+      border-radius: 50%;
+      filter: drop-shadow(0 0 8px currentColor);
+      transition: all 0.3s ease;
+    }
+
+    /* Individual color glows */
+    .social-icon:nth-child(1) img {
+      filter: drop-shadow(0 0 8px #1877F2);
+    }
+
+    /* Facebook blue */
+    .social-icon:nth-child(2) img {
+      filter: drop-shadow(0 0 8px #000000);
+    }
+
+    /* X (Twitter) black */
+    .social-icon:nth-child(3) img {
+      filter: drop-shadow(0 0 8px #E1306C);
+    }
+
+    /* Instagram pink */
+    .social-icon:nth-child(4) img {
+      filter: drop-shadow(0 0 8px #0077B5);
+    }
+
+    /* LinkedIn blue */
+    .social-icon img:hover {
+      filter: drop-shadow(0 0 12px currentColor);
+      transform: scale(1.1);
+    }
+
+    .neon-border {
+      border: none;
+    }
+
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0);
+      border-top: none;
+      z-index: 10;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      backdrop-filter: blur(0px);
+    }
+
+    footer::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #00ff88, transparent);
+      animation: neon-glow 2s linear infinite;
+    }
+
+    @keyframes neon-glow {
+      0% {
+        left: -100%;
+      }
+
+      100% {
+        left: 100%;
+      }
+    }
+
+    @media (max-width: 768px) {
+      #name-animation {
+        font-size: 3.5rem;
+      }
+
+      .tagline {
+        font-size: 1rem;
+      }
+
+      nav a {
+        font-size: 0.875rem;
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-black text-white overflow-hidden">
+  <canvas id="threejs-background"></canvas>
+  <div class="relative h-screen flex items-center justify-center">
+    <div class="relative z-10 text-center">
+      <h1 id="name-animation" class="text-6xl md:text-8xl font-bold neon-text"></h1>
+      <p class="text-xl md:text-2xl mt-4 neon-text opacity-0 tagline">Aryaputra</p>
+      <nav class="mt-8 space-x-6">
+        <a href="pages/about.html" class="text-lg neon-link hover:text-neon-500 transition duration-300">About</a>
+        <a href="pages/sigma-traits.html" class="text-lg neon-link hover:text-neon-500 transition duration-300">Sigma</a>
+        <a href="pages/hack-attack.html" class="text-lg neon-link hover:text-neon-500 transition duration-300">🎮</a>
+      </nav>
+    </div>
+  </div>
+  <footer class="absolute bottom-0 w-full py-4 text-white text-center">
+    <div class="flex justify-center space-x-6">
+      <a href="https://www.facebook.com/share/1BV4EYcvLy/" target="_blank" class="social-icon">
+        <img src="assets/logo/facebook.png" alt="Facebook" class="h-8 w-8">
+      </a>
+      <a href="https://www.x.com/tryphooo" target="_blank" class="social-icon">
+        <img src="assets/logo/twitter.png" alt="X" class="h-8 w-8">
+      </a>
+      <a href="https://www.instagram.com/aryaptrha" target="_blank" class="social-icon">
+        <img src="assets/logo/instagram.png" alt="Instagram" class="h-8 w-8">
+      </a>
+      <a href="https://www.linkedin.com/in/aryaputra-haidar-akbar-b122811b7/" target="_blank" class="social-icon">
+        <img src="assets/logo/linkedin.png" alt="LinkedIn" class="h-8 w-8">
+      </a>
+    </div>
+  </footer>
+  <script src="script/index.js"></script>
+</body>
+
+</html>
+</file>
+
+<file path="pages/about.html">
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Me</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Barrio&family=League+Gothic&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Sigmar&family=Varela+Round&display=swap"
+        rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/about.css">
+    <link rel="stylesheet" href="../styles/visitor-modal.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.5.0/dist/umd/supabase.min.js"></script>
+</head>
+
+<body class="dark-mode fade-in">
+    <div class="cyber-grid"></div>
+    <div class="container mx-auto p-4 sm:p-8">
+        <a href="javascript:history.back()" class="back-button text-blue-500 hover:text-blue-700">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+        </a>
+        <div class="normal-card neon-border rounded-lg p-6 sm:p-8 mt-12 mb-12">
+            <div class="flex flex-col sm:flex-row justify-between items-center mb-4">
+                <h1 class="title text-3xl sm:text-4xl font-bold mb-2 sm:mb-0">Aryaputra</h1>
+                <button id="themeToggleBtn" class="theme-toggle-btn">🌞</button>
+            </div>
+            <p class="text-lg sm:text-xl">Kok Bisa sih aku se-<span><b>SIGMA</b></span> ini!!!</p>
+        </div>
+        <hr class="mx-8 my-3 border-t-2 border-neon-blue">
+        <div class="flex justify-center my-4">
+            <div>Siapa Saya?</div>
+        </div>
+        <hr class="mx-8 my-3 border-t-2 border-neon-blue">
+        <div class="normal-card neon-border rounded-lg p-6 sm:p-8 mb-12">
+            <p class="text-lg sm
+            :text-xl">Aku bukan siapa siapa tapi aku tau siapa aku. Just an ordinary boring person trying to be good
+                for the sake of a life.</p>
+            <p class="text-lg sm
+            :text-xl">Lahir dan besar di Kota Bandung, sekolah dari TK sampai kuliah pun di Bandung. Semenjak memasuki
+                dunia kuliah mulai untuk mendalami dan menyukai dunia programming (walaupun lebih ke dipaksa terpaksa
+                terbiasa 🗿)</p>
+        </div>
+        <hr class="mx-8 my-3 border-t-2 border-neon-blue">
+        <div class="flex justify-center my-4">
+            <div>Bersama Para Pacar</div>
+        </div>
+        <hr class="mx-8 my-3 border-t-2 border-neon-blue">
+        <div id="carouselExampleControls" class="carousel slide relative" data-bs-ride="carousel">
+            <div class="carousel-inner relative overflow-hidden w-full">
+                <div class="carousel-item active relative float-left w-full">
+                    <img src="../assets/images/pacar/1.jpeg" class="block w-full" alt="Slide 1">
+                </div>
+                <div class="carousel-item relative float-left w-full">
+                    <img src="../assets/images/pacar/2.jpeg" class="block w-full" alt="Slide 2">
+                </div>
+                <div class="carousel-item relative float-left w-full">
+                    <img src="../assets/images/pacar/3.jpeg" class="block w-full" alt="Slide 3">
+                </div>
+                <div class="carousel-item relative float-left w-full">
+                    <img src="../assets/images/pacar/4.jpeg" class="block w-full" alt="Slide 4">
+                </div>
+                <div class="carousel-item relative float-left w-full">
+                    <img src="../assets/images/pacar/5.jpeg" class="block w-full" alt="Slide 5">
+                </div>
+                <div class="carousel-item relative float-left w-full">
+                    <img src="../assets/images/pacar/6.jpeg" class="block w-full" alt="Slide 6">
+                </div>
+                <div class="carousel-item relative float-left w-full">
+                    <img src="../assets/images/pacar/7.jpeg" class="block w-full" alt="Slide 7">
+                </div>
+                <div class="carousel-item relative float-left w-full">
+                    <img src="../assets/images/pacar/8.jpeg" class="block w-full" alt="Slide 8">
+                </div>
+            </div>
+            <button
+                class="carousel-control-prev absolute top-0 bottom-0 left-0 z-10 flex items-center justify-center p-0 text-center border-0 hover:outline-none hover:no-underline focus:outline-none focus:no-underline"
+                type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon inline-block bg-no-repeat" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button
+                class="carousel-control-next absolute top-0 bottom-0 right-0 z-10 flex items-center justify-center p-0 text-center border-0 hover:outline-none hover:no-underline focus:outline-none focus:no-underline"
+                type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                <span class="carousel-control-next-icon inline-block bg-no-repeat" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('themeToggleBtn').addEventListener('click', function () {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                this.textContent = '🌞';
+            } else {
+                this.textContent = '🌜';
+            }
+        });
+    </script>
+    <script id="supabase-config">
+        window.appConfig = {
+            supabaseUrl: "https://SUPABASE_URL_PLACEHOLDER.supabase.co",
+            supabaseKey: "SUPABASE_KEY_PLACEHOLDER"
+        };
+    </script>
+    <script src="../script/supabase-config.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Show visitor modal when page loads - slight delay to ensure all styles are loaded
+            setTimeout(() => {
+                showVisitorModal('about');
+            }, 1000);
+        });
+    </script>
+</body>
+
+</html>
+</file>
+
+</files>
