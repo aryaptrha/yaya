@@ -1,124 +1,1021 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>About Me</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-        href="https://fonts.googleapis.com/css2?family=Barrio&family=League+Gothic&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Sigmar&family=Varela+Round&display=swap"
-        rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../styles/about.css">
-    <link rel="stylesheet" href="../styles/visitor-modal.css">
+      href="https://fonts.googleapis.com/css2?family=Barrio&family=League+Gothic&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Sigmar&family=Varela+Round&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles/about.css" />
+    <link rel="stylesheet" href="../styles/visitor-modal.css" />
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.5.0/dist/umd/supabase.min.js"></script>
-</head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+  </head>
 
-<body class="dark-mode fade-in">
+  <body class="dark-mode fade-in">
+    <div id="particles-js"></div>
     <div class="cyber-grid"></div>
-    <div class="container mx-auto p-4 sm:p-8">
-        <a href="javascript:history.back()" class="back-button text-blue-500 hover:text-blue-700">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-            </svg>
-        </a>
-        <div class="normal-card neon-border rounded-lg p-6 sm:p-8 mt-12 mb-12">
-            <div class="flex flex-col sm:flex-row justify-between items-center mb-4">
-                <h1 class="title text-3xl sm:text-4xl font-bold mb-2 sm:mb-0">Aryaputra</h1>
-                <button id="themeToggleBtn" class="theme-toggle-btn">🌞</button>
-            </div>
-            <p class="text-lg sm:text-xl">Kok Bisa sih aku se-<span><b>SIGMA</b></span> ini!!!</p>
-        </div>
-        <hr class="mx-8 my-3 border-t-2 border-neon-blue">
-        <div class="flex justify-center my-4">
-            <div>Siapa Saya?</div>
-        </div>
-        <hr class="mx-8 my-3 border-t-2 border-neon-blue">
-        <div class="normal-card neon-border rounded-lg p-6 sm:p-8 mb-12">
-            <p class="text-lg sm
-            :text-xl">Aku bukan siapa siapa tapi aku tau siapa aku. Just an ordinary boring person trying to be good
-                for the sake of a life.</p>
-            <p class="text-lg sm
-            :text-xl">Lahir dan besar di Kota Bandung, sekolah dari TK sampai kuliah pun di Bandung. Semenjak memasuki
-                dunia kuliah mulai untuk mendalami dan menyukai dunia programming (walaupun lebih ke dipaksa terpaksa
-                terbiasa 🗿)</p>
-        </div>
-        <hr class="mx-8 my-3 border-t-2 border-neon-blue">
-        <div class="flex justify-center my-4">
-            <div>Bersama Para Pacar</div>
-        </div>
-        <hr class="mx-8 my-3 border-t-2 border-neon-blue">
-        <div id="carouselExampleControls" class="carousel slide relative" data-bs-ride="carousel">
-            <div class="carousel-inner relative overflow-hidden w-full">
-                <div class="carousel-item active relative float-left w-full">
-                    <img src="../assets/images/pacar/1.jpeg" class="block w-full" alt="Slide 1">
-                </div>
-                <div class="carousel-item relative float-left w-full">
-                    <img src="../assets/images/pacar/2.jpeg" class="block w-full" alt="Slide 2">
-                </div>
-                <div class="carousel-item relative float-left w-full">
-                    <img src="../assets/images/pacar/3.jpeg" class="block w-full" alt="Slide 3">
-                </div>
-                <div class="carousel-item relative float-left w-full">
-                    <img src="../assets/images/pacar/4.jpeg" class="block w-full" alt="Slide 4">
-                </div>
-                <div class="carousel-item relative float-left w-full">
-                    <img src="../assets/images/pacar/5.jpeg" class="block w-full" alt="Slide 5">
-                </div>
-                <div class="carousel-item relative float-left w-full">
-                    <img src="../assets/images/pacar/6.jpeg" class="block w-full" alt="Slide 6">
-                </div>
-                <div class="carousel-item relative float-left w-full">
-                    <img src="../assets/images/pacar/7.jpeg" class="block w-full" alt="Slide 7">
-                </div>
-                <div class="carousel-item relative float-left w-full">
-                    <img src="../assets/images/pacar/8.jpeg" class="block w-full" alt="Slide 8">
-                </div>
-            </div>
-            <button
-                class="carousel-control-prev absolute top-0 bottom-0 left-0 z-10 flex items-center justify-center p-0 text-center border-0 hover:outline-none hover:no-underline focus:outline-none focus:no-underline"
-                type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon inline-block bg-no-repeat" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button
-                class="carousel-control-next absolute top-0 bottom-0 right-0 z-10 flex items-center justify-center p-0 text-center border-0 hover:outline-none hover:no-underline focus:outline-none focus:no-underline"
-                type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-                <span class="carousel-control-next-icon inline-block bg-no-repeat" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
-        </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.getElementById('themeToggleBtn').addEventListener('click', function () {
-            document.body.classList.toggle('dark-mode');
-            if (document.body.classList.contains('dark-mode')) {
-                this.textContent = '🌞';
-            } else {
-                this.textContent = '🌜';
-            }
-        });
-    </script>
-    <script id="supabase-config">
-        window.appConfig = {
-            supabaseUrl: "https://nrgxggpmipbvecjshvxf.supabase.co",
-            supabaseKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5yZ3hnZ3BtaXBidmVjanNodnhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDExNDUxMjksImV4cCI6MjA1NjcyMTEyOX0.rJeqNwDJ794OUIxR0Zlr0ZNvx0rysTeEPfc5OmcUGqM"
-        };
-    </script>
-    <script src="../script/supabase-config.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Show visitor modal when page loads - slight delay to ensure all styles are loaded
-            setTimeout(() => {
-                showVisitorModal('about');
-            }, 1000);
-        });
-    </script>
-</body>
 
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <a
+      href="javascript:history.back()"
+      class="back-button hover-lift text-blue-500 hover:text-blue-700"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-6 w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M15 19l-7-7 7-7"
+        />
+      </svg>
+    </a>
+
+    <div class="music-player" id="musicToggle">
+      <i class="fas fa-music fa-lg"></i>
+    </div>
+
+    <div class="container mx-auto p-4 sm:p-8">
+      <div
+        class="normal-card neon-border rounded-lg p-6 sm:p-8 mt-12 mb-12 animate__animated animate__fadeInDown"
+      >
+        <div
+          class="flex flex-col sm:flex-row justify-between items-center mb-4"
+        >
+          <div
+            class="typewriter mb-4 sm:mb-0"
+            style="width: 100%; max-width: 500px"
+          >
+            <h1 class="title text-3xl sm:text-5xl font-bold">Aryaputra</h1>
+          </div>
+          <button id="themeToggleBtn" class="theme-toggle-btn">🌞</button>
+        </div>
+        <p class="text-lg sm:text-xl">
+          Kok Bisa sih aku se-<span class="sigma-text" id="sigmaText"
+            >SIGMA</span
+          >
+          ini!!!
+        </p>
+        <div class="mt-4">
+          <span class="neon-badge interactive-element"
+            ><i class="fas fa-code"></i> Developer</span
+          >
+          <span class="neon-badge interactive-element"
+            ><i class="fas fa-laptop-code"></i> Programmer</span
+          >
+          <span class="neon-badge interactive-element"
+            ><i class="fas fa-coffee"></i> Coffee Lover</span
+          >
+          <span class="neon-badge interactive-element"
+            ><i class="fas fa-music"></i> Music Fan</span
+          >
+        </div>
+      </div>
+
+      <div class="section-title" data-text="Siapa Saya?">Siapa Saya?</div>
+
+      <div
+        class="normal-card neon-border rounded-lg p-6 sm:p-8 mb-12 animate__animated animate__fadeIn"
+      >
+        <div class="flex flex-col md:flex-row">
+          <div class="md:w-2/3 pr-0 md:pr-8">
+            <p class="text-lg sm:text-xl mb-4">
+              Aku bukan siapa siapa tapi aku tau siapa aku.
+              <span class="interactive-element custom-tooltip"
+                >Just an ordinary boring person
+                <span class="tooltip-text">Not boring at all, actually!</span>
+              </span>
+              trying to be good for the sake of a life.
+            </p>
+
+            <p class="text-lg sm:text-xl">
+              Lahir dan besar di Kota
+              <span class="interactive-element" id="bandungText">Bandung</span>,
+              sekolah dari TK sampai kuliah pun di Bandung. Semenjak memasuki
+              dunia kuliah mulai untuk mendalami dan menyukai dunia programming
+              (walaupun lebih ke
+              <span class="custom-tooltip"
+                >dipaksa terpaksa terbiasa 🗿
+                <span class="tooltip-text"
+                  >The story of every programmer!</span
+                > </span
+              >)
+            </p>
+
+            <div class="mt-6">
+              <h3 class="font-bold text-xl mb-3">Programming Skills</h3>
+              <div class="mb-3">
+                <div class="flex justify-between mb-1">
+                  <span>JavaScript</span>
+                  <span>90%</span>
+                </div>
+                <div class="progress">
+                  <div
+                    class="progress-bar"
+                    role="progressbar"
+                    style="width: 0%"
+                    data-width="90%"
+                  ></div>
+                </div>
+              </div>
+              <div class="mb-3">
+                <div class="flex justify-between mb-1">
+                  <span>HTML/CSS</span>
+                  <span>85%</span>
+                </div>
+                <div class="progress">
+                  <div
+                    class="progress-bar"
+                    role="progressbar"
+                    style="width: 0%"
+                    data-width="85%"
+                  ></div>
+                </div>
+              </div>
+              <div class="mb-3">
+                <div class="flex justify-between mb-1">
+                  <span>Java</span>
+                  <span>75%</span>
+                </div>
+                <div class="progress">
+                  <div
+                    class="progress-bar"
+                    role="progressbar"
+                    style="width: 0%"
+                    data-width="75%"
+                  ></div>
+                </div>
+              </div>
+              <div class="mb-3">
+                <div class="flex justify-between mb-1">
+                  <span>Python</span>
+                  <span>65%</span>
+                </div>
+                <div class="progress">
+                  <div
+                    class="progress-bar"
+                    role="progressbar"
+                    style="width: 0%"
+                    data-width="65%"
+                  ></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="md:w-1/3 mt-6 md:mt-0">
+            <div class="normal-card neon-border hover-lift">
+              <h3 class="glitch-text mb-4" data-text="Fun Facts">Fun Facts</h3>
+              <ul class="list-disc pl-5">
+                <li class="mb-2">
+                  Daily coffee consumption:
+                  <span class="font-bold">3 cups</span>
+                </li>
+                <li class="mb-2">
+                  Lines of code written: <span class="font-bold">42,000+</span>
+                </li>
+                <li class="mb-2">
+                  Favorite coding soundtrack:
+                  <span class="font-bold">Lo-fi beats</span>
+                </li>
+                <li class="mb-2">
+                  Debugging style: <span class="font-bold">Chaotic good</span>
+                </li>
+                <li class="mb-2">
+                  Hours spent on Stack Overflow:
+                  <span class="font-bold">Too many</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-title" data-text="Journey">My Journey</div>
+
+      <div class="timeline mb-12">
+        <div class="timeline-item left animate__animated animate__fadeInLeft">
+          <div class="normal-card neon-border hover-lift">
+            <h3 class="font-bold text-xl mb-2">Early Years</h3>
+            <p>
+              Born and raised in beautiful Bandung, starting my adventure
+              through life.
+            </p>
+          </div>
+        </div>
+        <div class="timeline-item right animate__animated animate__fadeInRight">
+          <div class="normal-card neon-border hover-lift">
+            <h3 class="font-bold text-xl mb-2">School Days</h3>
+            <p>
+              From kindergarten through high school, all in Bandung. Building
+              foundations.
+            </p>
+          </div>
+        </div>
+        <div class="timeline-item left animate__animated animate__fadeInLeft">
+          <div class="normal-card neon-border hover-lift">
+            <h3 class="font-bold text-xl mb-2">University</h3>
+            <p>
+              Still in Bandung! This is where I discovered my love-hate
+              relationship with programming.
+            </p>
+          </div>
+        </div>
+        <div class="timeline-item right animate__animated animate__fadeInRight">
+          <div class="normal-card neon-border hover-lift">
+            <h3 class="font-bold text-xl mb-2">Present</h3>
+            <p>Embracing the SIGMA lifestyle, one line of code at a time.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-title" data-text="Bersama Para Pacar">
+        Bersama Para Pacar
+      </div>
+
+      <div
+        id="carouselExampleControls"
+        class="carousel slide relative animate__animated animate__fadeIn"
+        data-bs-ride="carousel"
+      >
+        <div class="carousel-indicators">
+          <button
+            type="button"
+            data-bs-target="#carouselExampleControls"
+            data-bs-slide-to="0"
+            class="active"
+            aria-current="true"
+            aria-label="Slide 1"
+          ></button>
+          <button
+            type="button"
+            data-bs-target="#carouselExampleControls"
+            data-bs-slide-to="1"
+            aria-label="Slide 2"
+          ></button>
+          <button
+            type="button"
+            data-bs-target="#carouselExampleControls"
+            data-bs-slide-to="2"
+            aria-label="Slide 3"
+          ></button>
+          <button
+            type="button"
+            data-bs-target="#carouselExampleControls"
+            data-bs-slide-to="3"
+            aria-label="Slide 4"
+          ></button>
+          <button
+            type="button"
+            data-bs-target="#carouselExampleControls"
+            data-bs-slide-to="4"
+            aria-label="Slide 5"
+          ></button>
+          <button
+            type="button"
+            data-bs-target="#carouselExampleControls"
+            data-bs-slide-to="5"
+            aria-label="Slide 6"
+          ></button>
+          <button
+            type="button"
+            data-bs-target="#carouselExampleControls"
+            data-bs-slide-to="6"
+            aria-label="Slide 7"
+          ></button>
+          <button
+            type="button"
+            data-bs-target="#carouselExampleControls"
+            data-bs-slide-to="7"
+            aria-label="Slide 8"
+          ></button>
+        </div>
+
+        <div class="carousel-inner relative overflow-hidden w-full">
+          <div class="carousel-item active relative float-left w-full">
+            <img
+              src="../assets/images/pacar/1.jpeg"
+              class="block w-full"
+              alt="Slide 1"
+            />
+            <div class="carousel-caption d-none d-md-block">
+              <h5>Beautiful Moments</h5>
+              <p>Capturing life's special times together</p>
+            </div>
+          </div>
+          <div class="carousel-item relative float-left w-full">
+            <img
+              src="../assets/images/pacar/2.jpeg"
+              class="block w-full"
+              alt="Slide 2"
+            />
+            <div class="carousel-caption d-none d-md-block">
+              <h5>Adventure Time</h5>
+              <p>Exploring new places</p>
+            </div>
+          </div>
+          <div class="carousel-item relative float-left w-full">
+            <img
+              src="../assets/images/pacar/3.jpeg"
+              class="block w-full"
+              alt="Slide 3"
+            />
+            <div class="carousel-caption d-none d-md-block">
+              <h5>Fun Days</h5>
+              <p>Creating memories that last</p>
+            </div>
+          </div>
+          <div class="carousel-item relative float-left w-full">
+            <img
+              src="../assets/images/pacar/4.jpeg"
+              class="block w-full"
+              alt="Slide 4"
+            />
+            <div class="carousel-caption d-none d-md-block">
+              <h5>Perfect Match</h5>
+              <p>When two souls connect</p>
+            </div>
+          </div>
+          <div class="carousel-item relative float-left w-full">
+            <img
+              src="../assets/images/pacar/5.jpeg"
+              class="block w-full"
+              alt="Slide 5"
+            />
+            <div class="carousel-caption d-none d-md-block">
+              <h5>Magical Moments</h5>
+              <p>Every second is precious</p>
+            </div>
+          </div>
+          <div class="carousel-item relative float-left w-full">
+            <img
+              src="../assets/images/pacar/6.jpeg"
+              class="block w-full"
+              alt="Slide 6"
+            />
+            <div class="carousel-caption d-none d-md-block">
+              <h5>Partner in Crime</h5>
+              <p>Through thick and thin</p>
+            </div>
+          </div>
+          <div class="carousel-item relative float-left w-full">
+            <img
+              src="../assets/images/pacar/7.jpeg"
+              class="block w-full"
+              alt="Slide 7"
+            />
+            <div class="carousel-caption d-none d-md-block">
+              <h5>Lucky Me</h5>
+              <p>Grateful for every moment</p>
+            </div>
+          </div>
+          <div class="carousel-item relative float-left w-full">
+            <img
+              src="../assets/images/pacar/8.jpeg"
+              class="block w-full"
+              alt="Slide 8"
+            />
+            <div class="carousel-caption d-none d-md-block">
+              <h5>Life Together</h5>
+              <p>Building memories day by day</p>
+            </div>
+          </div>
+        </div>
+
+        <button
+          class="carousel-control-prev absolute top-0 bottom-0 left-0 z-10 flex items-center justify-center p-0 text-center border-0 hover:outline-none hover:no-underline focus:outline-none focus:no-underline"
+          type="button"
+          data-bs-target="#carouselExampleControls"
+          data-bs-slide="prev"
+        >
+          <span
+            class="carousel-control-prev-icon inline-block bg-no-repeat"
+            aria-hidden="true"
+          ></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button
+          class="carousel-control-next absolute top-0 bottom-0 right-0 z-10 flex items-center justify-center p-0 text-center border-0 hover:outline-none hover:no-underline focus:outline-none focus:no-underline"
+          type="button"
+          data-bs-target="#carouselExampleControls"
+          data-bs-slide="next"
+        >
+          <span
+            class="carousel-control-next-icon inline-block bg-no-repeat"
+            aria-hidden="true"
+          ></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+
+      <div class="section-title">What I Love</div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <div
+          class="normal-card neon-border hover-lift animate__animated animate__fadeInUp"
+        >
+          <div class="flex justify-center mb-4">
+            <i class="fas fa-code fa-3x"></i>
+          </div>
+          <h3 class="font-bold text-xl mb-2 text-center">Coding</h3>
+          <p class="text-center">
+            From frustration to euphoria when that bug finally gets fixed. It's
+            a love-hate relationship.
+          </p>
+        </div>
+        <div
+          class="normal-card neon-border hover-lift animate__animated animate__fadeInUp"
+          style="animation-delay: 0.2s"
+        >
+          <div class="flex justify-center mb-4">
+            <i class="fas fa-coffee fa-3x"></i>
+          </div>
+          <h3 class="font-bold text-xl mb-2 text-center">Coffee</h3>
+          <p class="text-center">
+            My fuel for those late-night coding sessions. Black, no sugar - the
+            programmer's elixir.
+          </p>
+        </div>
+        <div
+          class="normal-card neon-border hover-lift animate__animated animate__fadeInUp"
+          style="animation-delay: 0.4s"
+        >
+          <div class="flex justify-center mb-4">
+            <i class="fas fa-music fa-3x"></i>
+          </div>
+          <h3 class="font-bold text-xl mb-2 text-center">Music</h3>
+          <p class="text-center">
+            The soundtrack to my life and coding adventures. From lo-fi beats to
+            rock classics.
+          </p>
+        </div>
+      </div>
+
+      <div class="section-title">Connect With Me</div>
+
+      <div
+        class="normal-card neon-border rounded-lg p-6 sm:p-8 mb-12 animate__animated animate__fadeIn"
+      >
+        <div class="flex flex-wrap justify-center gap-6">
+          <a href="https://github.com/aryaptrha" class="interactive-element">
+            <i class="fab fa-github fa-3x"></i>
+          </a>
+          <a
+            href="https://www.linkedin.com/in/aryaputra-haidar-akbar-b122811b7/"
+            class="interactive-element"
+          >
+            <i class="fab fa-linkedin fa-3x"></i>
+          </a>
+          <a
+            href="https://www.instagram.com/aryaptrha"
+            class="interactive-element"
+          >
+            <i class="fab fa-instagram fa-3x"></i>
+          </a>
+          <a
+            href="mailto:aryaputrahaidar@gmail.com"
+            class="interactive-element"
+          >
+            <i class="fas fa-envelope fa-3x"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="text-center mt-8 mb-16">
+        <p
+          class="glitch-text"
+          data-text="© 2025 Aryaputra. All rights reserved."
+        >
+          © 2025 Aryaputra. All rights reserved.
+        </p>
+        <p class="mt-2">
+          Made with <i class="fas fa-heart text-red-500"></i> and a lot of
+          coffee
+        </p>
+      </div>
+    </div>
+
+    <!-- Audio element -->
+    <audio id="backgroundMusic" loop>
+      <source src="../assets/audio/Viva! Hurricane.mp3" type="audio/mp3" />
+    </audio>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Initialize particles.js
+      particlesJS("particles-js", {
+        particles: {
+          number: {
+            value: 80,
+            density: {
+              enable: true,
+              value_area: 800,
+            },
+          },
+          color: {
+            value: "#b537f2",
+          },
+          shape: {
+            type: "circle",
+            stroke: {
+              width: 0,
+              color: "#000000",
+            },
+            polygon: {
+              nb_sides: 5,
+            },
+          },
+          opacity: {
+            value: 0.5,
+            random: false,
+            anim: {
+              enable: false,
+              speed: 1,
+              opacity_min: 0.1,
+              sync: false,
+            },
+          },
+          size: {
+            value: 3,
+            random: true,
+            anim: {
+              enable: false,
+              speed: 40,
+              size_min: 0.1,
+              sync: false,
+            },
+          },
+          line_linked: {
+            enable: true,
+            distance: 150,
+            color: "#b537f2",
+            opacity: 0.4,
+            width: 1,
+          },
+          move: {
+            enable: true,
+            speed: 6,
+            direction: "none",
+            random: false,
+            straight: false,
+            out_mode: "out",
+            bounce: false,
+            attract: {
+              enable: false,
+              rotateX: 600,
+              rotateY: 1200,
+            },
+          },
+        },
+        interactivity: {
+          detect_on: "canvas",
+          events: {
+            onhover: {
+              enable: true,
+              mode: "repulse",
+            },
+            onclick: {
+              enable: true,
+              mode: "push",
+            },
+            resize: true,
+          },
+          modes: {
+            grab: {
+              distance: 400,
+              line_linked: {
+                opacity: 1,
+              },
+            },
+            bubble: {
+              distance: 400,
+              size: 40,
+              duration: 2,
+              opacity: 8,
+              speed: 3,
+            },
+            repulse: {
+              distance: 200,
+              duration: 0.4,
+            },
+            push: {
+              particles_nb: 4,
+            },
+            remove: {
+              particles_nb: 2,
+            },
+          },
+        },
+        retina_detect: true,
+      });
+
+      // Custom cursor
+      document.addEventListener("DOMContentLoaded", function () {
+        const cursorDot = document.querySelector(".cursor-dot");
+        const cursorOutline = document.querySelector(".cursor-outline");
+
+        if (window.matchMedia("(min-width: 768px)").matches) {
+          document.addEventListener("mousemove", function (e) {
+            cursorDot.style.left = e.clientX + "px";
+            cursorDot.style.top = e.clientY + "px";
+
+            // Add slight delay to outline for a smoother effect
+            setTimeout(function () {
+              cursorOutline.style.left = e.clientX + "px";
+              cursorOutline.style.top = e.clientY + "px";
+            }, 80);
+          });
+
+          document.addEventListener("mousedown", function () {
+            cursorDot.style.transform = "translate(-50%, -50%) scale(0.7)";
+            cursorOutline.style.transform = "translate(-50%, -50%) scale(0.7)";
+          });
+
+          document.addEventListener("mouseup", function () {
+            cursorDot.style.transform = "translate(-50%, -50%) scale(1)";
+            cursorOutline.style.transform = "translate(-50%, -50%) scale(1)";
+          });
+
+          // Change cursor appearance when hovering over interactive elements
+          const interactiveElements = document.querySelectorAll(
+            "a, button, .interactive-element"
+          );
+          interactiveElements.forEach((element) => {
+            element.addEventListener("mouseenter", function () {
+              cursorDot.style.transform = "translate(-50%, -50%) scale(1.5)";
+              cursorOutline.style.transform =
+                "translate(-50%, -50%) scale(1.5)";
+              cursorOutline.style.borderColor =
+                document.body.classList.contains("dark-mode")
+                  ? "#ff2e97"
+                  : "#b537f2";
+            });
+
+            element.addEventListener("mouseleave", function () {
+              cursorDot.style.transform = "translate(-50%, -50%) scale(1)";
+              cursorOutline.style.transform = "translate(-50%, -50%) scale(1)";
+              cursorOutline.style.borderColor =
+                document.body.classList.contains("dark-mode")
+                  ? "#ff2e97"
+                  : "#b537f2";
+            });
+          });
+        }
+      });
+
+      // Theme toggle
+      document
+        .getElementById("themeToggleBtn")
+        .addEventListener("click", function () {
+          document.body.classList.toggle("dark-mode");
+          if (document.body.classList.contains("dark-mode")) {
+            this.textContent = "🌞";
+            document.querySelector(".cursor-dot").style.backgroundColor =
+              "#ff2e97";
+            document.querySelector(".cursor-outline").style.borderColor =
+              "#ff2e97";
+            document.querySelectorAll(".progress-bar").forEach((bar) => {
+              bar.style.background =
+                "linear-gradient(to right, var(--neon-pink), var(--neon-purple))";
+            });
+          } else {
+            this.textContent = "🌜";
+            document.querySelector(".cursor-dot").style.backgroundColor =
+              "#b537f2";
+            document.querySelector(".cursor-outline").style.borderColor =
+              "#b537f2";
+            document.querySelectorAll(".progress-bar").forEach((bar) => {
+              bar.style.background =
+                "linear-gradient(to right, var(--neon-blue), var(--neon-purple))";
+            });
+          }
+        });
+
+      // Bandung Easter Egg
+      document
+        .getElementById("bandungText")
+        .addEventListener("click", function () {
+          confetti();
+          // Show a brief message
+          const message = document.createElement("div");
+          message.textContent = "💖 Bandung! 💖";
+          message.style.position = "fixed";
+          message.style.top = "50%";
+          message.style.left = "50%";
+          message.style.transform = "translate(-50%, -50%)";
+          message.style.padding = "20px";
+          message.style.background = document.body.classList.contains(
+            "dark-mode"
+          )
+            ? "rgba(255, 46, 151, 0.8)"
+            : "rgba(181, 55, 242, 0.8)";
+          message.style.color = "white";
+          message.style.borderRadius = "10px";
+          message.style.zIndex = "1000";
+          message.style.fontWeight = "bold";
+          message.style.fontSize = "2rem";
+          document.body.appendChild(message);
+
+          setTimeout(() => {
+            document.body.removeChild(message);
+          }, 2000);
+        });
+
+      // Music player
+      const musicToggle = document.getElementById("musicToggle");
+      const backgroundMusic = document.getElementById("backgroundMusic");
+
+      musicToggle.addEventListener("click", function () {
+        if (backgroundMusic.paused) {
+          backgroundMusic.play();
+          musicToggle.classList.add("music-playing");
+        } else {
+          backgroundMusic.pause();
+          musicToggle.classList.remove("music-playing");
+        }
+      });
+
+      // SIGMA text interaction
+      document
+        .getElementById("sigmaText")
+        .addEventListener("mouseover", function () {
+          this.style.transform = "scale(1.2) rotate(5deg)";
+          this.style.transition = "transform 0.3s ease";
+        });
+
+      document
+        .getElementById("sigmaText")
+        .addEventListener("mouseout", function () {
+          this.style.transform = "scale(1) rotate(0deg)";
+        });
+
+      // Progress bars animation
+      function animateProgressBars() {
+        document.querySelectorAll(".progress-bar").forEach((bar) => {
+          const width = bar.getAttribute("data-width");
+          bar.style.width = width;
+        });
+      }
+
+      // Confetti function
+      function confetti() {
+        const colors = ["#ff2e97", "#00f3ff", "#b537f2", "#f9f002"];
+
+        for (let i = 0; i < 100; i++) {
+          const confetti = document.createElement("div");
+          confetti.className = "confetti";
+          confetti.style.left = Math.random() * window.innerWidth + "px";
+          confetti.style.backgroundColor =
+            colors[Math.floor(Math.random() * colors.length)];
+          confetti.style.width = Math.random() * 10 + 5 + "px";
+          confetti.style.height = Math.random() * 10 + 5 + "px";
+          confetti.style.opacity = Math.random() + 0.5;
+          confetti.style.animationDuration = Math.random() * 3 + 2 + "s";
+          document.body.appendChild(confetti);
+
+          // Remove confetti after animation completes
+          setTimeout(() => {
+            document.body.removeChild(confetti);
+          }, 5000);
+        }
+      }
+
+      // Animate elements when they come into view
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              if (entry.target.classList.contains("progress-bar")) {
+                const width = entry.target.getAttribute("data-width");
+                entry.target.style.width = width;
+              } else if (entry.target.classList.contains("timeline-item")) {
+                if (entry.target.classList.contains("left")) {
+                  entry.target.classList.add("animate__fadeInLeft");
+                } else {
+                  entry.target.classList.add("animate__fadeInRight");
+                }
+              } else {
+                entry.target.classList.add("animate__fadeIn");
+              }
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.1 }
+      );
+
+      document
+        .querySelectorAll(".progress-bar, .timeline-item, .normal-card")
+        .forEach((el) => {
+          observer.observe(el);
+        });
+
+      // Initial animations
+      setTimeout(animateProgressBars, 1000);
+
+      // Initialize supabase visitor tracking (placeholder)
+      function showVisitorModal(page) {
+        console.log("Visitor tracking for: " + page);
+        // Actual implementation would go here
+      }
+
+      // Call the visitor tracking on load
+      document.addEventListener("DOMContentLoaded", function () {
+        // Show visitor modal when page loads - slight delay to ensure all styles are loaded
+        setTimeout(() => {
+          showVisitorModal("about");
+        }, 1000);
+      });
+
+      // Initialize GSAP animations
+      document.addEventListener("DOMContentLoaded", function () {
+        // Register ScrollTrigger plugin
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Smooth scroll animation for navigation
+        document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+          anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute("href"));
+            if (target) {
+              gsap.to(window, {
+                duration: 1,
+                scrollTo: {
+                  y: target,
+                  offsetY: 50,
+                },
+                ease: "power2.inOut",
+              });
+            }
+          });
+        });
+
+        // Timeline animations
+        gsap.from(".timeline-item.left", {
+          scrollTrigger: {
+            trigger: ".timeline",
+            start: "top 80%",
+            toggleActions: "play none none none",
+          },
+          x: -100,
+          opacity: 0,
+          duration: 1,
+          stagger: 0.3,
+          ease: "back.out(1.7)",
+        });
+
+        gsap.from(".timeline-item.right", {
+          scrollTrigger: {
+            trigger: ".timeline",
+            start: "top 80%",
+            toggleActions: "play none none none",
+          },
+          x: 100,
+          opacity: 0,
+          duration: 1,
+          stagger: 0.3,
+          ease: "back.out(1.7)",
+        });
+
+        // Animate section titles when they come into view
+        gsap.utils.toArray(".section-title").forEach((title) => {
+          gsap.from(title, {
+            scrollTrigger: {
+              trigger: title,
+              start: "top 80%",
+              toggleActions: "play none none none",
+            },
+            y: 50,
+            opacity: 0,
+            duration: 0.8,
+            ease: "power3.out",
+          });
+        });
+
+        // Animate the sigma text with a continuous hover effect
+        gsap.to("#sigmaText", {
+          scale: 1.1,
+          rotation: 5,
+          duration: 1.5,
+          ease: "elastic.out(1, 0.3)",
+          repeat: -1,
+          yoyo: true,
+        });
+
+        // Animated cards
+        gsap.utils.toArray(".normal-card").forEach((card) => {
+          // Skip cards that are already part of other animations
+          if (!card.closest(".timeline-item")) {
+            gsap.from(card, {
+              scrollTrigger: {
+                trigger: card,
+                start: "top 85%",
+                toggleActions: "play none none none",
+              },
+              y: 30,
+              opacity: 0,
+              duration: 0.8,
+              ease: "power2.out",
+            });
+          }
+        });
+
+        // 3D tilt effect on hover for cards
+        document.querySelectorAll(".hover-lift").forEach((card) => {
+          card.addEventListener("mousemove", (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left; // x position within the element
+            const y = e.clientY - rect.top; // y position within the element
+
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+
+            const tiltX = (centerY - y) / 10;
+            const tiltY = (x - centerX) / 10;
+
+            gsap.to(card, {
+              duration: 0.5,
+              rotationX: tiltX,
+              rotationY: tiltY,
+              transformPerspective: 1000,
+              ease: "power1.out",
+            });
+          });
+
+          card.addEventListener("mouseleave", () => {
+            gsap.to(card, {
+              duration: 0.5,
+              rotationX: 0,
+              rotationY: 0,
+              ease: "power3.out",
+            });
+          });
+        });
+
+        // Text reveal animation for paragraphs
+        gsap.utils.toArray("p").forEach((paragraph) => {
+          if (
+            !paragraph.closest(".timeline-item") &&
+            !paragraph.closest(".carousel-caption")
+          ) {
+            gsap.from(paragraph, {
+              scrollTrigger: {
+                trigger: paragraph,
+                start: "top 85%",
+                toggleActions: "play none none none",
+              },
+              opacity: 0,
+              y: 20,
+              duration: 1,
+              ease: "power2.out",
+            });
+          }
+        });
+
+        // Progress bar animation
+        gsap.utils.toArray(".progress-bar").forEach((bar) => {
+          const width = bar.getAttribute("data-width");
+          gsap.to(bar, {
+            scrollTrigger: {
+              trigger: bar,
+              start: "top 90%",
+              toggleActions: "play none none none",
+            },
+            width: width,
+            duration: 1.5,
+            ease: "power2.out",
+          });
+        });
+      });
+    </script>
+  </body>
 </html>
