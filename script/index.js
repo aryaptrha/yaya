@@ -224,4 +224,25 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 500);
     });
   });
+
+  async function setRandomMemeFavicon() {
+    try {
+      // Example: Fetch a random meme from an API or use a static URL
+      const memeUrl = "https://i.imgflip.com/30b1gx.jpg"; // Replace with a dynamic meme API if needed
+
+      // Create or update the favicon link
+      let favicon = document.querySelector("link[rel='icon']");
+      if (!favicon) {
+        favicon = document.createElement("link");
+        favicon.rel = "icon";
+        document.head.appendChild(favicon);
+      }
+      favicon.href = memeUrl;
+    } catch (error) {
+      console.error("Failed to set random meme favicon:", error);
+    }
+  }
+
+  // Call the function on page load
+  setRandomMemeFavicon();
 });
