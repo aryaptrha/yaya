@@ -27,6 +27,8 @@ async function saveVisitorInfo(name, pageName) {
       return true;
     }
 
+    // Temporarily disable Supabase-related code
+    /*
     const { data, error } = await supabase
       .from('visitors')
       .insert([
@@ -35,15 +37,16 @@ async function saveVisitorInfo(name, pageName) {
           page_visited: pageName,
           visit_time: new Date().toISOString()
         }
-      ])
+      ]);
 
     if (error) {
-      console.error('Error saving visitor:', error)
-      return false
+      console.error('Error saving visitor:', error);
+      return false;
     }
+    */
 
     // Save to session storage
-    sessionStorage.setItem('visitorName', name)
+    sessionStorage.setItem('visitorName', name);
 
     // Remove the modal from DOM completely
     const modal = document.getElementById('visitor-modal');
@@ -51,10 +54,20 @@ async function saveVisitorInfo(name, pageName) {
       modal.parentNode.removeChild(modal);
     }
 
-    return true
+    return true;
   } catch (err) {
-    console.error('Error in saveVisitorInfo:', err)
-    return false
+    console.error('Error in saveVisitorInfo:', err);
+
+    // Save to session storage even if an error occurs
+    sessionStorage.setItem('visitorName', name);
+
+    // Remove the modal from DOM completely
+    const modal = document.getElementById('visitor-modal');
+    if (modal && modal.parentNode) {
+      modal.parentNode.removeChild(modal);
+    }
+
+    return false;
   }
 }
 
