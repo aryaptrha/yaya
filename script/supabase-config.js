@@ -1,6 +1,5 @@
 //Yang baca ini silahkan baca dan resapi url sama key nya otak atik ajh asw
-const supabaseUrl = "https://nrgxggpmipbvecjshvxf.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5yZ3hnZ3BtaXBidmVjanNodnhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDExNDUxMjksImV4cCI6MjA1NjcyMTEyOX0.rJeqNwDJ794OUIxR0Zlr0ZNvx0rysTeEPfc5OmcUGqM";
+
 const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 // Function to check if user is logged in via session
