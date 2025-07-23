@@ -246,3 +246,85 @@ document.addEventListener('DOMContentLoaded', () => {
   // Call the function on page load
   setRandomMemeFavicon();
 });
+
+function trulyMaskUrl(targetPath) {
+  // Prevent any navigation
+  window.onbeforeunload = null;
+  
+  // Create fullscreen overlay that looks like a new page
+  const overlay = document.createElement('div');
+  overlay.id = 'masked-page-overlay';
+  overlay.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #000;
+    z-index: 999999;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  `;
+
+  // Create fake browser UI
+  const fakeBrowser = document.createElement('div');
+  fakeBrowser.style.cssText = `
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  `;
+
+  // Fake URL with lock icon
+  const fakeUrl = document.createElement('div');
+  fakeUrl.style.cssText = `
+    background: #2d2d2d;
+    padding: 6px 12px;
+    border-radius: 20px;
+    color: #fff;
+    font-size: 14px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  `;
+
+  const maskedUrls = [
+    '🔒 https://secure-portal.enterprise.com/dashboard/analytics',
+    '🔒 https://internal-systems.corp/executive/reports', 
+    '🔒 https://classified.gov.site/level-5/documents',
+    '🔒 https://top-secret.military.net/operation-files',
+    '🔒 https://crypto-vault.blockchain.io/private-keys'
+  ];
+
+  fakeUrl.innerHTML = maskedUrls[Math.floor(Math.random() * maskedUrls.length)];
+
+  const iframe = document.createElement('iframe');
+  iframe.src = targetPath;
+  iframe.style.cssText = `
+    flex: 1;
+    border: none;
+    background: #000;
+  `;
+
+  iframe.onload = () => {
+    try {
+      iframe.contentWindow.history.pushState = () => {};
+      iframe.contentWindow.history.replaceState = () => {};
+    } catch (e) {
+    }
+  };
+
+  // fakeBrowser.appendChild(fakeAddressBar);
+  fakeBrowser.appendChild(iframe);
+  overlay.appendChild(fakeBrowser);
+  document.body.appendChild(overlay);
+
+  setTimeout(() => {
+    overlay.style.opacity = '1';
+  }, 50);
+
+  setTimeout(() => {
+    window.history.pushState({}, '', '/');
+  }, 100);
+}

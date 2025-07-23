@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Deploy to GitHub Pages with URL Masking
 
 on:
   push:
@@ -20,17 +20,155 @@ jobs:
             find . -name "*.html" -type f -exec sed -i "s|SUPABASE_URL_PLACEHOLDER|${{ secrets.SUPABASE_URL }}|g" {} \;
             find . -name "*.html" -type f -exec sed -i "s|SUPABASE_KEY_PLACEHOLDER|${{ secrets.SUPABASE_KEY }}|g" {} \;
 
+      - name: Create URL masking structure
+        run: |
+          # Create masked directory structure
+          mkdir -p dashboard
+          mkdir -p admin
+          mkdir -p secure-area
+          mkdir -p classified
+          mkdir -p top-secret
+          
+          # Copy pages to masked locations
+          if [ -f "pages/about.html" ]; then
+            cp pages/about.html dashboard/profile.html
+            cp pages/about.html admin/user-info.html
+          fi
+          
+          if [ -f "pages/sigma-traits.html" ]; then
+            cp pages/sigma-traits.html secure-area/analytics.html
+            cp pages/sigma-traits.html classified/data.html
+          fi
+          
+          if [ -f "pages/hack-attack.html" ]; then
+            cp pages/hack-attack.html top-secret/mission.html
+            cp pages/hack-attack.html admin/tools.html
+          fi
+
+      - name: Generate random masked URLs
+        run: |
+          # Create a mapping file for random URLs
+          echo "Creating URL mappings..."
+          
+          # Generate random strings for URLs
+          RANDOM_1=$(openssl rand -hex 8)
+          RANDOM_2=$(openssl rand -hex 8)
+          RANDOM_3=$(openssl rand -hex 8)
+          
+          # Create additional masked copies with random names
+          if [ -f "pages/about.html" ]; then
+            cp pages/about.html "x${RANDOM_1}.html"
+          fi
+          
+          if [ -f "pages/sigma-traits.html" ]; then
+            cp pages/sigma-traits.html "y${RANDOM_2}.html"
+          fi
+          
+          if [ -f "pages/hack-attack.html" ]; then
+            cp pages/hack-attack.html "z${RANDOM_3}.html"
+          fi
+          
+          # Save mappings to a file for reference
+          echo "about.html -> x${RANDOM_1}.html" > url-mappings.txt
+          echo "sigma-traits.html -> y${RANDOM_2}.html" >> url-mappings.txt
+          echo "hack-attack.html -> z${RANDOM_3}.html" >> url-mappings.txt
+
+      - name: Update navigation links in HTML files
+        run: |
+          # Read the generated random URLs
+          if [ -f "url-mappings.txt" ]; then
+            ABOUT_URL=$(grep "about.html" url-mappings.txt | cut -d'>' -f2 | tr -d ' ')
+            SIGMA_URL=$(grep "sigma-traits.html" url-mappings.txt | cut -d'>' -f2 | tr -d ' ')
+            HACK_URL=$(grep "hack-attack.html" url-mappings.txt | cut -d'>' -f2 | tr -d ' ')
+            
+            # Update main index.html with masked URLs
+            sed -i "s|pages/about.html|${ABOUT_URL}|g" index.html
+            sed -i "s|pages/sigma-traits.html|${SIGMA_URL}|g" index.html  
+            sed -i "s|pages/hack-attack.html|${HACK_URL}|g" index.html
+            
+            # Also update any other HTML files that might reference these
+            find . -name "*.html" -not -path "./pages/*" -exec sed -i "s|pages/about.html|${ABOUT_URL}|g" {} \;
+            find . -name "*.html" -not -path "./pages/*" -exec sed -i "s|pages/sigma-traits.html|${SIGMA_URL}|g" {} \;
+            find . -name "*.html" -not -path "./pages/*" -exec sed -i "s|pages/hack-attack.html|${HACK_URL}|g" {} \;
+          fi
+
+      - name: Create fake directory structure with decoy files
+        run: |
+          # Create convincing fake directories
+          mkdir -p corporate/reports
+          mkdir -p internal/documents  
+          mkdir -p backup/files
+          mkdir -p temp/cache
+          
+          # Create decoy HTML files
+          echo "<!DOCTYPE html><html><head><title>Access Denied</title></head><body><h1>403 - Access Denied</h1><p>You don't have permission to access this resource.</p></body></html>" > corporate/reports/index.html
+          echo "<!DOCTYPE html><html><head><title>Internal Server Error</title></head><body><h1>500 - Internal Server Error</h1><p>The server encountered an error.</p></body></html>" > internal/documents/index.html
+          echo "<!DOCTYPE html><html><head><title>Not Found</title></head><body><h1>404 - Not Found</h1><p>The requested resource was not found.</p></body></html>" > backup/files/index.html
+
+      - name: Create redirect pages for extra masking
+        run: |
+          # Create redirect pages that look like legitimate URLs
+          cat > business-portal.html << 'EOF'
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>Business Portal</title>
+            <meta http-equiv="refresh" content="0; url=dashboard/profile.html">
+          </head>
+          <body>
+            <p>Redirecting to business portal...</p>
+          </body>
+          </html>
+          EOF
+          
+          cat > employee-access.html << 'EOF'
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>Employee Access</title>
+            <meta http-equiv="refresh" content="0; url=secure-area/analytics.html">
+          </head>
+          <body>
+            <p>Redirecting to employee portal...</p>
+          </body>
+          </html>
+          EOF
+
+      - name: Clean up original pages directory (optional)
+        run: |
+          # Uncomment the next line if you want to completely hide the original pages
+          # rm -rf pages/
+          
+          # Or rename it to something inconspicuous
+          if [ -d "pages" ]; then
+            mv pages temp-backup-$(date +%s)
+          fi
+
+      - name: Generate sitemap with masked URLs
+        run: |
+          cat > sitemap.xml << 'EOF'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+            <url><loc>https://aryaptrha.github.io/yaya/</loc></url>
+            <url><loc>https://aryaptrha.github.io/yaya/dashboard/profile.html</loc></url>
+            <url><loc>https://aryaptrha.github.io/yaya/secure-area/analytics.html</loc></url>
+            <url><loc>https://aryaptrha.github.io/yaya/admin/tools.html</loc></url>
+            <url><loc>https://aryaptrha.github.io/yaya/business-portal.html</loc></url>
+            <url><loc>https://aryaptrha.github.io/yaya/employee-access.html</loc></url>
+          </urlset>
+          EOF
+
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@4.1.5
         with:
           branch: gh-pages
           folder: .
           
-      - name: Debug - Show environment variables (redacted)
+      - name: Debug - Show URL mappings
         run: |
-          echo "SUPABASE_URL length: ${#SUPABASE_URL}"
-          echo "SUPABASE_URL starts with: ${SUPABASE_URL:0:5}..."
-          echo "SUPABASE_KEY length: ${#SUPABASE_KEY}"
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          echo "=== URL MASKING RESULTS ==="
+          if [ -f "url-mappings.txt" ]; then
+            cat url-mappings.txt
+          fi
+          echo "=== DIRECTORY STRUCTURE ==="
+          find . -name "*.html" -type f | head -20
