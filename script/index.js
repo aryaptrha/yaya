@@ -248,58 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function trulyMaskUrl(targetPath) {
-  // Prevent any navigation
   window.onbeforeunload = null;
-  
-  // Create fullscreen overlay that looks like a new page
-  const overlay = document.createElement('div');
-  overlay.id = 'masked-page-overlay';
-  overlay.style.cssText = `
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: #000;
-    z-index: 999999;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-  `;
-
-  // Create fake browser UI
-  const fakeBrowser = document.createElement('div');
-  fakeBrowser.style.cssText = `
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-  `;
-
-  // Fake address bar
-  const fakeAddressBar = document.createElement('div');
-  fakeAddressBar.style.cssText = `
-    background: #1a1a1a;
-    padding: 8px 15px;
-    border-bottom: 1px solid #333;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  `;
-
-  // Fake URL with lock icon
-  const fakeUrl = document.createElement('div');
-  fakeUrl.style.cssText = `
-    background: #2d2d2d;
-    padding: 6px 12px;
-    border-radius: 20px;
-    color: #fff;
-    font-size: 14px;
-    flex: 1;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  `;
 
   const maskedUrls = [
     '🔒 https://secure-portal.enterprise.com/dashboard/analytics',
@@ -311,51 +260,8 @@ function trulyMaskUrl(targetPath) {
 
   fakeUrl.innerHTML = maskedUrls[Math.floor(Math.random() * maskedUrls.length)];
 
-  // Browser controls
-  const controls = document.createElement('div');
-  controls.style.cssText = `
-    display: flex;
-    gap: 10px;
-    align-items: center;
-  `;
-
-  // Back button that actually works
-  const backBtn = document.createElement('button');
-  backBtn.innerHTML = '←';
-  backBtn.style.cssText = `
-    background: #444;
-    border: none;
-    color: #fff;
-    padding: 5px 10px;
-    border-radius: 3px;
-    cursor: pointer;
-  `;
-  backBtn.onclick = () => {
-    overlay.remove();
-    // Reset URL if needed
-    window.history.pushState({}, '', '/yaya/');
-  };
-
-  // Close button
-  const closeBtn = document.createElement('button');
-  closeBtn.innerHTML = '✕';
-  closeBtn.style.cssText = `
-    background: #ff4444;
-    border: none;
-    color: #fff;
-    padding: 5px 8px;
-    border-radius: 3px;
-    cursor: pointer;
-  `;
-  closeBtn.onclick = () => overlay.remove();
-
-  controls.appendChild(backBtn);
-  controls.appendChild(closeBtn);
-
   fakeAddressBar.appendChild(fakeUrl);
-  fakeAddressBar.appendChild(controls);
 
-  // Content iframe
   const iframe = document.createElement('iframe');
   iframe.src = targetPath;
   iframe.style.cssText = `
@@ -364,14 +270,11 @@ function trulyMaskUrl(targetPath) {
     background: #000;
   `;
 
-  // Prevent iframe from changing parent URL
   iframe.onload = () => {
     try {
-      // Additional security to prevent URL changes
       iframe.contentWindow.history.pushState = () => {};
       iframe.contentWindow.history.replaceState = () => {};
     } catch (e) {
-      // Cross-origin restrictions, which is actually good for security
     }
   };
 
@@ -380,13 +283,11 @@ function trulyMaskUrl(targetPath) {
   overlay.appendChild(fakeBrowser);
   document.body.appendChild(overlay);
 
-  // Animate in
   setTimeout(() => {
     overlay.style.opacity = '1';
   }, 50);
 
-  // Change the actual page URL to something generic
   setTimeout(() => {
-    window.history.pushState({}, '', '/yaya/dashboard');
+    window.history.pushState({}, '', '/');
   }, 100);
 }
