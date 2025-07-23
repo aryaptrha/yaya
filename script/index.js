@@ -248,7 +248,46 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function trulyMaskUrl(targetPath) {
+  // Prevent any navigation
   window.onbeforeunload = null;
+  
+  // Create fullscreen overlay that looks like a new page
+  const overlay = document.createElement('div');
+  overlay.id = 'masked-page-overlay';
+  overlay.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #000;
+    z-index: 999999;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  `;
+
+  // Create fake browser UI
+  const fakeBrowser = document.createElement('div');
+  fakeBrowser.style.cssText = `
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  `;
+
+  // Fake URL with lock icon
+  const fakeUrl = document.createElement('div');
+  fakeUrl.style.cssText = `
+    background: #2d2d2d;
+    padding: 6px 12px;
+    border-radius: 20px;
+    color: #fff;
+    font-size: 14px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  `;
 
   const maskedUrls = [
     '🔒 https://secure-portal.enterprise.com/dashboard/analytics',
@@ -259,8 +298,6 @@ function trulyMaskUrl(targetPath) {
   ];
 
   fakeUrl.innerHTML = maskedUrls[Math.floor(Math.random() * maskedUrls.length)];
-
-  fakeAddressBar.appendChild(fakeUrl);
 
   const iframe = document.createElement('iframe');
   iframe.src = targetPath;
@@ -278,7 +315,7 @@ function trulyMaskUrl(targetPath) {
     }
   };
 
-  fakeBrowser.appendChild(fakeAddressBar);
+  // fakeBrowser.appendChild(fakeAddressBar);
   fakeBrowser.appendChild(iframe);
   overlay.appendChild(fakeBrowser);
   document.body.appendChild(overlay);
