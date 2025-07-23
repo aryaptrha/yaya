@@ -1,3 +1,3 @@
-about.html -> xecb4aa57b3dda144.html
-sigma-traits.html -> y51f68dca6a7c8731.html
-hack-attack.html -> ze88cbe531e18f3f0.html
+about.html -> x01fc443664d1bc97.html
+sigma-traits.html -> yd7ad0d27e2abe05a.html
+hack-attack.html -> z07877d2a15b1f054.html
