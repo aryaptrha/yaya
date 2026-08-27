@@ -31,11 +31,76 @@ let gameState = {
     targetsClicked: 0,
     lives: gameConfig.lives,
     gameActive: false,
+    paused: false,
     difficultySelected: 'easy',
     currentTargets: [],
     spawnInterval: null,
     codeLineInterval: null
 };
+
+const CODE_LINE_RATE = 2000;
+
+// Respected by every JS-driven (GSAP) effect below — CSS keyframes/transitions
+// are handled separately via the prefers-reduced-motion rule in the stylesheet.
+const PREFERS_REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const HAS_GSAP = typeof window.gsap !== 'undefined';
+let memoryLeaderboard = [];
+
+function killTween(target) {
+    if (HAS_GSAP) window.gsap.killTweensOf(target);
+}
+
+function readLeaderboard() {
+    try {
+        const stored = localStorage.getItem('hackAttackLeaderboard');
+        if (stored === null) return [...memoryLeaderboard];
+
+        const value = JSON.parse(stored);
+        memoryLeaderboard = Array.isArray(value) ? value : [];
+    } catch {
+        // Storage can be unavailable or contain legacy/corrupt data.
+    }
+    return [...memoryLeaderboard];
+}
+
+function writeLeaderboard(leaderboard) {
+    memoryLeaderboard = [...leaderboard];
+    try {
+        localStorage.setItem('hackAttackLeaderboard', JSON.stringify(leaderboard));
+    } catch {
+        // Keep the leaderboard working in memory when storage is unavailable.
+    }
+}
+
+function clearStoredLeaderboard() {
+    memoryLeaderboard = [];
+    try {
+        localStorage.removeItem('hackAttackLeaderboard');
+    } catch {
+        // The in-memory leaderboard is already clear.
+    }
+}
+
+// Timers are restarted rather than mutated so a level-up actually changes the
+// spawn rate — setInterval keeps its original period once created.
+function startTimers() {
+    stopTimers();
+    gameState.spawnInterval = setInterval(createTarget, gameConfig.spawnRate);
+    gameState.codeLineInterval = setInterval(createCodeLines, CODE_LINE_RATE);
+}
+
+function stopTimers() {
+    clearInterval(gameState.spawnInterval);
+    clearInterval(gameState.codeLineInterval);
+    gameState.spawnInterval = null;
+    gameState.codeLineInterval = null;
+}
+
+function forgetTarget(target) {
+    const index = gameState.currentTargets.findIndex(t => t.element === target);
+    if (index === -1) return null;
+    return gameState.currentTargets.splice(index, 1)[0];
+}
 
 // DOM elements
 const gameContainer = document.getElementById('game-container');
@@ -91,9 +156,10 @@ function createTarget() {
     // Add to game container
     gameContainer.appendChild(target);
 
-    // Shrinking effect for higher difficulties
-    if (gameConfig.targetShrink) {
-        gsap.to(target, {
+    // Shrinking effect for higher difficulties — skipped under reduced motion
+    // since it's a continuous per-target tween, not the countdown itself.
+    if (gameConfig.targetShrink && !PREFERS_REDUCED_MOTION && HAS_GSAP) {
+        window.gsap.to(target, {
             scale: 0.5,
             duration: gameConfig.targetLifespan / 1000,
             ease: "linear"
@@ -102,7 +168,9 @@ function createTarget() {
 
     // Remove target after lifespan
     const timeout = setTimeout(() => {
+        forgetTarget(target);
         if (target.parentNode) {
+            killTween(target);
             target.parentNode.removeChild(target);
             handleMissedTarget();
         }
@@ -117,18 +185,20 @@ function createTarget() {
 
 // Handle target click
 function handleTargetClick(target) {
-    // Remove target from DOM
+    // Ignore a second click that lands before the node is detached
+    if (!target.parentNode) return;
+
+    // Clear the expiry timeout before removing the node, so it can't fire a miss
+    const tracked = forgetTarget(target);
+    if (tracked) clearTimeout(tracked.timeout);
+
+    // Measure while still attached — a detached node reports a zero rect, which
+    // would fling the burst outside the container.
+    const burst = targetCenter(target);
+    const points = parseInt(target.dataset.points, 10) || 0;
+
+    killTween(target);
     target.parentNode.removeChild(target);
-
-    // Find the target in our array to clear its timeout
-    const targetIndex = gameState.currentTargets.findIndex(t => t.element === target);
-    if (targetIndex !== -1) {
-        clearTimeout(gameState.currentTargets[targetIndex].timeout);
-        gameState.currentTargets.splice(targetIndex, 1);
-    }
-
-    // Get point value from data attribute
-    const points = parseInt(target.dataset.points);
 
     // Update score
     gameState.score += points;
@@ -139,7 +209,7 @@ function handleTargetClick(target) {
     targetsElement.textContent = gameState.targetsClicked;
 
     // Create particle effect at target position
-    createParticleEffect(target);
+    createParticleEffect(burst.x, burst.y, points);
 
     // Level up after certain number of targets
     if (gameState.targetsClicked % 10 === 0) {
@@ -156,16 +226,21 @@ function handleMissedTarget() {
     gameState.lives--;
     livesElement.textContent = gameState.lives;
 
-    // Flash the lives counter in red
-    gsap.to(livesElement, {
-        color: 'red',
-        duration: 0.2,
-        repeat: 3,
-        yoyo: true,
-        onComplete: () => {
-            livesElement.style.color = 'var(--neon-pink)';
-        }
-    });
+    // Flash the lives counter in red — a plain color swap under reduced motion,
+    // the flicker animation otherwise.
+    if (PREFERS_REDUCED_MOTION || !HAS_GSAP) {
+        livesElement.style.color = 'var(--neon-pink)';
+    } else {
+        window.gsap.to(livesElement, {
+            color: 'red',
+            duration: 0.2,
+            repeat: 3,
+            yoyo: true,
+            onComplete: () => {
+                livesElement.style.color = 'var(--neon-pink)';
+            }
+        });
+    }
 
     // Game over when lives reach 0
     if (gameState.lives <= 0) {
@@ -173,52 +248,58 @@ function handleMissedTarget() {
     }
 }
 
-// Create particle effect
-function createParticleEffect(target) {
+// Centre of a target, in game-container coordinates
+function targetCenter(target) {
     const rect = target.getBoundingClientRect();
     const gameRect = gameContainer.getBoundingClientRect();
+    return {
+        x: rect.left + rect.width / 2 - gameRect.left,
+        y: rect.top + rect.height / 2 - gameRect.top
+    };
+}
 
-    // Position relative to game container
-    const x = rect.left + rect.width / 2 - gameRect.left;
-    const y = rect.top + rect.height / 2 - gameRect.top;
+// Create particle effect
+function createParticleEffect(x, y, points) {
+    // The particle spray is purely decorative and the highest-volume effect in
+    // the game — skip it under reduced motion, the points readout still lands.
+    if (!PREFERS_REDUCED_MOTION && HAS_GSAP) {
+        for (let i = 0; i < 12; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = `${x}px`;
+            particle.style.top = `${y}px`;
 
-    // Create particles
-    for (let i = 0; i < 12; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-        particle.style.left = `${x}px`;
-        particle.style.top = `${y}px`;
+            // Random color
+            const colors = ['var(--neon-pink)', 'var(--neon-green)', 'var(--neon-blue)'];
+            particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
 
-        // Random color
-        const colors = ['var(--neon-pink)', 'var(--neon-green)', 'var(--neon-blue)'];
-        particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            gameContainer.appendChild(particle);
 
-        gameContainer.appendChild(particle);
+            // Random direction
+            const angle = Math.random() * Math.PI * 2;
+            const distance = 20 + Math.random() * 60;
+            const destinationX = Math.cos(angle) * distance;
+            const destinationY = Math.sin(angle) * distance;
 
-        // Random direction
-        const angle = Math.random() * Math.PI * 2;
-        const distance = 20 + Math.random() * 60;
-        const destinationX = Math.cos(angle) * distance;
-        const destinationY = Math.sin(angle) * distance;
-
-        // Animate with GSAP
-        gsap.to(particle, {
-            x: destinationX,
-            y: destinationY,
-            opacity: 0,
-            duration: 0.6 + Math.random() * 0.4,
-            ease: "power2.out",
-            onComplete: () => {
-                if (particle.parentNode) {
-                    particle.parentNode.removeChild(particle);
+            // Animate with GSAP
+            window.gsap.to(particle, {
+                x: destinationX,
+                y: destinationY,
+                opacity: 0,
+                duration: 0.6 + Math.random() * 0.4,
+                ease: "power2.out",
+                onComplete: () => {
+                    if (particle.parentNode) {
+                        particle.parentNode.removeChild(particle);
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     // Show points gained
     const pointsText = document.createElement('div');
-    pointsText.textContent = `+${target.dataset.points}`;
+    pointsText.textContent = `+${points}`;
     pointsText.style.position = 'absolute';
     pointsText.style.left = `${x}px`;
     pointsText.style.top = `${y}px`;
@@ -231,17 +312,26 @@ function createParticleEffect(target) {
 
     gameContainer.appendChild(pointsText);
 
-    gsap.to(pointsText, {
-        y: '-30',
-        opacity: 0,
-        duration: 1,
-        ease: "power1.out",
-        onComplete: () => {
+    if (PREFERS_REDUCED_MOTION || !HAS_GSAP) {
+        // Same readout, no float/fade tween — just a brief, static display.
+        setTimeout(() => {
             if (pointsText.parentNode) {
                 pointsText.parentNode.removeChild(pointsText);
             }
-        }
-    });
+        }, 500);
+    } else {
+        window.gsap.to(pointsText, {
+            y: '-30',
+            opacity: 0,
+            duration: 1,
+            ease: "power1.out",
+            onComplete: () => {
+                if (pointsText.parentNode) {
+                    pointsText.parentNode.removeChild(pointsText);
+                }
+            }
+        });
+    }
 }
 
 // Level up
@@ -249,25 +339,40 @@ function levelUp() {
     gameState.level++;
     levelElement.textContent = gameState.level;
 
-    // Speed up the game
-    gameConfig.targetLifespan *= gameConfig.speedIncrease;
-    gameConfig.spawnRate *= gameConfig.speedIncrease;
+    // Speed up the game, with a floor so late levels stay playable
+    gameConfig.targetLifespan = Math.max(350, gameConfig.targetLifespan * gameConfig.speedIncrease);
+    gameConfig.spawnRate = Math.max(220, gameConfig.spawnRate * gameConfig.speedIncrease);
+    startTimers();
+
+    // Kill any tween left over from a previous notification (this one, or a
+    // pause/resume) before touching opacity directly, so they can't fight.
+    killTween(levelNotification);
 
     // Show level notification
     levelNotification.textContent = `LEVEL ${gameState.level}`;
     levelNotification.style.opacity = '1';
 
-    gsap.to(levelNotification, {
-        opacity: 0,
-        duration: 2,
-        delay: 1,
-        ease: "power2.out"
-    });
+    if (PREFERS_REDUCED_MOTION || !HAS_GSAP) {
+        // Same hold-then-hide, no fade tween.
+        setTimeout(() => {
+            levelNotification.style.opacity = '0';
+        }, 1000);
+    } else {
+        window.gsap.to(levelNotification, {
+            opacity: 0,
+            duration: 2,
+            delay: 1,
+            ease: "power2.out"
+        });
+    }
 }
 
 // Create digital code lines effect
 function createCodeLines() {
-    if (!gameState.gameActive) return;
+    // Purely decorative and continuous — the first thing to drop under
+    // reduced motion, since it adds/removes a node every couple of seconds
+    // for no gameplay benefit.
+    if (!gameState.gameActive || PREFERS_REDUCED_MOTION || !HAS_GSAP) return;
 
     const gameWidth = gameContainer.offsetWidth;
     const gameHeight = gameContainer.offsetHeight;
@@ -292,7 +397,7 @@ function createCodeLines() {
     gameContainer.appendChild(codeLine);
 
     // Animate line
-    gsap.to(codeLine, {
+    window.gsap.to(codeLine, {
         opacity: 0,
         duration: 2,
         delay: 1,
@@ -306,12 +411,18 @@ function createCodeLines() {
 
 // Start the game
 function startGame() {
+    // Reset the tuning back to the chosen difficulty. levelUp() mutates
+    // gameConfig, so without this a second run starts at the speed the last
+    // one ended at.
+    gameConfig = { ...DIFFICULTY_SETTINGS[gameState.difficultySelected] };
+
     // Reset game state
     gameState.score = 0;
     gameState.level = 1;
     gameState.targetsClicked = 0;
     gameState.lives = gameConfig.lives;
     gameState.gameActive = true;
+    gameState.paused = false;
     gameState.currentTargets = [];
 
     // Clear any existing targets
@@ -329,26 +440,23 @@ function startGame() {
     startScreen.style.display = 'none';
     gameOverScreen.classList.remove('visible');
 
-    // Start spawning targets
-    gameState.spawnInterval = setInterval(createTarget, gameConfig.spawnRate);
-
-    // Start code line effect
-    gameState.codeLineInterval = setInterval(createCodeLines, 2000);
+    // Start spawning targets and the code-line effect
+    startTimers();
 }
 
 // End game
 function endGame() {
     // Set game as inactive
     gameState.gameActive = false;
+    gameState.paused = false;
 
-    // Clear intervals
-    clearInterval(gameState.spawnInterval);
-    clearInterval(gameState.codeLineInterval);
+    stopTimers();
 
     // Clear timeouts for existing targets
     gameState.currentTargets.forEach(target => {
         clearTimeout(target.timeout);
     });
+    gameState.currentTargets = [];
 
     // Show game over screen
     gameOverScreen.classList.add('visible');
@@ -362,10 +470,10 @@ function endGame() {
 
 // Leaderboard functionality
 function saveScore() {
-    let leaderboard = JSON.parse(localStorage.getItem('hackAttackLeaderboard')) || [];
+    let leaderboard = readLeaderboard();
 
-    // Get player name from session or use fallback
-    const playerName = sessionStorage.getItem('visitorName') || `Hacker_${Math.floor(Math.random() * 1000)}`;
+    // Anonymous local player name — there's no account system, just a per-run tag
+    const playerName = `Hacker_${Math.floor(Math.random() * 1000)}`;
 
     // Add new score
     leaderboard.push({
@@ -381,31 +489,16 @@ function saveScore() {
     leaderboard.sort((a, b) => b.score - a.score);
     leaderboard = leaderboard.slice(0, 10);
 
-    // Save back to localStorage
-    localStorage.setItem('hackAttackLeaderboard', JSON.stringify(leaderboard));
+    // Persist locally when browser storage is available.
+    writeLeaderboard(leaderboard);
 
     // Update leaderboard display
     updateLeaderboard(playerName);
-
-    // If connected to Supabase, also save score to the database
-    if (typeof supabase !== 'undefined') {
-        try {
-            supabase.from('game_scores').insert([{
-                player_name: playerName,
-                score: gameState.score,
-                level: gameState.level,
-                targets: gameState.targetsClicked,
-                difficulty: gameState.difficultySelected
-            }]);
-        } catch (err) {
-            console.error('Error saving score to Supabase:', err);
-        }
-    }
 }
 
 // Update leaderboard display
 function updateLeaderboard(currentPlayerName = null) {
-    const leaderboard = JSON.parse(localStorage.getItem('hackAttackLeaderboard')) || [];
+    const leaderboard = readLeaderboard();
     leaderboardEntries.innerHTML = '';
 
     if (leaderboard.length === 0) {
@@ -442,6 +535,8 @@ function updateLeaderboard(currentPlayerName = null) {
 
 // Clear leaderboard functionality
 function clearLeaderboard() {
+    if (document.querySelector('.confirm-dialog')) return;
+
     // Create confirmation dialog
     const dialog = document.createElement('div');
     dialog.className = 'confirm-dialog';
@@ -467,19 +562,37 @@ function clearLeaderboard() {
     dialog.appendChild(message);
     dialog.appendChild(buttonContainer);
 
+    dialog.setAttribute('role', 'dialog');
+    dialog.setAttribute('aria-modal', 'true');
+
+    const previouslyFocused = document.activeElement;
     document.body.appendChild(dialog);
+    cancelButton.focus();
 
-    // Button event handlers
+    // Added post-append so the transition from the CSS's default opacity:0
+    // actually runs (toggling the class in the same frame it's appended
+    // would collapse to no transition at all).
+    requestAnimationFrame(() => dialog.classList.add('visible'));
+
+    function close() {
+        document.removeEventListener('keydown', onKeydown);
+        if (dialog.parentNode) dialog.parentNode.removeChild(dialog);
+        if (previouslyFocused && previouslyFocused.focus) previouslyFocused.focus();
+    }
+
+    function onKeydown(event) {
+        if (event.key === 'Escape') close();
+    }
+
+    document.addEventListener('keydown', onKeydown);
+
     confirmButton.addEventListener('click', function () {
-        // Clear leaderboard data
-        localStorage.removeItem('hackAttackLeaderboard');
+        clearStoredLeaderboard();
         updateLeaderboard();
-        document.body.removeChild(dialog);
+        close();
     });
 
-    cancelButton.addEventListener('click', function () {
-        document.body.removeChild(dialog);
-    });
+    cancelButton.addEventListener('click', close);
 }
 
 // Set game difficulty
@@ -511,23 +624,36 @@ difficultyButtons.forEach(btn => {
 
 clearLeaderboardBtn.addEventListener('click', clearLeaderboard);
 
-// Pause game if window loses focus
-window.addEventListener('blur', () => {
-    if (gameState.gameActive) {
-        gameState.gameActive = false;
-        clearInterval(gameState.spawnInterval);
-        clearInterval(gameState.codeLineInterval);
-    }
-});
+// Pause when the tab is hidden, resume when it comes back. `paused` is tracked
+// explicitly so resume can't restart a game that was never started or is over.
+function pauseGame() {
+    if (!gameState.gameActive) return;
+    gameState.gameActive = false;
+    gameState.paused = true;
+    stopTimers();
 
-// Resume game when window regains focus
-window.addEventListener('focus', () => {
-    if (!gameState.gameActive && !gameOverScreen.classList.contains('visible') && startScreen.style.display === 'none') {
-        gameState.gameActive = true;
-        gameState.spawnInterval = setInterval(createTarget, gameConfig.spawnRate);
-        gameState.codeLineInterval = setInterval(createCodeLines, 2000);
-    }
+    // A still-running levelUp() fade tween would otherwise keep ticking and
+    // overwrite this opacity, making "PAUSED" fade away on its own.
+    killTween(levelNotification);
+    levelNotification.textContent = 'PAUSED';
+    levelNotification.style.opacity = '1';
+}
+
+function resumeGame() {
+    if (!gameState.paused) return;
+    gameState.paused = false;
+    gameState.gameActive = true;
+    killTween(levelNotification);
+    levelNotification.style.opacity = '0';
+    startTimers();
+}
+
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden) pauseGame();
+    else resumeGame();
 });
+window.addEventListener('blur', pauseGame);
+window.addEventListener('focus', resumeGame);
 
 // Handle window resize
 window.addEventListener('resize', () => {
@@ -539,8 +665,8 @@ window.addEventListener('resize', () => {
         const padding = 10;
 
         // Keep targets within bounds
-        let left = parseInt(target.style.left);
-        let top = parseInt(target.style.top);
+        const left = parseInt(target.style.left, 10);
+        const top = parseInt(target.style.top, 10);
 
         if (left > gameWidth - targetSize - padding) {
             target.style.left = `${gameWidth - targetSize - padding}px`;
@@ -555,10 +681,32 @@ window.addEventListener('resize', () => {
 // Update leaderboard on load
 updateLeaderboard();
 
-// Hide loading screen after a delay
-setTimeout(() => {
-    loadingScreen.style.opacity = 0;
-    setTimeout(() => {
+// Hide the loading overlay once the page is actually ready, with a short floor
+// so it doesn't just flash, and a ceiling so a stalled asset can't trap the user.
+let loadingFallbackTimer = setTimeout(hideLoadingScreen, 4000);
+
+function hideLoadingScreen() {
+    if (!loadingScreen || loadingScreen.dataset.hidden === 'true') return;
+    loadingScreen.dataset.hidden = 'true';
+
+    // Whichever path fires first (ready, or the ceiling) makes the other moot.
+    clearTimeout(loadingFallbackTimer);
+
+    const removeOverlay = () => {
         loadingScreen.style.display = 'none';
-    }, 500);
-}, 1500);
+    };
+
+    if (PREFERS_REDUCED_MOTION) {
+        loadingScreen.style.opacity = 0;
+        removeOverlay();
+    } else {
+        loadingScreen.style.opacity = 0;
+        setTimeout(removeOverlay, 500);
+    }
+}
+
+if (document.readyState === 'complete') {
+    setTimeout(hideLoadingScreen, 400);
+} else {
+    window.addEventListener('load', () => setTimeout(hideLoadingScreen, 400));
+}

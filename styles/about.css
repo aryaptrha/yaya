@@ -713,3 +713,28 @@ body {
         text-shadow: 0 0 10px var(--neon-pink), 0 0 20px var(--neon-pink), 0 0 30px var(--neon-pink);
     }
 }
+
+/* Respect the OS-level motion preference: freezing the infinite loops below
+   mid-keyframe would leave some of them (glitch-text's clipped duplicate
+   layers, the confetti burst) stuck looking broken, so those are hidden
+   outright instead of just shortened. */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .glitch-text::before,
+    .glitch-text::after {
+        content: none;
+    }
+
+    .confetti {
+        display: none;
+    }
+}

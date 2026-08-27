@@ -27,8 +27,6 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="../styles/about.css" />
-    <link rel="stylesheet" href="../styles/visitor-modal.css" />
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.5.0/dist/umd/supabase.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
   </head>
@@ -66,7 +64,7 @@
 
     <div class="container mx-auto p-4 sm:p-8">
       <div
-        class="normal-card neon-border rounded-lg p-6 sm:p-8 mt-12 mb-12 animate__animated animate__fadeInDown"
+        class="normal-card neon-border rounded-lg p-6 sm:p-8 mt-12 mb-12"
       >
         <div
           class="flex flex-col sm:flex-row justify-between items-center mb-4"
@@ -103,9 +101,7 @@
 
       <div class="section-title" data-text="Siapa Saya?">Siapa Saya?</div>
 
-      <div
-        class="normal-card neon-border rounded-lg p-6 sm:p-8 mb-12 animate__animated animate__fadeIn"
-      >
+      <div class="normal-card neon-border rounded-lg p-6 sm:p-8 mb-12">
         <div class="flex flex-col md:flex-row">
           <div class="md:w-2/3 pr-0 md:pr-8">
             <p class="text-lg sm:text-xl mb-4">
@@ -222,7 +218,7 @@
       <div class="section-title" data-text="Journey">My Journey</div>
 
       <div class="timeline mb-12">
-        <div class="timeline-item left animate__animated animate__fadeInLeft">
+        <div class="timeline-item left">
           <div class="normal-card neon-border hover-lift">
             <h3 class="font-bold text-xl mb-2">Early Years</h3>
             <p>
@@ -231,7 +227,7 @@
             </p>
           </div>
         </div>
-        <div class="timeline-item right animate__animated animate__fadeInRight">
+        <div class="timeline-item right">
           <div class="normal-card neon-border hover-lift">
             <h3 class="font-bold text-xl mb-2">School Days</h3>
             <p>
@@ -240,7 +236,7 @@
             </p>
           </div>
         </div>
-        <div class="timeline-item left animate__animated animate__fadeInLeft">
+        <div class="timeline-item left">
           <div class="normal-card neon-border hover-lift">
             <h3 class="font-bold text-xl mb-2">University</h3>
             <p>
@@ -249,7 +245,7 @@
             </p>
           </div>
         </div>
-        <div class="timeline-item right animate__animated animate__fadeInRight">
+        <div class="timeline-item right">
           <div class="normal-card neon-border hover-lift">
             <h3 class="font-bold text-xl mb-2">Present</h3>
             <p>Embracing the SIGMA lifestyle, one line of code at a time.</p>
@@ -439,9 +435,7 @@
       <div class="section-title">What I Love</div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        <div
-          class="normal-card neon-border hover-lift animate__animated animate__fadeInUp"
-        >
+        <div class="normal-card neon-border hover-lift">
           <div class="flex justify-center mb-4">
             <i class="fas fa-code fa-3x"></i>
           </div>
@@ -450,10 +444,7 @@
             Ngoding mulu ngoding bang, ngoding terus sampai lupa waktu. Love Coding, Hate Debugging.!
           </p>
         </div>
-        <div
-          class="normal-card neon-border hover-lift animate__animated animate__fadeInUp"
-          style="animation-delay: 0.2s"
-        >
+        <div class="normal-card neon-border hover-lift">
           <div class="flex justify-center mb-4">
             <i class="fa-solid fa-face-smile fa-3x"></i>
           </div>
@@ -462,10 +453,7 @@
             Yeahh, I Love You, Siapapun kamu yang membaca ini, aku sayang kamu, aku cinta kamu, aku rindu kamu, aku kangen kamu, aku mau kamu, aku butuh kamu
           </p>
         </div>
-        <div
-          class="normal-card neon-border hover-lift animate__animated animate__fadeInUp"
-          style="animation-delay: 0.4s"
-        >
+        <div class="normal-card neon-border hover-lift">
           <div class="flex justify-center mb-4">
             <i class="fas fa-music fa-3x"></i>
           </div>
@@ -478,9 +466,7 @@
 
       <div class="section-title">Connect With Me</div>
 
-      <div
-        class="normal-card neon-border rounded-lg p-6 sm:p-8 mb-12 animate__animated animate__fadeIn"
-      >
+      <div class="normal-card neon-border rounded-lg p-6 sm:p-8 mb-12">
         <div class="flex flex-wrap justify-center gap-6">
           <a href="https://github.com/aryaptrha" class="interactive-element">
             <i class="fab fa-github fa-3x"></i>
@@ -527,492 +513,6 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
-    <script>
-      // Initialize particles.js
-      particlesJS("particles-js", {
-        particles: {
-          number: {
-            value: 80,
-            density: {
-              enable: true,
-              value_area: 800,
-            },
-          },
-          color: {
-            value: "#b537f2",
-          },
-          shape: {
-            type: "circle",
-            stroke: {
-              width: 0,
-              color: "#000000",
-            },
-            polygon: {
-              nb_sides: 5,
-            },
-          },
-          opacity: {
-            value: 0.5,
-            random: false,
-            anim: {
-              enable: false,
-              speed: 1,
-              opacity_min: 0.1,
-              sync: false,
-            },
-          },
-          size: {
-            value: 3,
-            random: true,
-            anim: {
-              enable: false,
-              speed: 40,
-              size_min: 0.1,
-              sync: false,
-            },
-          },
-          line_linked: {
-            enable: true,
-            distance: 150,
-            color: "#b537f2",
-            opacity: 0.4,
-            width: 1,
-          },
-          move: {
-            enable: true,
-            speed: 6,
-            direction: "none",
-            random: false,
-            straight: false,
-            out_mode: "out",
-            bounce: false,
-            attract: {
-              enable: false,
-              rotateX: 600,
-              rotateY: 1200,
-            },
-          },
-        },
-        interactivity: {
-          detect_on: "canvas",
-          events: {
-            onhover: {
-              enable: true,
-              mode: "repulse",
-            },
-            onclick: {
-              enable: true,
-              mode: "push",
-            },
-            resize: true,
-          },
-          modes: {
-            grab: {
-              distance: 400,
-              line_linked: {
-                opacity: 1,
-              },
-            },
-            bubble: {
-              distance: 400,
-              size: 40,
-              duration: 2,
-              opacity: 8,
-              speed: 3,
-            },
-            repulse: {
-              distance: 200,
-              duration: 0.4,
-            },
-            push: {
-              particles_nb: 4,
-            },
-            remove: {
-              particles_nb: 2,
-            },
-          },
-        },
-        retina_detect: true,
-      });
-
-      // Custom cursor
-      document.addEventListener("DOMContentLoaded", function () {
-        const cursorDot = document.querySelector(".cursor-dot");
-        const cursorOutline = document.querySelector(".cursor-outline");
-
-        if (window.matchMedia("(min-width: 768px)").matches) {
-          document.addEventListener("mousemove", function (e) {
-            cursorDot.style.left = e.clientX + "px";
-            cursorDot.style.top = e.clientY + "px";
-
-            // Add slight delay to outline for a smoother effect
-            setTimeout(function () {
-              cursorOutline.style.left = e.clientX + "px";
-              cursorOutline.style.top = e.clientY + "px";
-            }, 80);
-          });
-
-          document.addEventListener("mousedown", function () {
-            cursorDot.style.transform = "translate(-50%, -50%) scale(0.7)";
-            cursorOutline.style.transform = "translate(-50%, -50%) scale(0.7)";
-          });
-
-          document.addEventListener("mouseup", function () {
-            cursorDot.style.transform = "translate(-50%, -50%) scale(1)";
-            cursorOutline.style.transform = "translate(-50%, -50%) scale(1)";
-          });
-
-          // Change cursor appearance when hovering over interactive elements
-          const interactiveElements = document.querySelectorAll(
-            "a, button, .interactive-element"
-          );
-          interactiveElements.forEach((element) => {
-            element.addEventListener("mouseenter", function () {
-              cursorDot.style.transform = "translate(-50%, -50%) scale(1.5)";
-              cursorOutline.style.transform =
-                "translate(-50%, -50%) scale(1.5)";
-              cursorOutline.style.borderColor =
-                document.body.classList.contains("dark-mode")
-                  ? "#ff2e97"
-                  : "#b537f2";
-            });
-
-            element.addEventListener("mouseleave", function () {
-              cursorDot.style.transform = "translate(-50%, -50%) scale(1)";
-              cursorOutline.style.transform = "translate(-50%, -50%) scale(1)";
-              cursorOutline.style.borderColor =
-                document.body.classList.contains("dark-mode")
-                  ? "#ff2e97"
-                  : "#b537f2";
-            });
-          });
-        }
-      });
-
-      // Theme toggle
-      document
-        .getElementById("themeToggleBtn")
-        .addEventListener("click", function () {
-          document.body.classList.toggle("dark-mode");
-          if (document.body.classList.contains("dark-mode")) {
-            this.textContent = "🌞";
-            document.querySelector(".cursor-dot").style.backgroundColor =
-              "#ff2e97";
-            document.querySelector(".cursor-outline").style.borderColor =
-              "#ff2e97";
-            document.querySelectorAll(".progress-bar").forEach((bar) => {
-              bar.style.background =
-                "linear-gradient(to right, var(--neon-pink), var(--neon-purple))";
-            });
-          } else {
-            this.textContent = "🌜";
-            document.querySelector(".cursor-dot").style.backgroundColor =
-              "#b537f2";
-            document.querySelector(".cursor-outline").style.borderColor =
-              "#b537f2";
-            document.querySelectorAll(".progress-bar").forEach((bar) => {
-              bar.style.background =
-                "linear-gradient(to right, var(--neon-blue), var(--neon-purple))";
-            });
-          }
-        });
-
-      // Bandung Easter Egg
-      document
-        .getElementById("bandungText")
-        .addEventListener("click", function () {
-          confetti();
-          // Show a brief message
-          const message = document.createElement("div");
-          message.textContent = "💖 Bandung! 💖";
-          message.style.position = "fixed";
-          message.style.top = "50%";
-          message.style.left = "50%";
-          message.style.transform = "translate(-50%, -50%)";
-          message.style.padding = "20px";
-          message.style.background = document.body.classList.contains(
-            "dark-mode"
-          )
-            ? "rgba(255, 46, 151, 0.8)"
-            : "rgba(181, 55, 242, 0.8)";
-          message.style.color = "white";
-          message.style.borderRadius = "10px";
-          message.style.zIndex = "1000";
-          message.style.fontWeight = "bold";
-          message.style.fontSize = "2rem";
-          document.body.appendChild(message);
-
-          setTimeout(() => {
-            document.body.removeChild(message);
-          }, 2000);
-        });
-
-      // Music player
-      const musicToggle = document.getElementById("musicToggle");
-      const backgroundMusic = document.getElementById("backgroundMusic");
-
-      musicToggle.addEventListener("click", function () {
-        if (backgroundMusic.paused) {
-          backgroundMusic.play();
-          musicToggle.classList.add("music-playing");
-        } else {
-          backgroundMusic.pause();
-          musicToggle.classList.remove("music-playing");
-        }
-      });
-
-      // SIGMA text interaction
-      document
-        .getElementById("sigmaText")
-        .addEventListener("mouseover", function () {
-          this.style.transform = "scale(1.2) rotate(5deg)";
-          this.style.transition = "transform 0.3s ease";
-        });
-
-      document
-        .getElementById("sigmaText")
-        .addEventListener("mouseout", function () {
-          this.style.transform = "scale(1) rotate(0deg)";
-        });
-
-      // Progress bars animation
-      function animateProgressBars() {
-        document.querySelectorAll(".progress-bar").forEach((bar) => {
-          const width = bar.getAttribute("data-width");
-          bar.style.width = width;
-        });
-      }
-
-      // Confetti function
-      function confetti() {
-        const colors = ["#ff2e97", "#00f3ff", "#b537f2", "#f9f002"];
-
-        for (let i = 0; i < 100; i++) {
-          const confetti = document.createElement("div");
-          confetti.className = "confetti";
-          confetti.style.left = Math.random() * window.innerWidth + "px";
-          confetti.style.backgroundColor =
-            colors[Math.floor(Math.random() * colors.length)];
-          confetti.style.width = Math.random() * 10 + 5 + "px";
-          confetti.style.height = Math.random() * 10 + 5 + "px";
-          confetti.style.opacity = Math.random() + 0.5;
-          confetti.style.animationDuration = Math.random() * 3 + 2 + "s";
-          document.body.appendChild(confetti);
-
-          // Remove confetti after animation completes
-          setTimeout(() => {
-            document.body.removeChild(confetti);
-          }, 5000);
-        }
-      }
-
-      // Animate elements when they come into view
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              if (entry.target.classList.contains("progress-bar")) {
-                const width = entry.target.getAttribute("data-width");
-                entry.target.style.width = width;
-              } else if (entry.target.classList.contains("timeline-item")) {
-                if (entry.target.classList.contains("left")) {
-                  entry.target.classList.add("animate__fadeInLeft");
-                } else {
-                  entry.target.classList.add("animate__fadeInRight");
-                }
-              } else {
-                entry.target.classList.add("animate__fadeIn");
-              }
-              observer.unobserve(entry.target);
-            }
-          });
-        },
-        { threshold: 0.1 }
-      );
-
-      document
-        .querySelectorAll(".progress-bar, .timeline-item, .normal-card")
-        .forEach((el) => {
-          observer.observe(el);
-        });
-
-      // Initial animations
-      setTimeout(animateProgressBars, 1000);
-
-      // Initialize supabase visitor tracking (placeholder)
-      function showVisitorModal(page) {
-        console.log("Visitor tracking for: " + page);
-        // Actual implementation would go here
-      }
-
-      // Call the visitor tracking on load
-      document.addEventListener("DOMContentLoaded", function () {
-        // Show visitor modal when page loads - slight delay to ensure all styles are loaded
-        setTimeout(() => {
-          showVisitorModal("about");
-        }, 1000);
-      });
-
-      // Initialize GSAP animations
-      document.addEventListener("DOMContentLoaded", function () {
-        // Register ScrollTrigger plugin
-        gsap.registerPlugin(ScrollTrigger);
-
-        // Smooth scroll animation for navigation
-        document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-          anchor.addEventListener("click", function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute("href"));
-            if (target) {
-              gsap.to(window, {
-                duration: 1,
-                scrollTo: {
-                  y: target,
-                  offsetY: 50,
-                },
-                ease: "power2.inOut",
-              });
-            }
-          });
-        });
-
-        // Timeline animations
-        gsap.from(".timeline-item.left", {
-          scrollTrigger: {
-            trigger: ".timeline",
-            start: "top 80%",
-            toggleActions: "play none none none",
-          },
-          x: -100,
-          opacity: 0,
-          duration: 1,
-          stagger: 0.3,
-          ease: "back.out(1.7)",
-        });
-
-        gsap.from(".timeline-item.right", {
-          scrollTrigger: {
-            trigger: ".timeline",
-            start: "top 80%",
-            toggleActions: "play none none none",
-          },
-          x: 100,
-          opacity: 0,
-          duration: 1,
-          stagger: 0.3,
-          ease: "back.out(1.7)",
-        });
-
-        // Animate section titles when they come into view
-        gsap.utils.toArray(".section-title").forEach((title) => {
-          gsap.from(title, {
-            scrollTrigger: {
-              trigger: title,
-              start: "top 80%",
-              toggleActions: "play none none none",
-            },
-            y: 50,
-            opacity: 0,
-            duration: 0.8,
-            ease: "power3.out",
-          });
-        });
-
-        // Animate the sigma text with a continuous hover effect
-        gsap.to("#sigmaText", {
-          scale: 1.1,
-          rotation: 5,
-          duration: 1.5,
-          ease: "elastic.out(1, 0.3)",
-          repeat: -1,
-          yoyo: true,
-        });
-
-        // Animated cards
-        gsap.utils.toArray(".normal-card").forEach((card) => {
-          // Skip cards that are already part of other animations
-          if (!card.closest(".timeline-item")) {
-            gsap.from(card, {
-              scrollTrigger: {
-                trigger: card,
-                start: "top 85%",
-                toggleActions: "play none none none",
-              },
-              y: 30,
-              opacity: 0,
-              duration: 0.8,
-              ease: "power2.out",
-            });
-          }
-        });
-
-        // 3D tilt effect on hover for cards
-        document.querySelectorAll(".hover-lift").forEach((card) => {
-          card.addEventListener("mousemove", (e) => {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left; // x position within the element
-            const y = e.clientY - rect.top; // y position within the element
-
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-
-            const tiltX = (centerY - y) / 10;
-            const tiltY = (x - centerX) / 10;
-
-            gsap.to(card, {
-              duration: 0.5,
-              rotationX: tiltX,
-              rotationY: tiltY,
-              transformPerspective: 1000,
-              ease: "power1.out",
-            });
-          });
-
-          card.addEventListener("mouseleave", () => {
-            gsap.to(card, {
-              duration: 0.5,
-              rotationX: 0,
-              rotationY: 0,
-              ease: "power3.out",
-            });
-          });
-        });
-
-        // Text reveal animation for paragraphs
-        gsap.utils.toArray("p").forEach((paragraph) => {
-          if (
-            !paragraph.closest(".timeline-item") &&
-            !paragraph.closest(".carousel-caption")
-          ) {
-            gsap.from(paragraph, {
-              scrollTrigger: {
-                trigger: paragraph,
-                start: "top 85%",
-                toggleActions: "play none none none",
-              },
-              opacity: 0,
-              y: 20,
-              duration: 1,
-              ease: "power2.out",
-            });
-          }
-        });
-
-        // Progress bar animation
-        gsap.utils.toArray(".progress-bar").forEach((bar) => {
-          const width = bar.getAttribute("data-width");
-          gsap.to(bar, {
-            scrollTrigger: {
-              trigger: bar,
-              start: "top 90%",
-              toggleActions: "play none none none",
-            },
-            width: width,
-            duration: 1.5,
-            ease: "power2.out",
-          });
-        });
-      });
-    </script>
+    <script src="../script/about.js"></script>
   </body>
 </html>

@@ -267,6 +267,14 @@ header {
     transform: translateX(-5px);
 }
 
+.button:focus-visible,
+.difficulty-btn:focus-visible,
+.clear-btn:focus-visible,
+.back-btn:focus-visible {
+    outline: 2px solid var(--neon-blue);
+    outline-offset: 3px;
+}
+
 #start-screen {
     position: absolute;
     top: 0;
@@ -428,7 +436,7 @@ header {
     position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) scale(0.95);
     background: rgba(0, 0, 0, 0.9);
     border: 2px solid var(--neon-purple);
     box-shadow: 0 0 20px var(--neon-purple);
@@ -439,6 +447,13 @@ header {
     max-width: 400px;
     width: 90%;
     backdrop-filter: blur(5px);
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.confirm-dialog.visible {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
 }
 
 .confirm-dialog p {
@@ -612,5 +627,16 @@ header {
     .button {
         padding: 8px 18px;
         font-size: 0.9rem;
+    }
+}
+
+/* Mirrors the reduced-motion reset already established in index.html — the
+   JS side additionally gates every GSAP tween via PREFERS_REDUCED_MOTION,
+   since CSS transition/animation-duration overrides don't touch those. */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
     }
 }

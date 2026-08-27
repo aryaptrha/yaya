@@ -2,329 +2,289 @@ document.addEventListener('DOMContentLoaded', () => {
   document.body.classList.add('fade-in');
   document.body.classList.remove('fade-out');
 
-  // Initialize GSAP ScrollTrigger
-  gsap.registerPlugin(ScrollTrigger);
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Name animation with GSAP
-  const nameChars = "ARYAPUTRA";
+  initNameAnimation(reduceMotion);
+  initScrollAnimations(reduceMotion);
+  initBackground(reduceMotion);
+  initScrollIndicator(reduceMotion);
+  initPageTransitions(reduceMotion);
+});
+
+// A page restored from the back/forward cache keeps its previous classes and
+// timers, so always restore the visible state when it becomes active again.
+window.addEventListener('pageshow', () => {
+  document.body.classList.add('fade-in');
+  document.body.classList.remove('fade-out');
+});
+
+// ---------------------------------------------------------------------------
+// Hero
+// ---------------------------------------------------------------------------
+
+function initNameAnimation(reduceMotion) {
+  const NAME = 'ARYAPUTRA';
   const nameElement = document.getElementById('name-animation');
-  if (!nameElement) {
-    console.error("Element with ID 'name-animation' not found.");
+  const navLinks = document.getElementById('nav-links');
+  if (!nameElement) return;
+
+  nameElement.textContent = '';
+
+  const chars = Array.from(NAME, (letter) => {
+    const span = document.createElement('span');
+    span.textContent = letter;
+    span.classList.add('name-hover');
+    span.style.opacity = '0';
+    // The container's aria-label already exposes the full name, so hide these
+    // one-letter-at-a-time spans from assistive tech to avoid double reads.
+    span.setAttribute('aria-hidden', 'true');
+    nameElement.appendChild(span);
+    return span;
+  });
+
+  // Screen readers get the whole name, not nine separate letters.
+  nameElement.setAttribute('aria-label', NAME);
+
+  if (reduceMotion || typeof gsap === 'undefined') {
+    nameElement.style.opacity = '1';
+    chars.forEach((span) => { span.style.opacity = '1'; });
+    if (navLinks) navLinks.style.opacity = '1';
     return;
   }
-  nameElement.innerHTML = ''; // Clear any existing content
 
-  // Create spans for each letter
-  const chars = [];
-  
-  // Create spans for each letter with consistent styling
-  for (let i = 0; i < nameChars.length; i++) {
-    const span = document.createElement('span');
-    span.textContent = nameChars[i];
-    span.classList.add('name-hover');
-    span.style.fontSize = "1em";
-    span.style.display = "inline-block";
-    span.style.opacity = "0";
-    nameElement.appendChild(span);
-    chars.push(span);
-  }
-
-  // GSAP animation for name
   gsap.set(nameElement, { opacity: 1 });
-  
-  // Animate all letters of the name simultaneously
   gsap.to(chars, {
     opacity: 1,
     stagger: 0.1,
     duration: 0.5,
     onComplete: () => {
-      // Animate nav links after name animation completes
-      gsap.to('#nav-links', { 
-        opacity: 1, 
-        duration: 0.8,
-        delay: 0.2
-      });
-    }
+      if (navLinks) gsap.to(navLinks, { opacity: 1, duration: 0.8, delay: 0.2 });
+    },
   });
+}
 
-  // Scroll progress bar
+function initScrollAnimations(reduceMotion) {
+  const revealed = ['#branding-title', '#contact-cta', '.skill-card', '#scroll-indicator'];
+
+  // No scroll-triggered fades: show everything up front and skip the progress bar.
+  if (reduceMotion || typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+    revealed.forEach((selector) => {
+      document.querySelectorAll(selector).forEach((el) => {
+        el.style.opacity = '1';
+        el.style.transform = 'none';
+      });
+    });
+    return;
+  }
+
+  gsap.registerPlugin(ScrollTrigger);
+
   gsap.to('.progress-bar', {
     width: '100%',
     ease: 'none',
-    scrollTrigger: {
-      trigger: 'body',
-      start: 'top top',
-      end: 'bottom bottom',
-      scrub: 0.3
-    }
+    scrollTrigger: { trigger: 'body', start: 'top top', end: 'bottom bottom', scrub: 0.3 },
   });
 
-  // Animate branding section
   gsap.to('#branding-title', {
     opacity: 1,
     y: 0,
     duration: 1,
-    scrollTrigger: {
-      trigger: '#branding-section',
-      start: 'top 80%',
-      toggleActions: 'play none none none'
-    }
+    scrollTrigger: { trigger: '#branding-section', start: 'top 80%', toggleActions: 'play none none none' },
   });
 
-  // Animate skill cards
   gsap.utils.toArray('.skill-card').forEach((card, i) => {
     gsap.to(card, {
       opacity: 1,
       y: 0,
       duration: 0.8,
       delay: 0.2 * i,
-      scrollTrigger: {
-        trigger: card,
-        start: 'top 85%',
-        toggleActions: 'play none none none'
-      }
+      scrollTrigger: { trigger: card, start: 'top 85%', toggleActions: 'play none none none' },
     });
   });
 
-  // Animate contact CTA
   gsap.to('#contact-cta', {
     opacity: 1,
     y: 0,
     duration: 1,
-    scrollTrigger: {
-      trigger: '#contact-cta',
-      start: 'top 85%',
-      toggleActions: 'play none none none'
-    }
+    scrollTrigger: { trigger: '#contact-cta', start: 'top 85%', toggleActions: 'play none none none' },
   });
 
-  // Scene setup code with Three.js
-  const scene = new THREE.Scene();
-  const canvas = document.getElementById('threejs-background');
-  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setPixelRatio(window.devicePixelRatio);
+  gsap.to('#scroll-indicator', { opacity: 1, duration: 0.8, delay: 1.5 });
+}
 
+// ---------------------------------------------------------------------------
+// Three.js background
+// ---------------------------------------------------------------------------
+
+function initBackground(reduceMotion) {
+  const canvas = document.getElementById('threejs-background');
+  if (!canvas) return;
+
+  // The canvas is pure decoration, so skip the WebGL context entirely when
+  // reduced motion is requested or the library failed to load.
+  if (reduceMotion || typeof THREE === 'undefined') {
+    canvas.style.display = 'none';
+    return;
+  }
+
+  let renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: false });
+  } catch (err) {
+    console.warn('WebGL unavailable, skipping background:', err);
+    canvas.style.display = 'none';
+    return;
+  }
+
+  const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
   camera.position.z = 5;
 
-  const geometries = [];
-  const colors = [0x00ff88, 0x00ffff, 0xff00ff, 0x9900ff];
-
-  function createGeometry() {
-    // Randomly choose between IcosahedronGeometry for varied polyhedron shapes
-    const geometryTypes = [
-      new THREE.IcosahedronGeometry(Math.random() * 0.7 + 0.4),
-      new THREE.OctahedronGeometry(Math.random() * 0.7 + 0.4)
-    ];
-    
-    const geometry = geometryTypes[Math.floor(Math.random() * geometryTypes.length)];
-    
-    // Create a wireframe material with neon colors
-    const color = colors[Math.floor(Math.random() * colors.length)];
-    const material = new THREE.MeshBasicMaterial({
-      color: color,
-      wireframe: true,
-      transparent: true,
-      opacity: 0.9
-    });
-    
-    const mesh = new THREE.Mesh(geometry, material);
-
-    // Position meshes more spread out
-    mesh.position.set(
-      Math.random() * 30 - 15,
-      Math.random() * 30 - 15,
-      Math.random() * -15
-    );
-
-    // Set random rotation speeds (slower than before)
-    mesh.rotationSpeed = {
-      x: (Math.random() - 0.5) * 0.01,
-      y: (Math.random() - 0.5) * 0.01,
-      z: (Math.random() - 0.5) * 0.01
-    };
-    
-    // Add a custom scale for pulsing effect
-    mesh.pulseFactor = Math.random() * 0.1;
-    mesh.pulseSpeed = 0.005 + Math.random() * 0.01;
-    mesh.pulseOffset = Math.random() * Math.PI * 2;
-    mesh.baseScale = 0.8 + Math.random() * 0.4;
-    
-    scene.add(mesh);
-    geometries.push(mesh);
+  // An uncapped devicePixelRatio means 3-4x the pixels on a modern phone for a
+  // background nobody looks at directly.
+  const MAX_PIXEL_RATIO = 1.5;
+  function sizeRenderer() {
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, MAX_PIXEL_RATIO));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
   }
+  sizeRenderer();
+
+  const COLORS = [0x00ff88, 0x00ffff, 0xff00ff, 0x9900ff];
+  const shapes = [];
 
   for (let i = 0; i < 15; i++) {
-    createGeometry();
+    const radius = Math.random() * 0.7 + 0.4;
+    const geometry = Math.random() < 0.5
+      ? new THREE.IcosahedronGeometry(radius)
+      : new THREE.OctahedronGeometry(radius);
+
+    const mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({
+      color: COLORS[Math.floor(Math.random() * COLORS.length)],
+      wireframe: true,
+      transparent: true,
+      opacity: 0.9,
+    }));
+
+    mesh.position.set(Math.random() * 30 - 15, Math.random() * 30 - 15, Math.random() * -15);
+    mesh.userData = {
+      home: mesh.position.clone(),
+      spin: {
+        x: (Math.random() - 0.5) * 0.01,
+        y: (Math.random() - 0.5) * 0.01,
+        z: (Math.random() - 0.5) * 0.01,
+      },
+      pulseAmount: Math.random() * 0.1,
+      pulseSpeed: 0.5 + Math.random(),
+      pulseOffset: Math.random() * Math.PI * 2,
+      baseScale: 0.8 + Math.random() * 0.4,
+    };
+
+    scene.add(mesh);
+    shapes.push(mesh);
   }
 
-  const mouse = new THREE.Vector2();
+  const parallax = { x: 0, y: 0 };
   window.addEventListener('mousemove', (event) => {
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    parallax.x = (event.clientX / window.innerWidth) * 2 - 1;
+    parallax.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  }, { passive: true });
+
+  // Coalesce bursts of resize events (window-edge dragging, mobile rotation)
+  // into one recompute per animation frame instead of one per event.
+  let resizeQueued = false;
+  window.addEventListener('resize', () => {
+    if (resizeQueued) return;
+    resizeQueued = true;
+    requestAnimationFrame(() => {
+      resizeQueued = false;
+      sizeRenderer();
+    });
   });
 
-  function animate() {
-    requestAnimationFrame(animate);
-    
-    const time = performance.now() * 0.001; // Current time in seconds
+  function render() {
+    const time = performance.now() * 0.001;
 
-    geometries.forEach(geo => {
-      // Regular rotation
-      geo.rotation.x += geo.rotationSpeed.x;
-      geo.rotation.y += geo.rotationSpeed.y;
-      geo.rotation.z += geo.rotationSpeed.z;
+    shapes.forEach((mesh) => {
+      const data = mesh.userData;
 
-      // Pulse effect
-      const pulse = Math.sin(time * geo.pulseSpeed + geo.pulseOffset) * geo.pulseFactor + 1;
-      geo.scale.set(
-        geo.baseScale * pulse,
-        geo.baseScale * pulse,
-        geo.baseScale * pulse
-      );
+      mesh.rotation.x += data.spin.x;
+      mesh.rotation.y += data.spin.y;
+      mesh.rotation.z += data.spin.z;
 
-      // Slight movement based on mouse position
-      geo.position.x += mouse.x * 0.005;
-      geo.position.y += mouse.y * 0.005;
-      
-      // Bring back shapes that drift too far
-      if (Math.abs(geo.position.x) > 10) geo.position.x *= 0.99;
-      if (Math.abs(geo.position.y) > 10) geo.position.y *= 0.99;
+      const pulse = Math.sin(time * data.pulseSpeed + data.pulseOffset) * data.pulseAmount + 1;
+      mesh.scale.setScalar(data.baseScale * pulse);
+
+      // Offset from a fixed home position instead of adding to the current one
+      // every frame, which used to let the shapes drift permanently off-screen.
+      mesh.position.x = data.home.x + parallax.x * 0.6;
+      mesh.position.y = data.home.y + parallax.y * 0.6;
     });
 
     renderer.render(scene, camera);
   }
 
-  window.addEventListener('resize', () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+  // setAnimationLoop already parks itself when the tab is hidden; the explicit
+  // handler covers browsers that keep rAF ticking in background tabs.
+  renderer.setAnimationLoop(render);
+  document.addEventListener('visibilitychange', () => {
+    renderer.setAnimationLoop(document.hidden ? null : render);
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Navigation
+// ---------------------------------------------------------------------------
+
+function initScrollIndicator(reduceMotion) {
+  const indicator = document.getElementById('scroll-indicator');
+  const target = document.getElementById('branding-section');
+  if (!indicator || !target) return;
+
+  const scrollToTarget = () => target.scrollIntoView({
+    behavior: reduceMotion ? 'auto' : 'smooth',
+    block: 'start',
   });
 
-  animate();
+  // Native smooth scrolling. The old code called gsap.to(window, {scrollTo})
+  // without ever loading ScrollToPlugin, so clicking this did nothing at all.
+  indicator.addEventListener('click', scrollToTarget);
 
-  // Smooth scroll functionality
-  document.getElementById('scroll-indicator').addEventListener('click', () => {
-    gsap.to(window, {
-      duration: 1,
-      scrollTo: '#branding-section',
-      ease: 'power2.inOut'
-    });
+  // It's a decorative <div> (tabindex/role are set in the markup), not a real
+  // <button>, so it needs its own Enter/Space handling to be keyboard-operable.
+  indicator.addEventListener('keydown', (event) => {
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+    event.preventDefault();
+    scrollToTarget();
   });
+}
 
-  // Add event listeners to navigation links
-  const navLinks = document.querySelectorAll('nav a');
-  navLinks.forEach(link => {
+function initPageTransitions(reduceMotion) {
+  // Must match the `.fade-out` transition duration in index.html, so the fade
+  // finishes before we hand off to the next page instead of jump-cutting it.
+  const FADE_OUT_MS = 500;
+  let navigationTimer = null;
+
+  document.querySelectorAll('nav a, a.nav-link').forEach((link) => {
     link.addEventListener('click', (event) => {
+      // Leave anything that is not a plain left click to the browser:
+      // new-tab, new-window, download and middle-click all still work.
+      if (event.defaultPrevented || event.button !== 0) return;
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      if (link.target && link.target !== '_self') return;
+      if (link.hasAttribute('download')) return;
+
+      // Off-site links leave immediately; no point fading out a page we are
+      // about to lose control of anyway.
+      if (link.origin !== window.location.origin) return;
+
+      if (reduceMotion) return;
+
       event.preventDefault();
       document.body.classList.add('fade-out');
-      setTimeout(() => {
-        window.location.href = link.href;
-      }, 500);
+      clearTimeout(navigationTimer);
+      navigationTimer = setTimeout(() => { window.location.href = link.href; }, FADE_OUT_MS);
     });
   });
-
-  async function setRandomMemeFavicon() {
-    try {
-      // Example: Fetch a random meme from an API or use a static URL
-      const memeUrl = "https://i.imgflip.com/30b1gx.jpg"; // Replace with a dynamic meme API if needed
-
-      // Create or update the favicon link
-      let favicon = document.querySelector("link[rel='icon']");
-      if (!favicon) {
-        favicon = document.createElement("link");
-        favicon.rel = "icon";
-        document.head.appendChild(favicon);
-      }
-      favicon.href = memeUrl;
-    } catch (error) {
-      console.error("Failed to set random meme favicon:", error);
-    }
-  }
-
-  // Call the function on page load
-  setRandomMemeFavicon();
-});
-
-function trulyMaskUrl(targetPath) {
-  // Prevent any navigation
-  window.onbeforeunload = null;
-  
-  // Create fullscreen overlay that looks like a new page
-  const overlay = document.createElement('div');
-  overlay.id = 'masked-page-overlay';
-  overlay.style.cssText = `
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: #000;
-    z-index: 999999;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-  `;
-
-  // Create fake browser UI
-  const fakeBrowser = document.createElement('div');
-  fakeBrowser.style.cssText = `
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-  `;
-
-  // Fake URL with lock icon
-  const fakeUrl = document.createElement('div');
-  fakeUrl.style.cssText = `
-    background: #2d2d2d;
-    padding: 6px 12px;
-    border-radius: 20px;
-    color: #fff;
-    font-size: 14px;
-    flex: 1;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  `;
-
-  const maskedUrls = [
-    '🔒 https://secure-portal.enterprise.com/dashboard/analytics',
-    '🔒 https://internal-systems.corp/executive/reports', 
-    '🔒 https://classified.gov.site/level-5/documents',
-    '🔒 https://top-secret.military.net/operation-files',
-    '🔒 https://crypto-vault.blockchain.io/private-keys'
-  ];
-
-  fakeUrl.innerHTML = maskedUrls[Math.floor(Math.random() * maskedUrls.length)];
-
-  const iframe = document.createElement('iframe');
-  iframe.src = targetPath;
-  iframe.style.cssText = `
-    flex: 1;
-    border: none;
-    background: #000;
-  `;
-
-  iframe.onload = () => {
-    try {
-      iframe.contentWindow.history.pushState = () => {};
-      iframe.contentWindow.history.replaceState = () => {};
-    } catch (e) {
-    }
-  };
-
-  // fakeBrowser.appendChild(fakeAddressBar);
-  fakeBrowser.appendChild(iframe);
-  overlay.appendChild(fakeBrowser);
-  document.body.appendChild(overlay);
-
-  setTimeout(() => {
-    overlay.style.opacity = '1';
-  }, 50);
-
-  setTimeout(() => {
-    window.history.pushState({}, '', '/');
-  }, 100);
 }

@@ -1,3 +1,0 @@
-about.html -> xa59f9a257ef3511e.html
-sigma-traits.html -> ya6eed5ebae84101f.html
-hack-attack.html -> z544772c453b464e9.html

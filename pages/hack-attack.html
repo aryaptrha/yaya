@@ -5,15 +5,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hack Attack - Cyberpunk Game</title>
+    <meta name="description"
+        content="Hack Attack — a fast cyberpunk reflex game. Click the targets before they vanish across three difficulties.">
+    <meta name="theme-color" content="#050505">
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+    <meta property="og:title" content="Hack Attack">
+    <meta property="og:description" content="Click the targets before they disappear. How many can you hack?">
+    <meta property="og:type" content="website">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Barrio&family=League+Gothic&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Sigmar&family=Varela+Round&display=swap"
         rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <link rel="stylesheet" href="../styles/hack-attack.css">
-    <link rel="stylesheet" href="../styles/visitor-modal.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.5.0/dist/umd/supabase.min.js"></script>
 </head>
 
 <body>
@@ -102,21 +108,6 @@
         </div>
     </div>
     <script src="../script/hack-attack.js"></script>
-    <script id="supabase-config">
-        window.appConfig = {
-            supabaseUrl: "https://nrgxggpmipbvecjshvxf.supabase.co",
-            supabaseKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5yZ3hnZ3BtaXBidmVjanNodnhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDExNDUxMjksImV4cCI6MjA1NjcyMTEyOX0.rJeqNwDJ794OUIxR0Zlr0ZNvx0rysTeEPfc5OmcUGqM"
-        };
-    </script>
-    <script src="../script/supabase-config.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Show visitor modal when page loads - ensure CSS is fully loaded
-            setTimeout(() => {
-                showVisitorModal('hack-attack');
-            }, 1000);
-        });
-    </script>
 </body>
 
 </html>

@@ -5,14 +5,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sigma Traits Generator</title>
+    <meta name="description"
+        content="Generate your certified Sigma developer trait — a joke generator for programmers who debug with console.log.">
+    <meta name="theme-color" content="#050505">
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+    <meta property="og:title" content="Sigma Traits Generator">
+    <meta property="og:description" content="Discover why you're the ultimate Sigma developer.">
+    <meta property="og:type" content="website">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Barrio&family=League+Gothic&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Sigmar&family=Varela+Round&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="../styles/sigma-traits.css">
-    <link rel="stylesheet" href="../styles/visitor-modal.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.5.0/dist/umd/supabase.min.js"></script>
 </head>
 
 <body>
@@ -29,7 +34,7 @@
     <div class="container">
         <h1 class="title">SIGMA TRAITS GENERATOR</h1>
 
-        <div class="sigma-card">
+        <div class="sigma-card" aria-live="polite" aria-atomic="true">
             <div class="emoji">😎</div>
             <div class="sigma-trait" id="trait">Click the button below to reveal your Sigma trait!</div>
             <div class="sigma-description" id="description">Discover why you're the ultimate Sigma.</div>
@@ -40,21 +45,6 @@
         </div>
     </div>
     <script src="../script/sigma-traits.js"></script>
-    <script id="supabase-config">
-        window.appConfig = {
-            supabaseUrl: "https://nrgxggpmipbvecjshvxf.supabase.co",
-            supabaseKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5yZ3hnZ3BtaXBidmVjanNodnhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDExNDUxMjksImV4cCI6MjA1NjcyMTEyOX0.rJeqNwDJ794OUIxR0Zlr0ZNvx0rysTeEPfc5OmcUGqM"
-        };
-    </script>
-    <script src="../script/supabase-config.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Show visitor modal when page loads - ensure CSS is fully loaded
-            setTimeout(() => {
-                showVisitorModal('sigma-traits');
-            }, 1000);
-        });
-    </script>
 </body>
 
 </html>
