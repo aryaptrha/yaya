@@ -80,6 +80,13 @@ const generateBtn = document.getElementById('generateBtn');
 const traitElement = document.getElementById('trait');
 const descriptionElement = document.getElementById('description');
 const emojiElement = document.querySelector('.emoji');
+const sigmaCard = document.querySelector('.sigma-card');
+
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+let isGenerating = false;
+let lastSparkleTime = 0;
+const SPARKLE_MIN_INTERVAL_MS = 60; // time-based throttle so a fast mouse can't flood the DOM
 
 // Function to create sparkle effect
 function createSparkle(x, y) {
@@ -88,57 +95,69 @@ function createSparkle(x, y) {
     sparkle.style.left = `${x}px`;
     sparkle.style.top = `${y}px`;
     document.body.appendChild(sparkle);
-    
+
     // Remove sparkle after animation completes
     setTimeout(() => {
         sparkle.remove();
     }, 500);
 }
 
-// Add mousemove event for sparkle effect
-document.addEventListener('mousemove', (e) => {
-    // Only create sparkles occasionally to avoid overwhelming the browser
-    if (Math.random() < 0.1) {
-        createSparkle(e.clientX, e.clientY);
-    }
-});
+// Ambient cursor sparkles — purely decorative, so skip entirely when the user
+// prefers reduced motion, and throttle by time (not just chance) to stay smooth.
+if (!prefersReducedMotion) {
+    document.addEventListener('mousemove', (e) => {
+        const now = performance.now();
+        if (now - lastSparkleTime < SPARKLE_MIN_INTERVAL_MS) return;
+        if (Math.random() < 0.35) {
+            lastSparkleTime = now;
+            createSparkle(e.clientX, e.clientY);
+        }
+    }, { passive: true });
+}
 
 // Function to generate random trait
 function generateTrait() {
+    if (isGenerating) return; // ignore rapid re-clicks mid-animation
+    isGenerating = true;
+
     // Remove 'show' class for animation
     traitElement.classList.remove('show');
     descriptionElement.classList.remove('show');
-    
-    // Random shaking effect
-    const card = document.querySelector('.sigma-card');
-    card.style.animation = 'none';
-    setTimeout(() => {
-        card.style.animation = 'shake 0.5s';
-    }, 10);
-    
-    // Generate random sparkles around the button
-    const buttonRect = generateBtn.getBoundingClientRect();
-    for (let i = 0; i < 20; i++) {
-        setTimeout(() => {
-            const x = buttonRect.left + Math.random() * buttonRect.width;
-            const y = buttonRect.top + Math.random() * buttonRect.height;
-            createSparkle(x, y);
-        }, i * 50);
+
+    if (!prefersReducedMotion) {
+        // Restart the shake animation: set to 'none', then reapply next frame
+        // so the browser actually registers the restart (more reliable than
+        // an arbitrary timeout).
+        sigmaCard.style.animation = 'none';
+        requestAnimationFrame(() => {
+            sigmaCard.style.animation = 'shake 0.5s';
+        });
+
+        // Generate random sparkles around the button
+        const buttonRect = generateBtn.getBoundingClientRect();
+        for (let i = 0; i < 20; i++) {
+            setTimeout(() => {
+                const x = buttonRect.left + Math.random() * buttonRect.width;
+                const y = buttonRect.top + Math.random() * buttonRect.height;
+                createSparkle(x, y);
+            }, i * 50);
+        }
     }
-    
-    // Get random trait after short delay for animation
+
+    // Get random trait after short delay for animation (instant when reduced motion is on)
     setTimeout(() => {
         const randomIndex = Math.floor(Math.random() * sigmaTraits.length);
         const randomTrait = sigmaTraits[randomIndex];
-        
+
         traitElement.textContent = randomTrait.trait;
         descriptionElement.textContent = randomTrait.description;
         emojiElement.textContent = randomTrait.emoji;
-        
+
         // Add 'show' class for animation
         traitElement.classList.add('show');
         descriptionElement.classList.add('show');
-    }, 300);
+        isGenerating = false;
+    }, prefersReducedMotion ? 0 : 300);
 }
 
 // Button click event
@@ -148,14 +167,4 @@ generateBtn.addEventListener('click', generateTrait);
 setTimeout(() => {
     traitElement.classList.add('show');
     descriptionElement.classList.add('show');
-}, 500);
-
-// Add shake animation
-const shakeStyle = document.createElement('style');
-shakeStyle.textContent = `
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-    20%, 40%, 60%, 80% { transform: translateX(5px); }
-}`;
-document.head.appendChild(shakeStyle);
+}, prefersReducedMotion ? 0 : 500);
