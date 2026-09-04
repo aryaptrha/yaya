@@ -142,26 +142,6 @@ body {
     transform: translateY(-5px);
 }
 
-.back-btn {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    background: none;
-    border: none;
-    color: var(--neon-blue);
-    font-size: 1rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: all 0.3s ease;
-}
-
-.back-btn:hover {
-    color: var(--neon-pink);
-    transform: translateX(-5px);
-}
-
 .emoji {
     font-size: 2rem;
     margin-bottom: 1rem;
@@ -225,13 +205,11 @@ body {
     .sigma-trait,
     .sigma-description,
     .generate-btn,
-    .generate-btn::before,
-    .back-btn {
+    .generate-btn::before {
         transition: none;
     }
 
-    .generate-btn:hover,
-    .back-btn:hover {
+    .generate-btn:hover {
         transform: none;
     }
 }

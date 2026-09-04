@@ -1,373 +1,501 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+/* ==========================================================================
+   About page behaviour.
 
-  initParticles(reduceMotion);
-  initCustomCursor(reduceMotion);
-  initThemeToggle();
-  initBandungEasterEgg(reduceMotion);
-  initMusicPlayer();
-  initSigmaHover();
-  initSigmaAmbientMotion(reduceMotion);
-  initSmoothAnchorLinks(reduceMotion);
-  initScrollReveals(reduceMotion);
-  initCardTilt(reduceMotion);
-});
+   Previously this file drove GSAP + ScrollTrigger and Bootstrap's carousel.
+   Both are gone: reveals now use one IntersectionObserver and the gallery is a
+   CSS scroll-snap strip, which removes ~380KB of JS/CSS from a mobile page and
+   fixes two real bugs — GSAP parked off-screen items at x:±100 (creating
+   horizontal page overflow) and left them invisible whenever ScrollTrigger
+   never fired.
+   ========================================================================== */
 
-// ---------------------------------------------------------------------------
-// Background & cursor
-// ---------------------------------------------------------------------------
+(function () {
+  'use strict';
 
-function initParticles(reduceMotion) {
-  const container = document.getElementById('particles-js');
-  if (!container) return;
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
-  // Decorative background only: skip the animated particle network entirely
-  // when reduced motion is requested or the CDN script failed to load.
-  if (reduceMotion || typeof particlesJS === 'undefined') return;
+  document.addEventListener('DOMContentLoaded', function () {
+    initTheme();
+    initScrollAffordances();
+    initReveals();
+    initTerms();
+    initEasterEgg();
+    initGallery();
+    initMusic();
+    initCursor();
+    initCardTilt();
+    initParticles();
 
-  particlesJS('particles-js', {
-    particles: {
-      number: { value: 80, density: { enable: true, value_area: 800 } },
-      color: { value: '#b537f2' },
-      shape: { type: 'circle', stroke: { width: 0, color: '#000000' }, polygon: { nb_sides: 5 } },
-      opacity: { value: 0.5, random: false, anim: { enable: false, speed: 1, opacity_min: 0.1, sync: false } },
-      size: { value: 3, random: true, anim: { enable: false, speed: 40, size_min: 0.1, sync: false } },
-      line_linked: { enable: true, distance: 150, color: '#b537f2', opacity: 0.4, width: 1 },
-      move: {
-        enable: true,
-        speed: 6,
-        direction: 'none',
-        random: false,
-        straight: false,
-        out_mode: 'out',
-        bounce: false,
-        attract: { enable: false, rotateX: 600, rotateY: 1200 },
-      },
-    },
-    interactivity: {
-      detect_on: 'canvas',
-      events: {
-        onhover: { enable: true, mode: 'repulse' },
-        onclick: { enable: true, mode: 'push' },
-        resize: true,
-      },
-      modes: {
-        grab: { distance: 400, line_linked: { opacity: 1 } },
-        bubble: { distance: 400, size: 40, duration: 2, opacity: 8, speed: 3 },
-        repulse: { distance: 200, duration: 0.4 },
-        push: { particles_nb: 4 },
-        remove: { particles_nb: 2 },
-      },
-    },
-    retina_detect: true,
+    var year = document.getElementById('year');
+    if (year) year.textContent = String(new Date().getFullYear());
   });
-}
 
-function initCustomCursor(reduceMotion) {
-  const cursorDot = document.querySelector('.cursor-dot');
-  const cursorOutline = document.querySelector('.cursor-outline');
-  if (!cursorDot || !cursorOutline) return;
+  /* ------------------------------------------------------------------ theme */
 
-  // Desktop-only decoration; also skip it under reduced motion since it is a
-  // perpetual per-frame effect and the native cursor is already visible
-  // (about.css never hides it with `cursor: none`).
-  if (reduceMotion || !window.matchMedia('(min-width: 768px)').matches) return;
+  function initTheme() {
+    var btn = document.getElementById('themeToggleBtn');
+    var icon = document.getElementById('themeIcon');
+    var meta = document.getElementById('themeColorMeta');
+    if (!btn) return;
 
-  const pointer = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-  const outline = { x: pointer.x, y: pointer.y };
+    // The inline head script already applied the stored/preferred theme; this
+    // only keeps the control's label and icon in sync with it.
+    sync(document.documentElement.getAttribute('data-theme') === 'dark');
 
-  document.addEventListener('mousemove', (event) => {
-    pointer.x = event.clientX;
-    pointer.y = event.clientY;
-    cursorDot.style.left = `${pointer.x}px`;
-    cursorDot.style.top = `${pointer.y}px`;
-  }, { passive: true });
+    btn.addEventListener('click', function () {
+      var dark = document.documentElement.getAttribute('data-theme') !== 'dark';
+      document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+      try {
+        localStorage.setItem('theme', dark ? 'dark' : 'light');
+      } catch (e) {
+        /* storage unavailable — the theme still applies for this page view */
+      }
+      sync(dark);
+    });
 
-  // The outline eases toward the pointer every frame instead of snapping to
-  // a position captured 80ms ago, which used to make it visibly lag/stutter.
-  function followPointer() {
-    outline.x += (pointer.x - outline.x) * 0.2;
-    outline.y += (pointer.y - outline.y) * 0.2;
-    cursorOutline.style.left = `${outline.x}px`;
-    cursorOutline.style.top = `${outline.y}px`;
-    requestAnimationFrame(followPointer);
-  }
-  requestAnimationFrame(followPointer);
-
-  function setCursorScale(scale) {
-    cursorDot.style.transform = `translate(-50%, -50%) scale(${scale})`;
-    cursorOutline.style.transform = `translate(-50%, -50%) scale(${scale})`;
+    function sync(dark) {
+      if (icon) icon.className = dark ? 'fas fa-sun' : 'fas fa-moon';
+      btn.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+      if (meta) meta.setAttribute('content', dark ? '#0a0a0c' : '#f4f3f9');
+    }
   }
 
-  document.addEventListener('mousedown', () => setCursorScale(0.7));
-  document.addEventListener('mouseup', () => setCursorScale(1));
+  /* ------------------------------------------------------------ navigation */
 
-  document.querySelectorAll('a, button, .interactive-element').forEach((element) => {
-    element.addEventListener('mouseenter', () => {
-      setCursorScale(1.5);
-      cursorOutline.style.borderColor = currentAccentColor();
-    });
-    element.addEventListener('mouseleave', () => {
-      setCursorScale(1);
-      cursorOutline.style.borderColor = currentAccentColor();
-    });
-  });
-}
+  function initScrollAffordances() {
+    var bar = document.getElementById('scrollProgress');
+    var toTop = document.getElementById('toTopBtn');
+    var ticking = false;
 
-function currentAccentColor() {
-  return document.body.classList.contains('dark-mode') ? '#ff2e97' : '#b537f2';
-}
+    function update() {
+      ticking = false;
+      var doc = document.documentElement;
+      var max = doc.scrollHeight - doc.clientHeight;
+      var ratio = max > 0 ? Math.min(1, doc.scrollTop / max) : 0;
+      if (bar) bar.style.transform = 'scaleX(' + ratio + ')';
+      if (toTop) toTop.hidden = doc.scrollTop < 600;
+    }
 
-// ---------------------------------------------------------------------------
-// Theme & page interactions
-// ---------------------------------------------------------------------------
+    window.addEventListener(
+      'scroll',
+      function () {
+        if (ticking) return;
+        ticking = true;
+        window.requestAnimationFrame(update);
+      },
+      { passive: true }
+    );
+    update();
 
-function initThemeToggle() {
-  const toggleBtn = document.getElementById('themeToggleBtn');
-  if (!toggleBtn) return;
-
-  toggleBtn.addEventListener('click', () => {
-    document.body.classList.toggle('dark-mode');
-    const isDark = document.body.classList.contains('dark-mode');
-    toggleBtn.textContent = isDark ? '🌞' : '🌜';
-
-    const accent = currentAccentColor();
-    const cursorDot = document.querySelector('.cursor-dot');
-    const cursorOutline = document.querySelector('.cursor-outline');
-    if (cursorDot) cursorDot.style.backgroundColor = accent;
-    if (cursorOutline) cursorOutline.style.borderColor = accent;
-
-    const gradient = isDark
-      ? 'linear-gradient(to right, var(--neon-pink), var(--neon-purple))'
-      : 'linear-gradient(to right, var(--neon-blue), var(--neon-purple))';
-    document.querySelectorAll('.progress-bar').forEach((bar) => {
-      bar.style.background = gradient;
-    });
-  });
-}
-
-function initBandungEasterEgg(reduceMotion) {
-  const trigger = document.getElementById('bandungText');
-  if (!trigger) return;
-
-  trigger.addEventListener('click', () => {
-    spawnConfetti(reduceMotion);
-
-    const message = document.createElement('div');
-    message.textContent = '💖 Bandung! 💖';
-    message.style.position = 'fixed';
-    message.style.top = '50%';
-    message.style.left = '50%';
-    message.style.transform = 'translate(-50%, -50%)';
-    message.style.padding = '20px';
-    message.style.background = document.body.classList.contains('dark-mode')
-      ? 'rgba(255, 46, 151, 0.8)'
-      : 'rgba(181, 55, 242, 0.8)';
-    message.style.color = 'white';
-    message.style.borderRadius = '10px';
-    message.style.zIndex = '1000';
-    message.style.fontWeight = 'bold';
-    message.style.fontSize = '2rem';
-    document.body.appendChild(message);
-
-    setTimeout(() => message.remove(), 2000);
-  });
-}
-
-function spawnConfetti(reduceMotion) {
-  // Skip the burst of 100 animated nodes for anyone who asked for less
-  // motion; the Easter egg message above still shows.
-  if (reduceMotion) return;
-
-  const colors = ['#ff2e97', '#00f3ff', '#b537f2', '#f9f002'];
-  for (let i = 0; i < 100; i++) {
-    const piece = document.createElement('div');
-    piece.className = 'confetti';
-    piece.style.left = `${Math.random() * window.innerWidth}px`;
-    piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-    piece.style.width = `${Math.random() * 10 + 5}px`;
-    piece.style.height = `${Math.random() * 10 + 5}px`;
-    piece.style.opacity = String(Math.random() + 0.5);
-    piece.style.animationDuration = `${Math.random() * 3 + 2}s`;
-    document.body.appendChild(piece);
-    setTimeout(() => piece.remove(), 5000);
+    if (toTop) {
+      toTop.addEventListener('click', function () {
+        window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+      });
+    }
   }
-}
 
-function initMusicPlayer() {
-  const musicToggle = document.getElementById('musicToggle');
-  const backgroundMusic = document.getElementById('backgroundMusic');
-  if (!musicToggle || !backgroundMusic) return;
+  /* ----------------------------------------------------------------- reveals */
 
-  musicToggle.addEventListener('click', async () => {
-    if (!backgroundMusic.paused) {
-      backgroundMusic.pause();
-      musicToggle.classList.remove('music-playing');
+  function initReveals() {
+    var targets = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+
+    function show(el) {
+      el.classList.add('is-visible');
+      el.querySelectorAll('.meter__fill').forEach(function (fill) {
+        fill.style.width = fill.getAttribute('data-value') + '%';
+      });
+    }
+
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+      targets.forEach(show);
       return;
     }
 
-    try {
-      await backgroundMusic.play();
-      musicToggle.classList.add('music-playing');
-    } catch {
-      // Autoplay policies or an unavailable audio file can reject playback.
-      musicToggle.classList.remove('music-playing');
-    }
-  });
-}
+    var observer = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          show(entry.target);
+          observer.unobserve(entry.target);
+        });
+      },
+      { rootMargin: '0px 0px -10% 0px', threshold: 0.1 }
+    );
 
-function initSigmaHover() {
-  const sigmaText = document.getElementById('sigmaText');
-  if (!sigmaText) return;
-
-  sigmaText.addEventListener('mouseover', () => {
-    sigmaText.style.transition = 'transform 0.3s ease';
-    sigmaText.style.transform = 'scale(1.2) rotate(5deg)';
-  });
-
-  sigmaText.addEventListener('mouseout', () => {
-    sigmaText.style.transform = 'scale(1) rotate(0deg)';
-  });
-}
-
-// ---------------------------------------------------------------------------
-// Scroll-driven motion
-// ---------------------------------------------------------------------------
-
-function initSmoothAnchorLinks(reduceMotion) {
-  document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-    anchor.addEventListener('click', (event) => {
-      const target = document.querySelector(anchor.getAttribute('href'));
-      if (!target) return;
-
-      // Native smooth scrolling. The old code called gsap.to(window, {scrollTo})
-      // without ever loading ScrollToPlugin, so this did nothing at all.
-      event.preventDefault();
-      target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+    targets.forEach(function (el) {
+      observer.observe(el);
     });
-  });
-}
-
-function initScrollReveals(reduceMotion) {
-  // No GSAP/ScrollTrigger, or reduced motion requested: show every
-  // scroll-revealed element up front instead of leaving it invisible. This is
-  // also the single source of truth for these reveals now — they used to be
-  // triggered redundantly by baked-in animate.css classes, a duplicate
-  // IntersectionObserver, and GSAP all at once, which caused a visible
-  // double-fade/flicker.
-  if (reduceMotion || typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
-    document.querySelectorAll('.timeline-item, .section-title, .normal-card, p').forEach((el) => {
-      el.style.opacity = '1';
-      el.style.transform = 'none';
-    });
-    document.querySelectorAll('.progress-bar').forEach((bar) => {
-      bar.style.width = bar.getAttribute('data-width');
-    });
-    return;
   }
 
-  gsap.registerPlugin(ScrollTrigger);
+  /* -------------------------------------------------------------- tooltips */
 
-  gsap.from('.timeline-item.left', {
-    scrollTrigger: { trigger: '.timeline', start: 'top 80%', toggleActions: 'play none none none' },
-    x: -100,
-    opacity: 0,
-    duration: 1,
-    stagger: 0.3,
-    ease: 'back.out(1.7)',
-  });
+  function initTerms() {
+    var terms = Array.prototype.slice.call(document.querySelectorAll('.term[aria-expanded]'));
+    if (!terms.length) return;
 
-  gsap.from('.timeline-item.right', {
-    scrollTrigger: { trigger: '.timeline', start: 'top 80%', toggleActions: 'play none none none' },
-    x: 100,
-    opacity: 0,
-    duration: 1,
-    stagger: 0.3,
-    ease: 'back.out(1.7)',
-  });
+    function closeAll(except) {
+      terms.forEach(function (term) {
+        if (term !== except) term.setAttribute('aria-expanded', 'false');
+      });
+    }
 
-  gsap.utils.toArray('.section-title').forEach((title) => {
-    gsap.from(title, {
-      scrollTrigger: { trigger: title, start: 'top 80%', toggleActions: 'play none none none' },
-      y: 50,
-      opacity: 0,
-      duration: 0.8,
-      ease: 'power3.out',
-    });
-  });
-
-  gsap.utils.toArray('.normal-card').forEach((card) => {
-    if (card.closest('.timeline-item')) return; // covered by the timeline tweens above
-    gsap.from(card, {
-      scrollTrigger: { trigger: card, start: 'top 85%', toggleActions: 'play none none none' },
-      y: 30,
-      opacity: 0,
-      duration: 0.8,
-      ease: 'power2.out',
-    });
-  });
-
-  gsap.utils.toArray('p').forEach((paragraph) => {
-    if (paragraph.closest('.timeline-item') || paragraph.closest('.carousel-caption')) return;
-    gsap.from(paragraph, {
-      scrollTrigger: { trigger: paragraph, start: 'top 85%', toggleActions: 'play none none none' },
-      opacity: 0,
-      y: 20,
-      duration: 1,
-      ease: 'power2.out',
-    });
-  });
-
-  gsap.utils.toArray('.progress-bar').forEach((bar) => {
-    gsap.to(bar, {
-      scrollTrigger: { trigger: bar, start: 'top 90%', toggleActions: 'play none none none' },
-      width: bar.getAttribute('data-width'),
-      duration: 1.5,
-      ease: 'power2.out',
-    });
-  });
-}
-
-function initSigmaAmbientMotion(reduceMotion) {
-  const sigmaText = document.getElementById('sigmaText');
-  if (!sigmaText) return;
-
-  // Perpetual ambient loop, not essential motion: skip it entirely rather
-  // than just shortening it, same treatment as the other continuous effects.
-  if (reduceMotion || typeof gsap === 'undefined') return;
-
-  gsap.to(sigmaText, {
-    scale: 1.1,
-    rotation: 5,
-    duration: 1.5,
-    ease: 'elastic.out(1, 0.3)',
-    repeat: -1,
-    yoyo: true,
-  });
-}
-
-function initCardTilt(reduceMotion) {
-  if (reduceMotion || typeof gsap === 'undefined') return;
-
-  document.querySelectorAll('.hover-lift').forEach((card) => {
-    card.addEventListener('mousemove', (event) => {
-      const rect = card.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
-      const tiltX = (rect.height / 2 - y) / 10;
-      const tiltY = (x - rect.width / 2) / 10;
-
-      gsap.to(card, {
-        duration: 0.5,
-        rotationX: tiltX,
-        rotationY: tiltY,
-        transformPerspective: 1000,
-        ease: 'power1.out',
+    terms.forEach(function (term) {
+      term.addEventListener('click', function (event) {
+        event.stopPropagation();
+        var open = term.getAttribute('aria-expanded') === 'true';
+        closeAll(term);
+        term.setAttribute('aria-expanded', open ? 'false' : 'true');
+        if (!open) keepInViewport(term.nextElementSibling);
       });
     });
 
-    card.addEventListener('mouseleave', () => {
-      gsap.to(card, { duration: 0.5, rotationX: 0, rotationY: 0, ease: 'power3.out' });
+    document.addEventListener('click', function () {
+      closeAll(null);
     });
-  });
-}
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape') closeAll(null);
+    });
+  }
+
+  // Nudge a popup back inside the viewport when it would spill off an edge —
+  // the old fixed-width tooltips ran off the screen on narrow phones.
+  function keepInViewport(pop) {
+    if (!pop) return;
+    pop.style.transform = '';
+    var rect = pop.getBoundingClientRect();
+    var margin = 8;
+    var shift = 0;
+    if (rect.left < margin) shift = margin - rect.left;
+    else if (rect.right > window.innerWidth - margin) shift = window.innerWidth - margin - rect.right;
+    if (shift) pop.style.transform = 'translate(calc(-50% + ' + Math.round(shift) + 'px), 0)';
+  }
+
+  /* ------------------------------------------------------------ easter egg */
+
+  function initEasterEgg() {
+    var trigger = document.getElementById('bandungText');
+    if (!trigger) return;
+
+    trigger.addEventListener('click', function (event) {
+      event.stopPropagation();
+      spawnConfetti();
+
+      var message = document.createElement('div');
+      message.className = 'egg-toast';
+      message.setAttribute('role', 'status');
+      message.textContent = '💖 Bandung! 💖';
+      document.body.appendChild(message);
+      window.setTimeout(function () {
+        message.remove();
+      }, 2000);
+    });
+  }
+
+  function spawnConfetti() {
+    // Skip the burst of animated nodes for anyone who asked for less motion;
+    // the message above still shows.
+    if (reduceMotion) return;
+
+    var colors = ['#ff2e97', '#00f3ff', '#b537f2', '#f9f002'];
+    var count = window.innerWidth < 700 ? 40 : 90;
+    var frag = document.createDocumentFragment();
+
+    for (var i = 0; i < count; i++) {
+      var piece = document.createElement('span');
+      piece.className = 'confetti';
+      piece.style.left = Math.random() * 100 + 'vw';
+      piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+      piece.style.width = piece.style.height = Math.random() * 8 + 5 + 'px';
+      piece.style.animationDuration = Math.random() * 2 + 2.5 + 's';
+      frag.appendChild(piece);
+    }
+    document.body.appendChild(frag);
+
+    window.setTimeout(function () {
+      document.querySelectorAll('.confetti').forEach(function (piece) {
+        piece.remove();
+      });
+    }, 5000);
+  }
+
+  /* ----------------------------------------------------------------- gallery */
+
+  function initGallery() {
+    var viewport = document.getElementById('galleryViewport');
+    var dotsWrap = document.getElementById('galleryDots');
+    var prev = document.getElementById('galleryPrev');
+    var next = document.getElementById('galleryNext');
+    var play = document.getElementById('galleryPlay');
+    var playIcon = document.getElementById('galleryPlayIcon');
+    var count = document.getElementById('galleryCount');
+    if (!viewport) return;
+
+    var slides = Array.prototype.slice.call(viewport.querySelectorAll('.slide'));
+    if (!slides.length) return;
+
+    var index = 0;
+    var timer = null;
+    // Autoplay is opt-out, but never starts under reduced motion.
+    var autoplay = !reduceMotion;
+
+    var dots = slides.map(function (_, i) {
+      var dot = document.createElement('button');
+      dot.type = 'button';
+      dot.className = 'gallery__dot';
+      dot.setAttribute('aria-label', 'Photo ' + (i + 1));
+      dot.addEventListener('click', function () {
+        stopAutoplay();
+        goTo(i);
+      });
+      if (dotsWrap) dotsWrap.appendChild(dot);
+      return dot;
+    });
+
+    function goTo(i, instant) {
+      index = Math.max(0, Math.min(slides.length - 1, i));
+      viewport.scrollTo({
+        left: index * viewport.clientWidth,
+        behavior: instant || reduceMotion ? 'auto' : 'smooth'
+      });
+      render();
+    }
+
+    function render() {
+      dots.forEach(function (dot, i) {
+        if (i === index) dot.setAttribute('aria-current', 'true');
+        else dot.removeAttribute('aria-current');
+      });
+      if (count) count.textContent = index + 1 + ' / ' + slides.length;
+      if (prev) prev.disabled = index === 0;
+      if (next) next.disabled = index === slides.length - 1;
+    }
+
+    function startAutoplay() {
+      stopTimer();
+      autoplay = true;
+      timer = window.setInterval(function () {
+        // Jump straight back to the first photo at the end rather than smooth
+        // scrolling all the way back through the strip.
+        if (index >= slides.length - 1) goTo(0, true);
+        else goTo(index + 1);
+      }, 5000);
+      syncPlayButton();
+    }
+
+    function stopAutoplay() {
+      autoplay = false;
+      stopTimer();
+      syncPlayButton();
+    }
+
+    function stopTimer() {
+      if (timer !== null) {
+        window.clearInterval(timer);
+        timer = null;
+      }
+    }
+
+    function syncPlayButton() {
+      if (!play) return;
+      play.setAttribute('aria-label', autoplay ? 'Pause slideshow' : 'Play slideshow');
+      if (playIcon) playIcon.className = autoplay ? 'fas fa-pause' : 'fas fa-play';
+    }
+
+    if (prev) {
+      prev.addEventListener('click', function () {
+        stopAutoplay();
+        goTo(index - 1);
+      });
+    }
+    if (next) {
+      next.addEventListener('click', function () {
+        stopAutoplay();
+        goTo(index + 1);
+      });
+    }
+    if (play) {
+      play.addEventListener('click', function () {
+        if (autoplay) stopAutoplay();
+        else startAutoplay();
+      });
+    }
+
+    // Arrow keys move a whole slide instead of nudging the scroll container.
+    viewport.addEventListener('keydown', function (event) {
+      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+      event.preventDefault();
+      stopAutoplay();
+      goTo(index + (event.key === 'ArrowRight' ? 1 : -1));
+    });
+
+    // Keep state in sync with swipes and any other native scrolling.
+    var ticking = false;
+    viewport.addEventListener(
+      'scroll',
+      function () {
+        if (ticking) return;
+        ticking = true;
+        window.requestAnimationFrame(function () {
+          ticking = false;
+          var width = viewport.clientWidth;
+          if (!width) return;
+          var current = Math.round(viewport.scrollLeft / width);
+          if (current !== index) {
+            index = current;
+            render();
+          }
+        });
+      },
+      { passive: true }
+    );
+
+    viewport.addEventListener('pointerdown', stopAutoplay);
+
+    if (finePointer) {
+      viewport.addEventListener('mouseenter', stopTimer);
+      viewport.addEventListener('mouseleave', function () {
+        if (autoplay) startAutoplay();
+      });
+    }
+
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) stopTimer();
+      else if (autoplay) startAutoplay();
+    });
+
+    // Slide width changes with the viewport, so realign after a resize.
+    window.addEventListener('resize', function () {
+      goTo(index, true);
+    });
+
+    render();
+    syncPlayButton();
+    if (autoplay) startAutoplay();
+  }
+
+  /* ------------------------------------------------------------------- music */
+
+  function initMusic() {
+    var toggle = document.getElementById('musicToggle');
+    var audio = document.getElementById('backgroundMusic');
+    if (!toggle || !audio) return;
+
+    toggle.addEventListener('click', function () {
+      if (!audio.paused) {
+        audio.pause();
+        return;
+      }
+      audio.play().catch(function () {
+        // Autoplay policy or a missing file rejected playback.
+        sync();
+      });
+    });
+
+    function sync() {
+      var playing = !audio.paused;
+      toggle.classList.toggle('is-playing', playing);
+      toggle.setAttribute('aria-label', playing ? 'Pause background music' : 'Play background music');
+    }
+
+    audio.addEventListener('play', sync);
+    audio.addEventListener('pause', sync);
+    sync();
+  }
+
+  /* ------------------------------------------------------------ desktop fx */
+
+  function initCursor() {
+    var dot = document.querySelector('.cursor-dot');
+    var outline = document.querySelector('.cursor-outline');
+    if (!dot || !outline) return;
+
+    // Desktop decoration only. CSS hides both elements below 880px, so skip the
+    // per-frame work entirely on touch devices and under reduced motion.
+    if (reduceMotion || !finePointer || !window.matchMedia('(min-width: 880px)').matches) return;
+
+    var pointer = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    var trail = { x: pointer.x, y: pointer.y };
+    var scale = 1;
+
+    document.addEventListener(
+      'mousemove',
+      function (event) {
+        pointer.x = event.clientX;
+        pointer.y = event.clientY;
+      },
+      { passive: true }
+    );
+
+    (function follow() {
+      trail.x += (pointer.x - trail.x) * 0.2;
+      trail.y += (pointer.y - trail.y) * 0.2;
+      dot.style.transform = 'translate(' + pointer.x + 'px,' + pointer.y + 'px) translate(-50%,-50%)';
+      outline.style.transform =
+        'translate(' + trail.x + 'px,' + trail.y + 'px) translate(-50%,-50%) scale(' + scale + ')';
+      window.requestAnimationFrame(follow);
+    })();
+
+    document.querySelectorAll('a, button').forEach(function (el) {
+      el.addEventListener('mouseenter', function () {
+        scale = 1.5;
+      });
+      el.addEventListener('mouseleave', function () {
+        scale = 1;
+      });
+    });
+  }
+
+  function initCardTilt() {
+    if (reduceMotion || !finePointer) return;
+
+    document.querySelectorAll('.card').forEach(function (card) {
+      card.addEventListener('mousemove', function (event) {
+        var rect = card.getBoundingClientRect();
+        var tiltX = (rect.height / 2 - (event.clientY - rect.top)) / 14;
+        var tiltY = ((event.clientX - rect.left) - rect.width / 2) / 14;
+        // The lift is included here because an inline transform overrides the
+        // `.card:hover` rule — previously the two fought and the lift was lost.
+        card.style.transform =
+          'perspective(900px) translateY(-4px) rotateX(' + tiltX + 'deg) rotateY(' + tiltY + 'deg)';
+      });
+
+      card.addEventListener('mouseleave', function () {
+        card.style.transform = '';
+      });
+    });
+  }
+
+  function initParticles() {
+    var container = document.getElementById('particles-js');
+    if (!container || typeof window.particlesJS === 'undefined') return;
+
+    // Purely decorative, and expensive: skip it under reduced motion, on small
+    // screens (the CSS grid already carries the look) and on metered data.
+    var saveData = navigator.connection && navigator.connection.saveData;
+    if (reduceMotion || saveData || window.innerWidth < 700) return;
+
+    window.particlesJS('particles-js', {
+      particles: {
+        number: { value: 48, density: { enable: true, value_area: 900 } },
+        color: { value: '#b537f2' },
+        shape: { type: 'circle' },
+        opacity: { value: 0.45 },
+        size: { value: 3, random: true },
+        line_linked: { enable: true, distance: 150, color: '#b537f2', opacity: 0.35, width: 1 },
+        move: { enable: true, speed: 2.2, direction: 'none', out_mode: 'out' }
+      },
+      interactivity: {
+        detect_on: 'canvas',
+        events: {
+          onhover: { enable: true, mode: 'repulse' },
+          onclick: { enable: false },
+          resize: true
+        },
+        modes: { repulse: { distance: 140, duration: 0.4 } }
+      },
+      retina_detect: true
+    });
+  }
+})();

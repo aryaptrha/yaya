@@ -26,6 +26,7 @@ function initNameAnimation(reduceMotion) {
   const NAME = 'ARYAPUTRA';
   const nameElement = document.getElementById('name-animation');
   const navLinks = document.getElementById('nav-links');
+  const tagline = document.getElementById('hero-tagline');
   if (!nameElement) return;
 
   nameElement.textContent = '';
@@ -48,17 +49,20 @@ function initNameAnimation(reduceMotion) {
   if (reduceMotion || typeof gsap === 'undefined') {
     nameElement.style.opacity = '1';
     chars.forEach((span) => { span.style.opacity = '1'; });
-    if (navLinks) navLinks.style.opacity = '1';
+    if (tagline) { tagline.style.opacity = '1'; tagline.style.transform = 'none'; }
+    if (navLinks) { navLinks.style.opacity = '1'; }
     return;
   }
 
   gsap.set(nameElement, { opacity: 1 });
   gsap.to(chars, {
     opacity: 1,
-    stagger: 0.1,
+    stagger: 0.08,
     duration: 0.5,
+    ease: 'power2.out',
     onComplete: () => {
-      if (navLinks) gsap.to(navLinks, { opacity: 1, duration: 0.8, delay: 0.2 });
+      if (tagline) gsap.to(tagline, { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' });
+      if (navLinks) gsap.to(navLinks, { opacity: 1, duration: 0.8, delay: 0.15, ease: 'power2.out' });
     },
   });
 }
@@ -89,6 +93,7 @@ function initScrollAnimations(reduceMotion) {
     opacity: 1,
     y: 0,
     duration: 1,
+    ease: 'power2.out',
     scrollTrigger: { trigger: '#branding-section', start: 'top 80%', toggleActions: 'play none none none' },
   });
 
@@ -97,8 +102,12 @@ function initScrollAnimations(reduceMotion) {
       opacity: 1,
       y: 0,
       duration: 0.8,
-      delay: 0.2 * i,
-      scrollTrigger: { trigger: card, start: 'top 85%', toggleActions: 'play none none none' },
+      delay: 0.12 * i,
+      ease: 'power2.out',
+      scrollTrigger: { trigger: card, start: 'top 88%', toggleActions: 'play none none none' },
+      onComplete: () => {
+        gsap.set(card, { clearProps: 'transform' });
+      },
     });
   });
 
@@ -106,10 +115,11 @@ function initScrollAnimations(reduceMotion) {
     opacity: 1,
     y: 0,
     duration: 1,
-    scrollTrigger: { trigger: '#contact-cta', start: 'top 85%', toggleActions: 'play none none none' },
+    ease: 'power2.out',
+    scrollTrigger: { trigger: '#contact-cta', start: 'top 88%', toggleActions: 'play none none none' },
   });
 
-  gsap.to('#scroll-indicator', { opacity: 1, duration: 0.8, delay: 1.5 });
+  gsap.to('#scroll-indicator', { opacity: 1, duration: 0.8, delay: 1.2, ease: 'power2.out' });
 }
 
 // ---------------------------------------------------------------------------
@@ -151,32 +161,113 @@ function initBackground(reduceMotion) {
   }
   sizeRenderer();
 
-  const COLORS = [0x00ff88, 0x00ffff, 0xff00ff, 0x9900ff];
+  // Vibrant neon space palette
+  const COLORS = [0x00ff88, 0x00f3ff, 0xff00ff, 0x9900ff, 0xffffff, 0xffe066];
+
+  // Helper: Construct extruded 3D star geometry with bevels
+  function create3DStarGeometry(points, outerRadius, innerRadius, depth) {
+    const shape = new THREE.Shape();
+    const step = Math.PI / points;
+    for (let i = 0; i < 2 * points; i++) {
+      const r = (i % 2 === 0) ? outerRadius : innerRadius;
+      const angle = i * step - Math.PI / 2;
+      const x = Math.cos(angle) * r;
+      const y = Math.sin(angle) * r;
+      if (i === 0) shape.moveTo(x, y);
+      else shape.lineTo(x, y);
+    }
+    shape.closePath();
+
+    const extrudeSettings = {
+      depth: depth,
+      bevelEnabled: true,
+      bevelSegments: 2,
+      steps: 1,
+      bevelSize: outerRadius * 0.08,
+      bevelThickness: depth * 0.35,
+    };
+
+    const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+    geometry.center();
+    return geometry;
+  }
+
+  // 1. Distant starry galaxy particle field
+  const starCount = 280;
+  const starGeometry = new THREE.BufferGeometry();
+  const starPositions = new Float32Array(starCount * 3);
+  const starColors = new Float32Array(starCount * 3);
+
+  for (let i = 0; i < starCount; i++) {
+    starPositions[i * 3] = (Math.random() - 0.5) * 55;
+    starPositions[i * 3 + 1] = (Math.random() - 0.5) * 55;
+    starPositions[i * 3 + 2] = Math.random() * -30 - 2;
+
+    const col = new THREE.Color(COLORS[Math.floor(Math.random() * COLORS.length)]);
+    starColors[i * 3] = col.r;
+    starColors[i * 3 + 1] = col.g;
+    starColors[i * 3 + 2] = col.b;
+  }
+
+  starGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
+  starGeometry.setAttribute('color', new THREE.BufferAttribute(starColors, 3));
+
+  const starMaterial = new THREE.PointsMaterial({
+    size: 0.12,
+    vertexColors: true,
+    transparent: true,
+    opacity: 0.75,
+  });
+
+  const starField = new THREE.Points(starGeometry, starMaterial);
+  scene.add(starField);
+
+  // 2. Floating 3D holographic stars matching existing object size (radius 0.45 - 1.1)
   const shapes = [];
+  const STAR_TYPES = [
+    { points: 5, innerRatio: 0.42, depthRatio: 0.28 }, // Classic 5-pointed star
+    { points: 4, innerRatio: 0.22, depthRatio: 0.25 }, // 4-pointed celestial sparkle star
+    { points: 6, innerRatio: 0.48, depthRatio: 0.26 }, // 6-pointed cosmic hexagram star
+  ];
 
-  for (let i = 0; i < 15; i++) {
-    const radius = Math.random() * 0.7 + 0.4;
-    const geometry = Math.random() < 0.5
-      ? new THREE.IcosahedronGeometry(radius)
-      : new THREE.OctahedronGeometry(radius);
+  for (let i = 0; i < 18; i++) {
+    const type = STAR_TYPES[i % STAR_TYPES.length];
+    // Match the existing design size (radius: ~0.45 - 1.1)
+    const radius = Math.random() * 0.65 + 0.45;
+    const innerRadius = radius * type.innerRatio;
+    const depth = radius * type.depthRatio;
 
+    const geometry = create3DStarGeometry(type.points, radius, innerRadius, depth);
+    const starColor = COLORS[Math.floor(Math.random() * COLORS.length)];
+
+    // Outer neon wireframe facets
     const mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({
-      color: COLORS[Math.floor(Math.random() * COLORS.length)],
+      color: starColor,
       wireframe: true,
       transparent: true,
-      opacity: 0.9,
+      opacity: 0.88,
     }));
 
+    // Inner translucent holographic core for depth
+    const core = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({
+      color: starColor,
+      transparent: true,
+      opacity: 0.2,
+      depthWrite: false,
+    }));
+    mesh.add(core);
+
+    // Distribution matching existing 3D scene bounds
     mesh.position.set(Math.random() * 30 - 15, Math.random() * 30 - 15, Math.random() * -15);
     mesh.userData = {
       home: mesh.position.clone(),
       spin: {
-        x: (Math.random() - 0.5) * 0.01,
-        y: (Math.random() - 0.5) * 0.01,
-        z: (Math.random() - 0.5) * 0.01,
+        x: (Math.random() - 0.5) * 0.012,
+        y: (Math.random() - 0.5) * 0.012,
+        z: (Math.random() - 0.5) * 0.012,
       },
-      pulseAmount: Math.random() * 0.1,
-      pulseSpeed: 0.5 + Math.random(),
+      pulseAmount: Math.random() * 0.12 + 0.05,
+      pulseSpeed: 0.6 + Math.random() * 0.8,
       pulseOffset: Math.random() * Math.PI * 2,
       baseScale: 0.8 + Math.random() * 0.4,
     };
@@ -222,6 +313,12 @@ function initBackground(reduceMotion) {
       mesh.position.y = data.home.y + parallax.y * 0.6;
     });
 
+    if (starField) {
+      starField.rotation.y = time * 0.012;
+      starField.position.x = parallax.x * 0.25;
+      starField.position.y = parallax.y * 0.25;
+    }
+
     renderer.render(scene, camera);
   }
 
@@ -258,6 +355,28 @@ function initScrollIndicator(reduceMotion) {
     event.preventDefault();
     scrollToTarget();
   });
+
+  // Softly fade out the indicator when the visitor scrolls down past the hero section
+  let isHidden = false;
+  window.addEventListener('scroll', () => {
+    const shouldHide = window.scrollY > 60;
+    if (shouldHide !== isHidden) {
+      isHidden = shouldHide;
+      if (typeof gsap !== 'undefined') {
+        gsap.to(indicator, {
+          opacity: shouldHide ? 0 : 1,
+          duration: 0.35,
+          overwrite: 'auto',
+        });
+      } else {
+        indicator.style.opacity = shouldHide ? '0' : '1';
+      }
+      indicator.style.pointerEvents = shouldHide ? 'none' : 'auto';
+    }
+  }, { passive: true });
+
+  const yearSpan = document.getElementById('current-year');
+  if (yearSpan) yearSpan.textContent = String(new Date().getFullYear());
 }
 
 function initPageTransitions(reduceMotion) {

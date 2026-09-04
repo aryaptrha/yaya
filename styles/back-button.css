@@ -1,0 +1,117 @@
+/* ==========================================================================
+   Standardized Back Button Component
+   Provides a unified cyberpunk neon pill design across all subpages with
+   GSAP-driven hover animations and accessible fallbacks.
+   ========================================================================== */
+
+.back-btn {
+    position: fixed;
+    top: max(20px, env(safe-area-inset-top));
+    left: max(20px, env(safe-area-inset-left));
+    z-index: 1000;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.55rem 1.15rem;
+    background: rgba(10, 15, 25, 0.75);
+    color: var(--neon-blue, #00f3ff);
+    border: 1px solid rgba(0, 243, 255, 0.35);
+    border-radius: 9999px;
+    font-family: 'Open Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    text-transform: uppercase;
+    cursor: pointer;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35), 0 0 10px rgba(0, 243, 255, 0.15);
+    user-select: none;
+    -webkit-user-select: none;
+    white-space: nowrap;
+    will-change: transform, box-shadow;
+    outline: none;
+    line-height: 1;
+}
+
+/* Light theme adaptation (About page support) */
+:root[data-theme="light"] .back-btn {
+    background: rgba(255, 255, 255, 0.88);
+    color: var(--accent-text, #7d18c9);
+    border-color: rgba(125, 24, 201, 0.3);
+    box-shadow: 0 4px 20px rgba(24, 12, 48, 0.08), 0 0 10px rgba(181, 55, 242, 0.15);
+}
+
+.back-btn__icon {
+    display: block;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    stroke: currentColor;
+    pointer-events: none;
+}
+
+.back-btn__text {
+    display: inline-block;
+    line-height: 1;
+    pointer-events: none;
+}
+
+/* Focus visibility for keyboard navigation */
+.back-btn:focus-visible {
+    outline: 2px solid var(--neon-blue, #00f3ff);
+    outline-offset: 3px;
+}
+
+:root[data-theme="light"] .back-btn:focus-visible {
+    outline: 2px solid var(--accent, #b537f2);
+    outline-offset: 3px;
+}
+
+/* CSS fallback hover when GSAP is not yet loaded or unavailable */
+@media (hover: hover) and (pointer: fine) {
+    .back-btn:not(.has-gsap):hover {
+        color: var(--neon-pink, #ff2e97);
+        border-color: rgba(255, 46, 151, 0.6);
+        background: rgba(25, 10, 30, 0.85);
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 46, 151, 0.45);
+        transform: translateX(-4px) scale(1.04);
+        transition: transform 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+    }
+
+    :root[data-theme="light"] .back-btn:not(.has-gsap):hover {
+        color: var(--accent, #b537f2);
+        border-color: rgba(181, 55, 242, 0.6);
+        background: rgba(255, 255, 255, 0.95);
+        box-shadow: 0 6px 24px rgba(24, 12, 48, 0.15), 0 0 18px rgba(181, 55, 242, 0.3);
+    }
+}
+
+/* Responsive adjustment for compact screens */
+@media (max-width: 640px) {
+    .back-btn {
+        top: max(14px, env(safe-area-inset-top));
+        left: max(14px, env(safe-area-inset-left));
+        padding: 0.45rem 0.95rem;
+        font-size: 0.85rem;
+        gap: 0.45rem;
+    }
+
+    .back-btn__icon {
+        width: 16px;
+        height: 16px;
+    }
+}
+
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    .back-btn {
+        transition: none !important;
+        will-change: auto !important;
+    }
+
+    .back-btn:not(.has-gsap):hover {
+        transform: none !important;
+    }
+}

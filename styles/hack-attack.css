@@ -245,32 +245,9 @@ header {
     transform: translateY(0);
 }
 
-.back-btn {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    background: none;
-    border: none;
-    color: var(--neon-blue);
-    font-size: 1.2rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: all 0.3s ease;
-    z-index: 10;
-    text-decoration: none;
-}
-
-.back-btn:hover {
-    color: var(--neon-pink);
-    transform: translateX(-5px);
-}
-
 .button:focus-visible,
 .difficulty-btn:focus-visible,
-.clear-btn:focus-visible,
-.back-btn:focus-visible {
+.clear-btn:focus-visible {
     outline: 2px solid var(--neon-blue);
     outline-offset: 3px;
 }
